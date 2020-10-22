@@ -11,9 +11,12 @@
                   ></q-img>
                 </div>
                 <div class="row justify-center text-subtitle1 text-grey">Ingresa a la plataforma</div>
-                <div class="row justify-center">
+                <div class="row justify-center q-py-md">
                 <q-input
-                  style="width:50%"
+                  style="margin: auto;
+                  width: calc(50% - 90px);
+                  min-width: 200px;
+                  max-width: 300px;"
                   class="q-ma-sm row justify-center"
                   type="email"
                   v-model="form.email"
@@ -30,7 +33,10 @@
 
                 <div class="row justify-center">
                 <q-input
-                  style="width:50%"
+                  style="margin: auto;
+                  width: calc(50% - 90px);
+                  min-width: 200px;
+                  max-width: 300px;"
                   class="q-ma-sm row justify-center"
                   :type="isPwd ? 'password' : 'text'"
                   v-model="form.password"
