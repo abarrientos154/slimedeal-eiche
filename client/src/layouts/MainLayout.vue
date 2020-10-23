@@ -195,11 +195,22 @@
                     icon-right="add"
                     color="primary"
                     class="q-mr-md"
+                    @click="newContrat=true"
                   >Nuevo contrato
                   </q-btn>
                 </div>
     </div>
     </q-drawer>
+
+    <q-dialog v-model="newContrat" persistent>
+      <q-card>
+        <q-card-section class="row justify-end"><q-btn icon="close" flat round dense v-close-popup /></q-card-section>
+        <q-card-section class="row items-center q-pa-sm">
+          <NuevoContrato />
+        </q-card-section>
+      </q-card>
+    </q-dialog>
+
     <q-drawer
       v-model="rightDrawerOpen"
       side="right"
@@ -283,11 +294,13 @@
 
 <script>
 import UltimasActividades from '../components/UltimasActividades'
+import NuevoContrato from '../components/NuevoContrato'
 export default {
   name: 'MainLayout',
-  components: { UltimasActividades },
+  components: { UltimasActividades, NuevoContrato },
   data () {
     return {
+      newContrat: false,
       contratos: [
         {
           name: 'uno',
