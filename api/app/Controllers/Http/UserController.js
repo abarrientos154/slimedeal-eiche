@@ -2,8 +2,6 @@
 
 const User = use("App/Models/User")
 const Role = use("App/Models/Role")
-const Email = use('App/Functions/Email')
-const Cruds = use('App/Functions/Cruds')
 const { validate } = use("Validator")
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */

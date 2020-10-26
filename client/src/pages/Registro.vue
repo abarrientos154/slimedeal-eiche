@@ -100,41 +100,46 @@ export default {
     password: { required },
     repeatPassword: {
       sameAsPassword: sameAs('password')
-    }
+    },
+    file: { required }
   },
   mounted () {
     this.baseu = env.apiUrl
   },
   methods: {
     async guardar () {
-      this.$q.loading.show({
-        message: 'Guardando Sus Datos, Por Favor Espere...'
-      })
-      if (this.file) {
-        var formData = new FormData()
-        formData.append('files', this.file)
-        formData.append('dat', JSON.stringify(this.form))
-        console.log(formData, 'formdata')
-        await this.$api.post('register_upload', formData, {
-          headers: {
-            'Content-Type': undefined
-          }
-        }).then((res) => {
-          if (res.error) {
-            this.$q.notify({
-              message: res.msg,
-              color: 'warning',
-              type: 'negative'
-            })
-            this.$q.loading.hide()
-          } else if (res) {
-            // this.$router.go(-1)
-            this.$q.loading.hide()
-          } else {
-            this.$q.loading.hide()
-          }
-          this.$q.loading.hide()
+      this.$v.$touch()
+      if (!this.$v.form.$error || !this.$v.password.$error || !this.$v.repeatPassword.$error || !this.$v.file.$error) {
+        this.$q.loading.show({
+          message: 'Guardando Sus Datos, Por Favor Espere...'
         })
+        if (this.file) {
+          this.form.password = this.password
+          var formData = new FormData()
+          formData.append('files', this.file)
+          formData.append('dat', JSON.stringify(this.form))
+          console.log(formData, 'formdata')
+          await this.$api.post('register_upload', formData, {
+            headers: {
+              'Content-Type': undefined
+            }
+          }).then((res) => {
+            if (res.error) {
+              this.$q.notify({
+                message: res.msg,
+                color: 'warning',
+                type: 'negative'
+              })
+              this.$q.loading.hide()
+            } else if (res) {
+              this.$router.go(-1)
+              this.$q.loading.hide()
+            } else {
+              this.$q.loading.hide()
+            }
+            this.$q.loading.hide()
+          })
+        }
       }
     }
   }

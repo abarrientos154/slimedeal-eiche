@@ -2,6 +2,7 @@
 
 const Helpers = use('Helpers')
 const mkdirp = use('mkdirp')
+const User = use("App/Models/User")
 const fs = require('fs')
 var randomize = require('randomatic');
 
@@ -37,6 +38,8 @@ class UploadController {
       let nombreArchivo = 'storage/uploads/register/' + data.name
       dat.archiveName = data.name + '.' + profilePic.extname
       dat.filePath = nombreArchivo + '.' + profilePic.extname
+      let roles = [2]
+      dat.roles = roles
       console.log(dat, 'mostrando datos para guardar del registro')
       await User.create(dat)
     }
