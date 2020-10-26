@@ -2,8 +2,8 @@
 
 const Helpers = use('Helpers')
 const mkdirp = use('mkdirp')
-const Shop = use('App/Models/Shop')
 const fs = require('fs')
+var randomize = require('randomatic');
 
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
@@ -14,67 +14,32 @@ const fs = require('fs')
  * Resourceful controller for interacting with uploads
  */
 class UploadController {
-  async upload({
-    request
-  }) {
-    let data = {}
+  async registerUpload({ request }) {
+    let codeFile = randomize('Aa0', 30)
+    const profilePic = request.file('files', {
+      types: ['image'],
+      size: '20mb'
+    })
     var dat = request.only(['dat'])
     dat = JSON.parse(dat.dat)
-    var profilePic = request.file('files', {
-      types: ['image'],
-      size: '2mb'
-    })
-    if (profilePic) {
-      if (Helpers.appRoot('storage/uploads')) {
-        await profilePic.move(Helpers.appRoot('storage/uploads'), {
-          name: dat.identification + '-' + dat.name + '.' + profilePic.extname,
-          overwrite: true
-        })
-      } else {
-        mkdirp.sync(`${__dirname}/storage/Excel`)
-      }
-
-      data.name = profilePic.fileName
-
-      if (!profilePic.moved()) {
-        return profilePic.error()
-      }
+    if (Helpers.appRoot('storage/uploads/register')) {
+      nombre = nombre.split(' ').join('-')
+      await profilePic.move(Helpers.appRoot('storage/uploads/register'), {
+        name: codeFile,
+        overwrite: true
+      })
+    } else {
+      mkdirp.sync(`${__dirname}/storage/Excel`)
     }
-    profilePic = request.file('files2', {
-      types: ['image'],
-      size: '2mb'
-    })
-    if (profilePic) {
-      if (Helpers.appRoot('storage/uploads')) {
-        await profilePic.move(Helpers.appRoot('storage/uploads'), {
-          name: dat.identification + '- license -' + dat.name + '.' + profilePic.extname,
-          overwrite: true
-        })
-      } else {
-        mkdirp.sync(`${__dirname}/storage/Excel`)
-      }
-      data.license = profilePic.fileName
-      if (!profilePic.moved()) {
-        return profilePic.error()
-      }
-    }
-    profilePic = request.file('files3', {
-      types: ['image'],
-      size: '2mb'
-    })
-    if (profilePic) {
-      if (Helpers.appRoot('storage/uploads')) {
-        await profilePic.move(Helpers.appRoot('storage/uploads'), {
-          name: dat.identification + '- identification -' + dat.name + '.' + profilePic.extname,
-          overwrite: true
-        })
-      } else {
-        mkdirp.sync(`${__dirname}/storage/Excel`)
-      }
-      data.identification = profilePic.fileName
-      if (!profilePic.moved()) {
-        return profilePic.error()
-      }
+    const data = { name: profilePic.fileName }
+    if (!profilePic.moved()) {
+      return profilePic.error()
+    } else {
+      let nombreArchivo = 'storage/uploads/register/' + data.name
+      dat.archiveName = data.name
+      dat.filePath = nombreArchivo
+      console.log(dat, 'mostrando datos para guardar del registro')
+      // const archivo = await Archivo.create(dat)
     }
     return data
   }
