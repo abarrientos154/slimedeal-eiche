@@ -62,20 +62,46 @@
 </template>
 
 <script>
+import env from '../../src/env'
 export default {
   data () {
     return {
       form: {},
-      file: null
+      file: null,
+      baseu: '',
     }
+  },
+  mounted () {
+    this.baseu = env.apiUrl
   },
   methods: {
     guardar () {
-      this.$api.post('register_upload').then(res => {
-        if (res) {
-          this.$router.go(-1)
-        }
+      this.$q.loading.show({
+        message: 'Guardando Sus Datos, Por Favor Espere...'
       })
+      if (this.file) {
+        let formData = new FormData()
+        formData.append('files', this.file)
+        formData.append('dat', JSON.stringify(this.form))
+        console.log(formData, 'formdata')
+        await this.$api.post('uploads', formData, {
+          headers: {
+            'Content-Type': undefined
+          }
+        }).then((res) => {
+          if (res.error) {
+            this.$q.notify({
+              message: res.msg,
+              color: 'warning',
+              type: 'negative'
+            })
+            this.$q.loading.hide()
+          } else if (res) {
+            this.$router.go(-1)
+            this.$q.loading.hide()
+          }
+        })
+      }
     }
   }
 }
