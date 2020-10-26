@@ -57,6 +57,9 @@
           </div>
         </div>
       </q-card-section>
+      <q-card-actions align="center">
+        <q-btn class="glossy" rounded color="primary" label="Registrar" size="20px" @click="guardar"/>
+      </q-card-actions>
     </q-card>
   </div>
 </template>
@@ -68,19 +71,19 @@ export default {
     return {
       form: {},
       file: null,
-      baseu: '',
+      baseu: ''
     }
   },
   mounted () {
     this.baseu = env.apiUrl
   },
   methods: {
-    guardar () {
+    async guardar () {
       this.$q.loading.show({
         message: 'Guardando Sus Datos, Por Favor Espere...'
       })
       if (this.file) {
-        let formData = new FormData()
+        var formData = new FormData()
         formData.append('files', this.file)
         formData.append('dat', JSON.stringify(this.form))
         console.log(formData, 'formdata')
