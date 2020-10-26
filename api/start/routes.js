@@ -40,7 +40,7 @@ addPrefixToGroup(
     Route.post("register", "UserController.register")
     Route.get("validate_email/:email", "UserController.validateEmail")
     Route.get("plans", "PlanController.index")
-    Route.get("register_upload", "UploadController.registerUpload")
+    Route.post("register_upload", "UploadController.registerUpload")
 
   })
 );
