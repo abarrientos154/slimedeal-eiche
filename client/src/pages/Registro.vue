@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="text-h6">Registro</div>
+    <div class="text-h6 row text-center">Registro</div>
   </div>
 </template>
 

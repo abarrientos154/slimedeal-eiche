@@ -62,7 +62,7 @@ class UserController {
       body.roles = [rol]
       const user = await User.create(body)
       // const user = body
-      // Email.sendMail(body.email, 'Bienvenido a hevent', 'A partir de Ahora Formas Parte De Nuestra Plataforma')
+      // Email.sendMail(body.email, 'Bienvenido a slimedeal', 'A partir de Ahora Formas Parte De Nuestra Plataforma')
       // const user = body
       response.send(user)
     }
@@ -138,7 +138,7 @@ class UserController {
     token.email = user.email
     token.verify = user.verify
     let data = {}
-    data.HEV_SESSION_INFO = token
+    data.SLIM_SESSION_INFO = token
     return data
   }
 

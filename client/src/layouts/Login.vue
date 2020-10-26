@@ -61,6 +61,9 @@
                     </template>
                   </q-btn>
                 </div>
+                <div class="row justify-center">
+                  <q-btn label="registrate aqui" dense flat />
+                </div>
                 <div class="row absolute-bottom justify-center q-pa-md">
                   <q-btn
                     label="Términos y condiciones de uso"
@@ -108,20 +111,21 @@ export default {
     ...mapMutations('generals', ['login']),
     ...mapActions('generals', ['saveUser']),
     onSubmit () {
-      // this.loading = true
-      /* this.$q.loading.show({
+      this.loading = true
+      this.$q.loading.show({
         message: 'Iniciando sesión'
-      }) */
-      /* this.$api.post('login', this.form).then(res => {
+      })
+      this.$api.post('login', this.form).then(res => {
         if (res) {
           this.login(res)
+          this.$router.push('menu')
         } else {
           console.log('error de ususario')
-          // this.loading = false
-        } */
-      this.$router.push('menu')
-      // this.$q.loading.hide()
-      // })
+          this.loading = false
+          this.$q.loading.hide()
+        }
+        this.$q.loading.hide()
+      })
     }
   }
 }
