@@ -58,12 +58,9 @@ class UserController {
       }])
     } else {
       let body = request.only(User.fillable)
-      const rol = body.roles
+      const rol = 2 //body.roles
       body.roles = [rol]
       const user = await User.create(body)
-      // const user = body
-      // Email.sendMail(body.email, 'Bienvenido a slimedeal', 'A partir de Ahora Formas Parte De Nuestra Plataforma')
-      // const user = body
       response.send(user)
     }
   }
