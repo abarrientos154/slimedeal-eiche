@@ -23,7 +23,6 @@ class UploadController {
     var dat = request.only(['dat'])
     dat = JSON.parse(dat.dat)
     if (Helpers.appRoot('storage/uploads/register')) {
-      nombre = nombre.split(' ').join('-')
       await profilePic.move(Helpers.appRoot('storage/uploads/register'), {
         name: codeFile,
         overwrite: true
@@ -36,10 +35,10 @@ class UploadController {
       return profilePic.error()
     } else {
       let nombreArchivo = 'storage/uploads/register/' + data.name
-      dat.archiveName = data.name
-      dat.filePath = nombreArchivo
+      dat.archiveName = data.name + '.' + profilePic.extname
+      dat.filePath = nombreArchivo + '.' + profilePic.extname
       console.log(dat, 'mostrando datos para guardar del registro')
-      // const archivo = await Archivo.create(dat)
+      await User.create(dat)
     }
     return data
   }

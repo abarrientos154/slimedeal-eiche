@@ -87,7 +87,7 @@ export default {
         formData.append('files', this.file)
         formData.append('dat', JSON.stringify(this.form))
         console.log(formData, 'formdata')
-        await this.$api.post('uploads', formData, {
+        await this.$api.post('register_upload', formData, {
           headers: {
             'Content-Type': undefined
           }
@@ -100,9 +100,12 @@ export default {
             })
             this.$q.loading.hide()
           } else if (res) {
-            this.$router.go(-1)
+            // this.$router.go(-1)
+            this.$q.loading.hide()
+          } else {
             this.$q.loading.hide()
           }
+          this.$q.loading.hide()
         })
       }
     }
