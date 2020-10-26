@@ -17,20 +17,14 @@ const roleData = [
   {
     id: 1,
     name: 'Super Admin',
-    description: 'Rol de Súper Administrador de HEVENT',
+    description: 'Rol de Súper Administrador de SLIMEDEAL',
     permissions: [1]
   },
   {
     id: 2,
     name: 'Cliente',
-    description: 'Rol de Cliente de HEVENT',
+    description: 'Rol de Cliente de SLIMEDEAL',
     permissions: [1]
-  },
-  {
-    id: 3,
-    name: 'Proveedor',
-    description: 'Rol de Proveedor de HEVENT',
-    permissions: [2]
   }
 ]
 

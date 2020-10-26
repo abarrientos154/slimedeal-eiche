@@ -19,24 +19,17 @@ const Factory = use('Factory')
 const userData = [
   {
     _id: '5e90d6e6f75366526a680091',
-    email: 'admin@hevent.com',
-    password: 'hevent2020',
+    email: 'admin@slimedeal.com',
+    password: 'slimedeal2020',
     full_name: 'Administrador del Sistema',
     roles: [1]
   },
   {
     _id: '5e90d6e6f75366526a680092',
-    email: 'cliente@hevent.com',
-    password: 'hevent2020',
+    email: 'cliente@slimedeal.com',
+    password: 'slimedeal2020',
     full_name: 'Usuario Cliente de Ejemplo',
     roles: [2]
-  },
-  {
-    _id: '5e90d6e6f75366526a680093',
-    email: 'proveedor@hevent.com',
-    password: 'hevent2020',
-    full_name: 'Usuario Proveedor de Ejemplo',
-    roles: [3]
   }
 ]
 
