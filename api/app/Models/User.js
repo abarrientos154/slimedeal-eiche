@@ -12,17 +12,17 @@ class User extends Model {
   }
   static fieldValidationRules() {
     const rulesUser = {
-      name: "string",
-      lastName: 'string',
-      address: 'string',
-      phone: 'string',
+      name: "required|string",
+      lastName: 'required|string',
+      address: 'required|string',
+      phone: 'required|string',
       email: 'required|email',
-      portfolioAddress:'string',
-      titularName: 'string',
-      bankAccount: 'string',
-      bankName: 'string',
-      accountType:'string',
-      additionalData:'string'
+      portfolioAddress:'required|string',
+      titularName: 'required|string',
+      bankAccount: 'required|string',
+      bankName: 'required|string',
+      accountType:'required|string',
+      additionalData:'required|string'
     }
     return rulesUser
   }
