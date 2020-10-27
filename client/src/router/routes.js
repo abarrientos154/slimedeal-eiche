@@ -17,6 +17,10 @@ const routes = [
     path: '/register',
     component: () => import('pages/Registro.vue')
   },
+  {
+    path: '/ver_contrato/:id',
+    component: () => import('pages/VerContrato.vue')
+  },
 
   // Always leave this as last one,
   // but you can also remove it

@@ -268,7 +268,9 @@
     </div>
     </q-drawer>
     <q-page-container>
-      <UltimasActividades />
+      <UltimasActividades title="Contratos Pendientes" :data="pendientes" />
+      <UltimasActividades title="Contratos Vigentes" :data="vigentes" />
+      <UltimasActividades title="Historial" :data="pendientes" />
       <div class="row justify-center">
         <div class="q-pa-md">
          <!--  <q-btn
@@ -300,7 +302,36 @@ export default {
   components: { UltimasActividades, NuevoContrato },
   data () {
     return {
+      title: 'Contratos enviados',
       newContrat: false,
+      pendientes: [
+        {
+          title: 'Pendiente 1',
+          description: 'description'
+        },
+        {
+          title: 'Pendiente 2',
+          description: 'description'
+        },
+        {
+          title: 'Pendiente 3',
+          description: 'description'
+        }
+      ],
+      vigentes: [
+        {
+          title: 'Vigente 1',
+          description: 'description'
+        },
+        {
+          title: 'Vigente 2',
+          description: 'description'
+        },
+        {
+          title: 'Vigente 3',
+          description: 'description'
+        }
+      ],
       contratos: [
         {
           name: 'uno',
