@@ -48,6 +48,6 @@ addPrefixToGroup(
 addPrefixToGroup(
   Route.group(() => {
     // Insertar rutas con protección de autenticación aquí
-
+    Route.post("contrato", "ContratoController.store");
   }).middleware("auth")
 );
