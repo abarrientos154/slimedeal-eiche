@@ -1,33 +1,50 @@
 <template>
   <div class="q-pa-sm q-mt-md">
-    <q-scroll-area style="height:500px; width: 100%; max-height:250px">
-      <q-list bordered>
-        <div class="text-h6 q-pa-sm q-ml-sm">Ultimas Actividades</div>
-        <q-item
-          v-for="(act, index) in data"
-          :key="index"
-        >
-          <q-item-section avatar>
-            <q-img :src="act.icon" />
-          </q-item-section>
-          <q-item-section>
-            <q-item-label>{{act.actividad}}</q-item-label>
-            <q-item-label
-              caption
-              lines="2"
-            >{{act.detalle}}</q-item-label>
-          </q-item-section>
-          <q-item-section side>
-            <q-item-label caption> {{act.fecha}} </q-item-label>
-          </q-item-section>
-        </q-item>
+        <div class="text-h6 q-pa-sm q-ml-sm">{{title}}</div>
 
-        <q-separator
-          spaced
-          inset="item"
-        />
-      </q-list>
-    </q-scroll-area>
+        <div class="q-pa-sm justify-start">
+        <q-scroll-area
+          horizontal
+          style="height: 130px"
+          class="rounded-borders "
+        >
+          <div class="row items-center no-wrap">
+            <div
+              v-for="(card,index) in data"
+              :key="index"
+            >
+              <div class="q-pa-sm items-center">
+                <q-card
+                  class="bg-white my-card"
+                  style="width: 340px; height: 100px"
+                >
+                  <q-item class="absolute-center" style="width: 100%">
+                    <q-item-section avatar>
+                      <q-avatar>
+                        <img src="https://cdn.quasar.dev/img/avatar2.jpg">
+                      </q-avatar>
+                    </q-item-section>
+
+                    <q-item-section>
+                      <q-item-label>{{card.title}}</q-item-label>
+                      <q-item-label caption>{{card.description}}</q-item-label>
+                    </q-item-section>
+
+                    <q-item-section>
+                      <div class="q-pb-sm">
+                        <q-btn color="primary" no-caps label="Ver Contrato" style="width: 130px" @click="ver()" />
+                      </div>
+                      <div>
+                        <q-btn color="primary" no-caps label="Descargar" style="width: 130px" />
+                      </div>
+                    </q-item-section>
+                  </q-item>
+                </q-card>
+              </div>
+            </div>
+          </div>
+        </q-scroll-area>
+      </div>
   </div>
 </template>
 
@@ -35,26 +52,15 @@
 export default {
   data () {
     return {
-      data: [
-        {
-          actividad: 'Actividad 1',
-          detalle: 'Detalle',
-          icon: '../statics/boy-avatar.png',
-          fecha: '21/09/2020'
-        },
-        {
-          actividad: 'Actividad 1',
-          detalle: 'Detalle',
-          icon: '../statics/boy-avatar.png',
-          fecha: '21/09/2020'
-        },
-        {
-          actividad: 'Actividad 1',
-          detalle: 'Detalle',
-          icon: '../statics/boy-avatar.png',
-          fecha: '21/09/2020'
-        }
-      ]
+    }
+  },
+  props: {
+    title: { required: true, default: 'Contratos' },
+    data: { required: true, default: {} }
+  },
+  methods: {
+    ver () {
+      this.$router.push('/ver_contrato/' + 'id')
     }
   }
 }
