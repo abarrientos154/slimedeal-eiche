@@ -268,9 +268,9 @@
     </div>
     </q-drawer>
     <q-page-container>
-      <UltimasActividades title="Contratos Pendientes" :data="pendientes" />
-      <UltimasActividades title="Contratos Vigentes" :data="vigentes" />
-      <UltimasActividades title="Historial" :data="pendientes" />
+      <ListContratos title="Contratos Pendientes" :data="pendientes" />
+      <ListContratos title="Contratos Vigentes" :data="vigentes" />
+      <ListContratos title="Historial" :data="pendientes" />
       <div class="row justify-center">
         <div class="q-pa-md">
          <!--  <q-btn
@@ -295,11 +295,11 @@
 </template>
 
 <script>
-import UltimasActividades from '../components/UltimasActividades'
+import ListContratos from '../components/ListContratos'
 import NuevoContrato from '../components/NuevoContrato'
 export default {
   name: 'MainLayout',
-  components: { UltimasActividades, NuevoContrato },
+  components: { ListContratos, NuevoContrato },
   data () {
     return {
       title: 'Contratos enviados',
