@@ -31,13 +31,13 @@
           </div>
            <div class="col-xs-11 col-sm-6 col-md-6 col-lg-6 q-pb-md">
             <q-file bottom-slots v-model="file" rounded outlined label="Subir Archivo" :error="$v.file.$error" error-message="Este campo es requerido" @blur="$v.file.$touch()">
-                <template v-slot:prepend>
-                  <q-icon name="cloud_upload" color="primary" @click.stop />
-                </template>
-                <template v-slot:append>
-                  <q-icon name="close" color="negative" @click.stop="model = null" class="cursor-pointer" />
-                </template>
-              </q-file>
+              <template v-slot:prepend>
+                <q-icon name="cloud_upload" color="primary" @click.stop />
+              </template>
+              <template v-slot:append>
+                <q-icon name="close" color="negative" @click.stop="model = null" class="cursor-pointer" />
+              </template>
+            </q-file>
           </div>
           <div class="col-xs-11 col-sm-6 col-md-6 col-lg-6 q-pb-md">
             <q-input class="q-mr-xs" v-model="form.portfolioAddress" rounded outlined label="Ingrese Direccion de Wallet de Bitcoin" :error="$v.form.portfolioAddress.$error" error-message="Este campo es requerido" @blur="$v.form.portfolioAddress.$touch()"/>
@@ -61,6 +61,18 @@
           <div class="col-xs-11 col-sm-6 col-md-6 col-lg-6 q-pb-md">
             <q-input class="q-mr-xs" v-model="form.additionalData" rounded outlined label="Ingrese Datos Adicionales" :error="$v.form.additionalData.$error" error-message="Este campo es requerido" @blur="$v.form.additionalData.$touch()"/>
           </div>
+          <div class="col-xs-11 col-sm-6 col-md-6 col-lg-6 q-pb-md">
+            <q-file bottom-slots v-model="perfilFile" rounded outlined label="Subir Foto de Perfil" :error="$v.perfilFile.$error" error-message="Este campo es requerido" @blur="$v.perfilFile.$touch()" @input="test">
+              <template v-slot:prepend>
+                <q-avatar>
+                  <img  :src="imgPerfil ? imgPerfil : 'noimg.png'">
+                </q-avatar>
+              </template>
+              <template v-slot:append>
+                <q-icon name="close" color="negative" @click.stop="perfilFile = null" class="cursor-pointer" />
+              </template>
+            </q-file>
+          </div>
         </div>
       </q-card-section>
       <q-card-actions align="center">
@@ -78,9 +90,11 @@ export default {
     return {
       form: {},
       file: null,
+      perfilFile: null,
       baseu: '',
       password: '',
-      repeatPassword: ''
+      repeatPassword: '',
+      imgPerfil: ''
     }
   },
   validations: {
@@ -101,12 +115,17 @@ export default {
     repeatPassword: {
       sameAsPassword: sameAs('password')
     },
-    file: { required }
+    file: { required },
+    perfilFile: { required }
   },
   mounted () {
     this.baseu = env.apiUrl
   },
   methods: {
+    test () {
+      console.log(this.perfilFile, 'file')
+      if (this.perfilFile) { this.imgPerfil = URL.createObjectURL(this.perfilFile) }
+    },
     async guardar () {
       this.$v.$touch()
       if (!this.$v.form.$error || !this.$v.password.$error || !this.$v.repeatPassword.$error || !this.$v.file.$error) {
@@ -116,7 +135,11 @@ export default {
         if (this.file) {
           this.form.password = this.password
           var formData = new FormData()
-          formData.append('files', this.file)
+          var files = []
+          files[0] = this.file
+          files[1] = this.perfilFile
+          formData.append('files', files[0])
+          formData.append('filesProfile', files[1])
           formData.append('dat', JSON.stringify(this.form))
           console.log(formData, 'formdata')
           await this.$api.post('register_upload', formData, {

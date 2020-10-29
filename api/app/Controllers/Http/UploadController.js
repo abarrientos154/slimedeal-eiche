@@ -15,11 +15,12 @@ var randomize = require('randomatic');
  * Resourceful controller for interacting with uploads
  */
 class UploadController {
-  async registerUpload({ request }) {
+  async registerUpload({ request, response }) {
     let codeFile = randomize('Aa0', 30)
     const profilePic = request.file('files', {
       size: '20mb'
     })
+
     var dat = request.only(['dat'])
     dat = JSON.parse(dat.dat)
     if (Helpers.appRoot('storage/uploads/register')) {
@@ -40,17 +41,41 @@ class UploadController {
       let roles = [2]
       dat.roles = roles
       console.log(dat, 'mostrando datos para guardar del registro')
-      await User.create(dat)
+      const userCreate = await User.create(dat)
+      const profilePicImg = request.file('filesProfile', {
+        size: '20mb'
+      })
+      if (Helpers.appRoot('storage/uploads/register')) {
+        await profilePicImg.move(Helpers.appRoot('storage/uploads/register'), {
+          name: userCreate._id.toString(),
+          overwrite: true
+        })
+      } else {
+        mkdirp.sync(`${__dirname}/storage/Excel`)
+      }
+      response.send(userCreate)
     }
-    return data
   }
-  async getFile({
-    params,
-    response
-  }) {
+  async getFile({ params, response }) {
     const fileName = params.filename
     return fileName
     response.download(Helpers.appRoot('storage/uploads') + `/${fileName}`)
+  }
+
+  async saveImageProfile({ params, response }) {
+    const profilePic = request.file('files', {
+      size: '20mb'
+    })
+    if (Helpers.appRoot('storage/uploads/register')) {
+      await profilePic.move(Helpers.appRoot('storage/uploads/register'), {
+        name: codeFile,
+        overwrite: true
+      })
+    } else {
+      mkdirp.sync(`${__dirname}/storage/Excel`)
+    }
+    const data = { name: profilePic.fileName }
+    response.send(data)
   }
 
   /**
