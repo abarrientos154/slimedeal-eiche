@@ -47,7 +47,7 @@ class ContratoController {
    * @param {Response} ctx.response
    */
   async store ({ request, response, auth }) {
-    user = (await auth.getUser()).toJSON()
+    let user = (await auth.getUser()).toJSON()
     let codeFile = randomize('Aa0', 30)
     const profilePic = request.file('files', {
       size: '100mb'
