@@ -47,7 +47,7 @@ class ContratoController {
    * @param {Response} ctx.response
    */
   async store ({ request, response, auth }) {
-    let user = (await auth.getUser()).toJSON()
+    const user = (await auth.getUser()).toJSON()
     let codeFile = randomize('Aa0', 30)
     const profilePic = request.file('files', {
       size: '100mb'
@@ -73,7 +73,7 @@ class ContratoController {
         let nombreArchivo = 'storage/uploads/contracts/' + data.name
         dat.archiveName = data.name + '.' + profilePic.extname
         dat.filePath = nombreArchivo + '.' + profilePic.extname
-        dat.userA_id = use._id
+        dat.userA_id = user._id
         dat.status = 0 // pendiente pero sin confirmar por ningun usuario
         await Contrato.create(dat)
       }
