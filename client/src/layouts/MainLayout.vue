@@ -131,6 +131,7 @@
     </q-header> -->
     <q-drawer
       show-if-above
+      :width="220"
       v-model="leftDrawerOpen"
       side="left"
       elevated
@@ -192,12 +193,13 @@
        <div class="q-pa-md">
                   <q-btn
                     rounded
+                    no-caps
+                    label="Nuevo contrato"
                     icon-right="add"
                     color="primary"
                     class="q-mr-md"
                     @click="newContrat=true"
-                  >Nuevo contrato
-                  </q-btn>
+                  />
                 </div>
     </div>
     </q-drawer>
