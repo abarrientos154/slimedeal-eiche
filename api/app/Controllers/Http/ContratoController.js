@@ -25,6 +25,10 @@ class ContratoController {
    */
   async index ({ request, response, view }) {
   }
+  async getContractsByPending ({ request, response, view }) {
+    let contratoPendientes = (await Contrato.where({ status: 0 }).fecth()).toJSON()
+    response.send(contratoPendientes)
+  }
 
   /**
    * Render a form to be used for creating a new contrato.

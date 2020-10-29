@@ -26,6 +26,11 @@ class UserController {
     response.send(users);
   }
 
+  async getUserInfo({ request, response, aunth }) {
+    let userInfo = (await auth.getUser()).toJSON()
+    response.send(userInfo);
+  }
+
   async show({ request, response, auth }) {
     user_id = ((await auth.getUser()).toJSON())._id
     let modelo = {
