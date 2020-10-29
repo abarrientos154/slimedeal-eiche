@@ -2,6 +2,7 @@
   <div>
             <q-card class="shadow-13 absolute-center" style="width:80%; height:85%">
               <q-card-section style="width:100%; height:100%">
+                <div class="absolute-center" style="width:100%">
                 <div class="row justify-center">
                   <q-img
                     style="width:100px"
@@ -58,6 +59,7 @@
                 </div>
                 <div class="row justify-center">
                   <q-btn label="registrate aqui" dense flat @click="$router.push('/register')" />
+                </div>
                 </div>
                 <div class="row absolute-bottom justify-center q-py-sm">
                   <div class="q-px-sm text-subtitle2 text-grey">Términos y condiciones de uso</div>
