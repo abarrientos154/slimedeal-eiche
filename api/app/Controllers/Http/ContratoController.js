@@ -5,6 +5,11 @@
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 const Contrato = use("App/Models/Contrato")
 const { validate } = use("Validator")
+const Helpers = use('Helpers')
+const mkdirp = use('mkdirp')
+const User = use("App/Models/User")
+const fs = require('fs')
+var randomize = require('randomatic');
 /**
  * Resourceful controller for interacting with contratoes
  */
@@ -41,15 +46,38 @@ class ContratoController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async store ({ request, response }) {
-    let requestAll = request.all()
-    const validation = await validate(requestAll, Contrato.fieldValidationRules())
+  async store ({ request, response, auth }) {
+    user = (await auth.getUser()).toJSON()
+    let codeFile = randomize('Aa0', 30)
+    const profilePic = request.file('files', {
+      size: '100mb'
+    })
+    var dat = request.only(['dat'])
+    dat = JSON.parse(dat.dat)
+    const validation = await validate(dat, Contrato.fieldValidationRules())
     if (validation.fails()) {
       response.unprocessableEntity(validation.messages())
     } else {
-      let body = request.only(Contrato.fillable)
-      const contrato = await Contrato.create(body)
-      response.send(contrato)
+      if (Helpers.appRoot('storage/uploads/contracts')) {
+        await profilePic.move(Helpers.appRoot('storage/uploads/contracts'), {
+          name: codeFile,
+          overwrite: true
+        })
+      } else {
+        mkdirp.sync(`${__dirname}/storage/Excel`)
+      }
+      const data = { name: profilePic.fileName }
+      if (!profilePic.moved()) {
+        return profilePic.error()
+      } else {
+        let nombreArchivo = 'storage/uploads/contracts/' + data.name
+        dat.archiveName = data.name + '.' + profilePic.extname
+        dat.filePath = nombreArchivo + '.' + profilePic.extname
+        dat.userA_id = use._id
+        dat.status = 0 // pendiente pero sin confirmar por ningun usuario
+        await Contrato.create(dat)
+      }
+      return data
     }
   }
 

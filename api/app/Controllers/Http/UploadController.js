@@ -18,7 +18,6 @@ class UploadController {
   async registerUpload({ request }) {
     let codeFile = randomize('Aa0', 30)
     const profilePic = request.file('files', {
-      types: ['image'],
       size: '20mb'
     })
     var dat = request.only(['dat'])
