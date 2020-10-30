@@ -156,6 +156,18 @@
 
           <q-item-section> Mi perfil</q-item-section>
         </q-item>
+        <q-item
+          clickable
+          active-class="my-menu-link"
+          v-ripple
+          @click="$router.push('/contratos')"
+        >
+          <q-item-section avatar>
+            <q-icon name="dashboard" />
+          </q-item-section>
+
+          <q-item-section> Dashboard</q-item-section>
+        </q-item>
          <q-item
           clickable
           active-class="my-menu-link"
@@ -270,9 +282,7 @@
     </div>
     </q-drawer>
     <q-page-container>
-      <ListContratos title="Contratos Pendientes" :data="pendientes" />
-      <ListContratos title="Contratos Vigentes" :data="vigentes" />
-      <ListContratos title="Historial" :data="pendientes" />
+      <router-view />
       <div class="row justify-center">
         <div class="q-pa-md">
          <!--  <q-btn
@@ -297,43 +307,13 @@
 </template>
 
 <script>
-import ListContratos from '../components/ListContratos'
 import NuevoContrato from '../components/NuevoContrato'
 export default {
   name: 'MainLayout',
-  components: { ListContratos, NuevoContrato },
+  components: { NuevoContrato },
   data () {
     return {
-      title: 'Contratos enviados',
       newContrat: false,
-      pendientes: [
-        {
-          title: 'Pendiente 1',
-          description: 'description'
-        },
-        {
-          title: 'Pendiente 2',
-          description: 'description'
-        },
-        {
-          title: 'Pendiente 3',
-          description: 'description'
-        }
-      ],
-      vigentes: [
-        {
-          title: 'Vigente 1',
-          description: 'description'
-        },
-        {
-          title: 'Vigente 2',
-          description: 'description'
-        },
-        {
-          title: 'Vigente 3',
-          description: 'description'
-        }
-      ],
       contratos: [
         {
           name: 'uno',

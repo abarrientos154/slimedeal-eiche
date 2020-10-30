@@ -4,7 +4,14 @@ const routes = [
     path: '/menu',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-
+      {
+        path: '/contratos',
+        component: () => import('pages/ListContratos.vue')
+      },
+      {
+        path: '/ver_contrato/:id',
+        component: () => import('pages/VerContrato.vue')
+      }
     ]
   },
   {
@@ -16,10 +23,6 @@ const routes = [
   {
     path: '/register',
     component: () => import('pages/Registro.vue')
-  },
-  {
-    path: '/ver_contrato/:id',
-    component: () => import('pages/VerContrato.vue')
   },
 
   // Always leave this as last one,

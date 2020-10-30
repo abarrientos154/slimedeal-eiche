@@ -41,7 +41,7 @@
                 <template v-slot:append>
                   <q-icon name="close" color="negative" @click.stop="model = null" class="cursor-pointer" />
                 </template>
-              </q-file>
+        </q-file>
       </q-step>
 
       <q-step

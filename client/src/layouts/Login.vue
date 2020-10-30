@@ -93,7 +93,7 @@ export default {
       this.$api.post('login', this.form).then(res => {
         if (res) {
           this.login(res)
-          this.$router.push('menu')
+          this.$router.push('contratos')
         } else {
           console.log('error de ususario')
           this.loading = false
