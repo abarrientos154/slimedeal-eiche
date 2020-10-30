@@ -174,7 +174,20 @@ export default {
       ]
     }
   },
+  mounted () {
+    /* this.getPendientes() */
+  },
   methods: {
+    getPendientes () {
+      this.$api.get('contratos_pendientes').then(res => {
+        if (res) {
+          var pen = res
+          console.log('pendientes ', pen)
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+    },
     ver () {
       this.$router.push('/ver_contrato/' + 'id')
     }

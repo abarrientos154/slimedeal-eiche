@@ -283,24 +283,24 @@
     </q-drawer>
     <q-page-container>
       <router-view />
-      <div class="row justify-center">
+      <!-- <div class="row justify-center">
         <div class="q-pa-md">
-         <!--  <q-btn
+         <q-btn
             round
             color="primary"
             icon="shopping_cart"
             size="20px"
-          /> -->
+          />
         </div>
         <div class="q-pa-md">
-          <!-- <q-btn
+          <q-btn
             round
             color="primary"
             icon="shopping_cart"
             size="20px"
-          /> -->
+          />
         </div>
-      </div>
+      </div> -->
       <!-- <Footer /> -->
     </q-page-container>
   </q-layout>

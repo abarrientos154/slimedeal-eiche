@@ -1,7 +1,7 @@
 <template>
-  <div class="row justify-between fullheight">
+  <div class="row justify-between">
     <q-card
-      class="bg-white shadow-13"
+      class="bg-white shadow-13 row q-pb-none"
       style="width: 200px; height: 100%"
     >
     <q-card-section style="width:100%; height:100%">
@@ -12,7 +12,7 @@
             ></q-img>
         </div>
         <div class="text-subtitle1 text-center">Nombre</div>
-        <div class="text-subtitle1 text-grey text-center">Correo Electronico</div>
+        <div class="text-subtitle2 text-grey text-center">Correo Electronico</div>
         <div class="text-subtitle2 text-grey text-center">Telefono</div>
         <div class="row justify-center q-pa-xs">
           <q-file bottom-slots v-model="file" outlined label="Archivo" >
@@ -67,7 +67,7 @@
             ></q-img>
         </div>
         <div class="text-subtitle1 text-center">Nombre</div>
-        <div class="text-subtitle1 text-grey text-center">Correo Electronico</div>
+        <div class="text-subtitle2 text-grey text-center">Correo Electronico</div>
         <div class="text-subtitle2 text-grey text-center">Telefono</div>
         <div class="row justify-center q-pa-xs">
             <q-file bottom-slots v-model="file" outlined label="Archivo" >
@@ -116,7 +116,20 @@ export default {
       rightDrawerOpen: true
     }
   },
+  mounted () {
+    /* this.getUser() */
+  },
   methods: {
+    getUser () {
+      this.$api.get('user_info').then(res => {
+        if (res) {
+          var uss = res
+          console.log('Usuario ', uss)
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+    },
     ver () {
       console.log(this.politicas)
     }
