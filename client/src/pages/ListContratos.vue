@@ -32,7 +32,7 @@
 
                     <q-item-section>
                       <div class="q-pb-sm">
-                        <q-btn color="primary" no-caps label="Ver Contrato" style="width: 130px" @click="ver()" />
+                        <q-btn color="primary" no-caps label="Ver Contrato" style="width: 130px" @click="ver(card._id)" />
                       </div>
                       <div>
                         <q-btn color="primary" no-caps label="Descargar" style="width: 130px" />
@@ -144,20 +144,7 @@
 export default {
   data () {
     return {
-      pendientes: [
-        {
-          title: 'Pendiente 1',
-          description: 'description'
-        },
-        {
-          title: 'Pendiente 2',
-          description: 'description'
-        },
-        {
-          title: 'Pendiente 3',
-          description: 'description'
-        }
-      ],
+      pendientes: [],
       vigentes: [
         {
           title: 'Vigente 1',
@@ -175,21 +162,21 @@ export default {
     }
   },
   mounted () {
-    /* this.getPendientes() */
+    this.getPendientes()
   },
   methods: {
     getPendientes () {
       this.$api.get('contratos_pendientes').then(res => {
         if (res) {
-          var pen = res
-          console.log('pendientes ', pen)
+          this.pendientes = res
+          console.log('pendientes ', this.pendientes)
         }
       }).catch(error => {
         console.log(error)
       })
     },
-    ver () {
-      this.$router.push('/ver_contrato/' + 'id')
+    ver (id) {
+      this.$router.push('/ver_contrato/' + id)
     }
   }
 }

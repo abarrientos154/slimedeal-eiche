@@ -1,5 +1,5 @@
 <template>
-  <div class="row justify-between">
+  <div class="row justify-between fullheight">
     <q-card
       class="bg-white shadow-13 row q-pb-none"
       style="width: 200px; height: 100%"
@@ -11,9 +11,9 @@
                 src="app-logo-128x128.png"
             ></q-img>
         </div>
-        <div class="text-subtitle1 text-center">Nombre</div>
-        <div class="text-subtitle2 text-grey text-center">Correo Electronico</div>
-        <div class="text-subtitle2 text-grey text-center">Telefono</div>
+        <div class="text-subtitle1 text-center">{{user.name}}</div>
+        <div class="text-subtitle2 text-grey text-center">{{user.email}}</div>
+        <div class="text-subtitle2 text-grey text-center">{{user.phone}}</div>
         <div class="row justify-center q-pa-xs">
           <q-file bottom-slots v-model="file" outlined label="Archivo" >
                 <template v-slot:prepend>
@@ -113,18 +113,19 @@ export default {
       file: null,
       fill: '',
       leftDrawerOpen: true,
-      rightDrawerOpen: true
+      rightDrawerOpen: true,
+      user: {}
     }
   },
   mounted () {
-    /* this.getUser() */
+    this.getUser()
   },
   methods: {
     getUser () {
       this.$api.get('user_info').then(res => {
         if (res) {
-          var uss = res
-          console.log('Usuario ', uss)
+          this.user = res
+          console.log('Usuario ', this.user)
         }
       }).catch(error => {
         console.log(error)

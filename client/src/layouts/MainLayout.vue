@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
+  <q-layout view="lHh Lpr lFf" style="height: 100%">
     <!-- <q-header elevated>
       <div class="column">
         <div>
@@ -281,7 +281,7 @@
           </q-pull>
     </div>
     </q-drawer>
-    <q-page-container>
+    <q-page-container class="fullheight">
       <router-view />
       <!-- <div class="row justify-center">
         <div class="q-pa-md">

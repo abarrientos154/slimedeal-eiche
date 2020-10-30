@@ -26,7 +26,7 @@ class UserController {
     response.send(users);
   }
 
-  async getUserInfo({ request, response, aunth }) {
+  async getUserInfo({ request, response, auth }) {
     let userInfo = (await auth.getUser()).toJSON()
     response.send(userInfo);
   }
