@@ -11,11 +11,11 @@
                 src="app-logo-128x128.png"
             ></q-img>
         </div>
-        <div class="text-subtitle1 text-center">{{user.name}}</div>
-        <div class="text-subtitle2 text-grey text-center">{{user.email}}</div>
-        <div class="text-subtitle2 text-grey text-center">{{user.phone}}</div>
+        <div class="text-subtitle1 text-center">{{userA.name}}</div>
+        <div class="text-subtitle2 text-grey text-center">{{userA.email}}</div>
+        <div class="text-subtitle2 text-grey text-center">{{userA.phone}}</div>
         <div class="row justify-center q-pa-xs">
-          <q-file bottom-slots v-model="file" outlined label="Archivo" >
+          <q-file bottom-slots v-model="fileUserA" outlined label="Archivo" >
                 <template v-slot:prepend>
                   <q-icon name="cloud_upload" color="primary" @click.stop />
                 </template>
@@ -37,7 +37,7 @@
         </div>
         <q-item v-ripple>
         <q-item-section avatar top>
-          <q-checkbox v-model="politicas" color="primary" />
+          <q-checkbox v-model="politicasUserA" color="primary" />
         </q-item-section>
         <q-item-section>
           <q-item-label class="text-caption">Estoy de acuerdo con las políticas establecidas por SlimeDeal.</q-item-label>
@@ -48,7 +48,6 @@
                 no-caps
                 color="primary"
                 class="q-mr-md"
-                @click="ver()"
                 >Enviar
             </q-btn>
         </div>
@@ -66,11 +65,11 @@
                 src="app-logo-128x128.png"
             ></q-img>
         </div>
-        <div class="text-subtitle1 text-center">Nombre</div>
+        <div class="text-subtitle1 text-center">Usuario B</div>
         <div class="text-subtitle2 text-grey text-center">Correo Electronico</div>
         <div class="text-subtitle2 text-grey text-center">Telefono</div>
         <div class="row justify-center q-pa-xs">
-            <q-file bottom-slots v-model="file" outlined label="Archivo" >
+            <q-file bottom-slots v-model="fileUserB" outlined label="Archivo" >
                 <template v-slot:prepend>
                   <q-icon name="cloud_upload" color="primary" @click.stop />
                 </template>
@@ -87,12 +86,12 @@
                 no-caps
                 color="primary"
                 class="q-mr-md"
-                >Cargar
+                >Bajar
             </q-btn>
         </div>
         <q-item v-ripple>
         <q-item-section avatar top>
-          <q-checkbox v-model="politicas" color="primary" />
+          <q-checkbox disable v-model="politicasUserB" color="primary" />
         </q-item-section>
         <q-item-section>
           <q-item-label class="text-caption">Estoy de acuerdo con las políticas establecidas por SlimeDeal.</q-item-label>
@@ -109,30 +108,29 @@ export default {
   components: {},
   data () {
     return {
-      politicas: false,
-      file: null,
-      fill: '',
+      politicasUserA: false,
+      politicasUserB: true,
+      fileUserA: null,
+      fileUserB: null,
       leftDrawerOpen: true,
       rightDrawerOpen: true,
-      user: {}
+      userA: {},
+      userB: {}
     }
   },
   mounted () {
-    this.getUser()
+    this.getUserA()
   },
   methods: {
-    getUser () {
+    getUserA () {
       this.$api.get('user_info').then(res => {
         if (res) {
-          this.user = res
-          console.log('Usuario ', this.user)
+          this.userA = res
+          console.log('Usuario ', this.userA)
         }
       }).catch(error => {
         console.log(error)
       })
-    },
-    ver () {
-      console.log(this.politicas)
     }
   }
 }
