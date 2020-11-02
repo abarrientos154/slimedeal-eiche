@@ -11,6 +11,18 @@ const routes = [
       {
         path: '/ver_contrato/:id',
         component: () => import('pages/VerContrato.vue')
+      },
+      {
+        path: '/contratos_vigentes',
+        component: () => import('pages/ContratosVigentes.vue')
+      },
+      {
+        path: '/contratos_pendientes',
+        component: () => import('pages/ContratosPendientes.vue')
+      },
+      {
+        path: '/historial_contratos',
+        component: () => import('pages/HistorialContratos.vue')
       }
     ]
   },

@@ -168,10 +168,23 @@
 
           <q-item-section> Dashboard</q-item-section>
         </q-item>
+        <q-item
+          clickable
+          active-class="my-menu-link"
+          v-ripple
+          @click="$router.push('/contratos_pendientes')"
+        >
+          <q-item-section avatar>
+            <q-icon name="description" />
+          </q-item-section>
+
+          <q-item-section> Contratos  pendientes </q-item-section>
+        </q-item>
          <q-item
           clickable
           active-class="my-menu-link"
           v-ripple
+          @click="$router.push('/contratos_vigentes')"
         >
           <q-item-section avatar>
             <q-icon name="description" />
@@ -183,6 +196,7 @@
           clickable
           active-class="my-menu-link"
           v-ripple
+          @click="$router.push('/historial_contratos')"
         >
           <q-item-section avatar>
             <q-icon name="hourglass_empty" />

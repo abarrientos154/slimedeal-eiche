@@ -1,6 +1,6 @@
 <template>
   <div class="q-pa-sm q-mt-md">
-        <div class="text-h6 q-pa-sm q-ml-sm">Contratos Pendientes</div>
+      <div class="text-h6 q-pa-sm q-ml-sm">{{title}}</div>
 
         <div class="q-pa-sm justify-start">
         <q-scroll-area
@@ -10,10 +10,10 @@
         >
           <div class="row items-center no-wrap">
             <div
-              v-for="(card,index) in pendientes"
+              v-for="(card,index) in data"
               :key="index"
             >
-              <div class="q-pa-sm items-center">
+              <div v-if="index < 2" class="q-pa-sm items-center">
                 <q-card
                   class="bg-white my-card"
                   style="width: 340px; height: 100px"
@@ -46,69 +46,25 @@
         </q-scroll-area>
       </div>
 
-      <div class="text-h6 q-pa-sm q-ml-sm">Contratos Vigentes</div>
+      <q-separator class="q-my-md"/>
 
-        <div class="q-pa-sm justify-start">
-        <q-scroll-area
-          horizontal
-          style="height: 130px"
-          class="rounded-borders "
-        >
-          <div class="row items-center no-wrap">
-            <div
-              v-for="(card,index) in vigentes"
-              :key="index"
-            >
-              <div class="q-pa-sm items-center">
-                <q-card
-                  class="bg-white my-card"
-                  style="width: 340px; height: 100px"
-                >
-                  <q-item class="absolute-center" style="width: 100%">
-                    <q-item-section avatar>
-                      <q-avatar>
-                        <img src="https://cdn.quasar.dev/img/avatar2.jpg">
-                      </q-avatar>
-                    </q-item-section>
-
-                    <q-item-section>
-                      <q-item-label>{{card.title}}</q-item-label>
-                      <q-item-label caption>{{card.description}}</q-item-label>
-                    </q-item-section>
-
-                    <q-item-section>
-                      <div class="q-pb-sm">
-                        <q-btn color="primary" no-caps label="Ver Contrato" style="width: 130px" @click="ver(card._id)" />
-                      </div>
-                      <div>
-                        <q-btn color="primary" no-caps label="Descargar" style="width: 130px" />
-                      </div>
-                    </q-item-section>
-                  </q-item>
-                </q-card>
-              </div>
-            </div>
-          </div>
-        </q-scroll-area>
-      </div>
-
+      <q-card
+        class="bg-white q-pa-xs shadow-13 my-card"
+        style="width: 100%"
+      >
       <div class="text-h6 q-pa-sm q-ml-sm">Historial</div>
 
         <div class="q-pa-sm justify-start">
-        <q-scroll-area
-          horizontal
-          style="height: 130px"
-          class="rounded-borders "
-        >
-          <div class="row items-center no-wrap">
+          <div class="items-center no-wrap">
             <div
-              v-for="(card,index) in pendientes"
+              v-for="(card,index) in data"
               :key="index"
             >
-              <div class="q-pa-sm items-center">
+              <div class="row q-pa-sm items-center">
+                <div class="text-subtitle2 q-px-md">{{index + 1}}</div>
                 <q-card
                   class="bg-white my-card"
-                  style="width: 340px; height: 100px"
+                  style="width: 90%; height: 100px"
                 >
                   <q-item class="absolute-center" style="width: 100%">
                     <q-item-section avatar>
@@ -126,7 +82,10 @@
                       <div class="q-pb-sm">
                         <q-btn color="primary" no-caps label="Ver Contrato" style="width: 130px" @click="ver(card._id)" />
                       </div>
-                      <div>
+                    </q-item-section>
+
+                    <q-item-section>
+                      <div class="q-pb-sm">
                         <q-btn color="primary" no-caps label="Descargar" style="width: 130px" />
                       </div>
                     </q-item-section>
@@ -135,49 +94,24 @@
               </div>
             </div>
           </div>
-        </q-scroll-area>
       </div>
+      </q-card>
   </div>
 </template>
 
 <script>
 export default {
+  props: {
+    data: { required: true },
+    title: { required: true }
+  },
   data () {
     return {
-      pendientes: [],
-      vigentes: [
-        {
-          _id: 'vigente1',
-          title: 'Vigente 1',
-          description: 'description'
-        },
-        {
-          _id: 'vigente2',
-          title: 'Vigente 2',
-          description: 'description'
-        },
-        {
-          _id: 'vigente3',
-          title: 'Vigente 3',
-          description: 'description'
-        }
-      ]
     }
   },
   mounted () {
-    this.getPendientes()
   },
   methods: {
-    getPendientes () {
-      this.$api.get('contratos_pendientes').then(res => {
-        if (res) {
-          this.pendientes = res
-          console.log('pendientes ', this.pendientes)
-        }
-      }).catch(error => {
-        console.log(error)
-      })
-    },
     ver (id) {
       this.$router.push('/ver_contrato/' + id)
     }
