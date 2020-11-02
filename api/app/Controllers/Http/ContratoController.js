@@ -95,7 +95,9 @@ class ContratoController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async show ({ params, request, response, view }) {
+  async show ({ params, request, response }) {
+    let contrato = await Contrato.find(params.id)
+    response.send(contrato)
   }
 
   /**

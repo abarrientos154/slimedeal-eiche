@@ -50,6 +50,7 @@ addPrefixToGroup(
   Route.group(() => {
     // Insertar rutas con protección de autenticación aquí
     Route.post("contrato", "ContratoController.store");
+    Route.get("contrato/:id", "ContratoController.show");
     Route.get("contratos_pendientes", "ContratoController.getContractsByPending");
     Route.get("user_info", "UserController.getUserInfo");
 
