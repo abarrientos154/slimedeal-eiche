@@ -25,8 +25,12 @@ class ContratoController {
    */
   async index ({ request, response, view }) {
   }
-  async getContractsByPending ({ request, response, view }) {
-    let contratoPendientes = (await Contrato.where({ status: 0 }).fetch()).toJSON()
+  async getContractsByPending ({ request, response, auth }) {
+    const user = (await auth.getUser()).toJSON()
+    let contratoPendientes = (await Contrato.where({
+      status: 0,
+      $or: [{ userA_id: user._id }, { email: user.email }]
+    }).fetch()).toJSON()
     response.send(contratoPendientes)
   }
 
