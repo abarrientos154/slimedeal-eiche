@@ -42,6 +42,7 @@ addPrefixToGroup(
     Route.get("plans", "PlanController.index")
     Route.post("register_upload", "UploadController.registerUpload")
     Route.post("register_upload_img_profile", "UploadController.saveImageProfile")
+    Route.get("get_file_by_directory", "UploadController.getFileByDirectory")
 
   })
 );
@@ -51,7 +52,7 @@ addPrefixToGroup(
     // Insertar rutas con protección de autenticación aquí
     Route.post("contrato", "ContratoController.store");
     Route.get("contrato/:id", "ContratoController.show");
-    Route.get("update_check/:id", "ContratoController.updateCheck");
+    Route.put("update_check/:id", "ContratoController.updateCheck");
     Route.get("contratos_pendientes", "ContratoController.getContractsByPending");
     Route.get("user_info", "UserController.getUserInfo");
 

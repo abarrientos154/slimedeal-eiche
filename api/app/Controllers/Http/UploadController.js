@@ -213,8 +213,11 @@ class UploadController {
   }
 
   async getFileByDirectory ({ params, response, request }) {
-    const dir = params.dir.split('-').join('/')
-    response.download(Helpers.appRoot('storage/uploads') + `/${dir}`)
+    console.log('asd')
+    //let algo = 'storage/uploads/contracts/ITMDeztaqQd17sdFAtYcMYlSPdo9Lu.png'
+    //response.download(Helpers.tmpPath(algo))
+    let body = request.only(['dir'])
+    response.download(Helpers.appRoot(body.dir))
   }
 
 
