@@ -127,6 +127,97 @@ class ContratoController {
   async update ({ params, request, response }) {
   }
 
+  async updateCheck ({ params, request, response, auth }) {
+    let contratoF = await Contrato.find(params.id)
+    const user = (await auth.getUser()).toJSON()
+    const profilePic = request.file('files', {
+      size: '100mb'
+    })
+    var dat = request.only(['dat'])
+    dat = JSON.parse(dat.dat)
+    let name = user._id === contratoF.userA_id ? 'userA' : 'userB'
+    if (Helpers.appRoot('storage/uploads/contracts')) {
+      await profilePic.move(Helpers.appRoot('storage/uploads/contracts'), {
+        name: name + '-' + user._id + '-' + contrato._id.toString(),
+        overwrite: true
+      })
+    } else {
+      mkdirp.sync(`${__dirname}/storage/Excel`)
+    }
+    let data = { name: profilePic.fileName }
+    if (user._id === contratoF.userA_id) {
+      var contrato = await Contrato.query().where({_id: params.id }).update({
+        userAFile: `storage/uploads/contracts/${data.name}.${profilePic.extname}`,
+        userACheck: dat.check
+      })
+    } else {
+      var contrato = await Contrato.query().where({_id: params.id }).update({
+        userBFile: `storage/uploads/contracts/${data.name}.${profilePic.extname}`,
+        userBCheck: dat.check
+      })
+    }
+    response.send(contrato)
+
+    /* if (contrato.metodoPago === 1) { //Si paga el usuario A
+      const profilePic = request.file('files', {
+        size: '100mb'
+      })
+      var dat = request.only(['dat'])
+      dat = JSON.parse(dat.dat)
+      if (Helpers.appRoot('storage/uploads/contracts')) {
+        await profilePic.move(Helpers.appRoot('storage/uploads/contracts'), {
+          name: 'userA-' + user._id + '-' + contrato._id.toString(),
+          overwrite: true
+        })
+      } else {
+        mkdirp.sync(`${__dirname}/storage/Excel`)
+      }
+      let data = { name: profilePic.fileName }
+      const contrato = await Contrato.query().where({_id: params.id }).update({
+        userAFile: `storage/uploads/contracts/${data.name}.${profilePic.extname}`,
+        userACheck: dat.check
+      })
+    } else if (contrato.metodoPago === 2) { // si paga el usuario B
+      const profilePic = request.file('files', {
+        size: '100mb'
+      })
+      var dat = request.only(['dat'])
+      dat = JSON.parse(dat.dat)
+      if (Helpers.appRoot('storage/uploads/contracts')) {
+        await profilePic.move(Helpers.appRoot('storage/uploads/contracts'), {
+          name: 'userB-' + user._id + '-' + contrato._id.toString(),
+          overwrite: true
+        })
+      } else {
+        mkdirp.sync(`${__dirname}/storage/Excel`)
+      }
+      let data = { name: profilePic.fileName }
+      const contrato = await Contrato.query().where({_id: params.id }).update({
+        userAFile: `storage/uploads/contracts/${data.name}.${profilePic.extname}`,
+        userBCheck: dat.check
+      })
+    } else if (contrato.metodoPago === 3) {
+      const profilePic = request.file('files', {
+        size: '100mb'
+      })
+      var dat = request.only(['dat'])
+      dat = JSON.parse(dat.dat)
+      if (Helpers.appRoot('storage/uploads/contracts')) {
+        await profilePic.move(Helpers.appRoot('storage/uploads/contracts'), {
+          name: 'userB-' + user._id + '-' + contrato._id.toString(),
+          overwrite: true
+        })
+      } else {
+        mkdirp.sync(`${__dirname}/storage/Excel`)
+      }
+      let data = { name: profilePic.fileName }
+      const contrato = await Contrato.query().where({_id: params.id }).update({
+        userAFile: `storage/uploads/contracts/${data.name}.${profilePic.extname}`,
+        userACheck: dat.check
+      })
+    } */
+  }
+
   /**
    * Delete a contrato with id.
    * DELETE contratoes/:id
