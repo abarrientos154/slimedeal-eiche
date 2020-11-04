@@ -2,7 +2,7 @@
   <div class="row justify-between fullheight">
     <q-card
       class="bg-white shadow-13 row q-pb-none"
-      style="width: 200px; height: 100%"
+      style="width: 200px; height: 100%; min-height: 540px; max-height: 700px;"
     >
     <q-card-section style="width:100%; height:100%">
         <div class="row justify-center">
@@ -15,7 +15,11 @@
         <div class="text-subtitle2 text-grey text-center">{{userA.email}}</div>
         <div class="text-subtitle2 text-grey text-center">{{userA.phone}}</div>
         <div class="row justify-center q-pa-xs">
-          <q-file bottom-slots v-model="fileUserA" outlined label="Archivo" >
+          <q-file v-if="metodoPagoA" bottom-slots v-model="fileUserA" outlined label="Archivo" >
+            <q-img
+              :src="imgA"
+              basic
+            ></q-img>
                 <template v-slot:prepend>
                   <q-icon name="cloud_upload" color="primary" @click.stop />
                 </template>
@@ -27,7 +31,7 @@
                 </template>
         </q-file>
         </div>
-        <div class="q-py-md row justify-center">
+        <div v-if="metodoPagoA" class="q-py-md row justify-center">
             <q-btn
                 no-caps
                 color="primary"
@@ -48,6 +52,7 @@
                 no-caps
                 color="primary"
                 class="q-mr-md"
+                @click="enviar()"
                 >Enviar
             </q-btn>
         </div>
@@ -69,7 +74,7 @@
         <div class="text-subtitle2 text-grey text-center">Correo Electronico</div>
         <div class="text-subtitle2 text-grey text-center">Telefono</div>
         <div class="row justify-center q-pa-xs">
-            <q-file bottom-slots v-model="fileUserB" outlined label="Archivo" >
+            <q-file disable v-if="metodoPagoB" bottom-slots v-model="fileUserB" outlined label="Archivo" >
                 <template v-slot:prepend>
                   <q-icon name="cloud_upload" color="primary" @click.stop />
                 </template>
@@ -81,7 +86,7 @@
                 </template>
         </q-file>
         </div>
-        <div class="q-pa-md row justify-center">
+        <div v-if="metodoPagoB" class="q-pa-md row justify-center">
             <q-btn
                 no-caps
                 color="primary"
@@ -103,11 +108,17 @@
 </template>
 
 <script>
+import env from '../env'
 export default {
   name: 'MainLayout',
   components: {},
   data () {
     return {
+      baseu: '',
+      imgA: 'noneimg.png',
+      id: '',
+      metodoPagoA: true,
+      metodoPagoB: true,
       politicasUserA: false,
       politicasUserB: true,
       fileUserA: null,
@@ -115,18 +126,52 @@ export default {
       leftDrawerOpen: true,
       rightDrawerOpen: true,
       userA: {},
-      userB: {}
+      userB: {},
+      contrato: {}
     }
   },
   mounted () {
+    this.baseu = env.apiUrl
     this.getUserA()
+    if (this.$route.params.id) {
+      this.id = this.$route.params.id
+      console.log(this.id)
+      this.getContrato(this.id)
+    }
   },
   methods: {
+    enviar () {
+      console.log(this.politicasUserA)
+    },
     getUserA () {
       this.$api.get('user_info').then(res => {
         if (res) {
           this.userA = res
           console.log('Usuario ', this.userA)
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    getContrato (id) {
+      this.$api.get('contrato/' + id).then(res => {
+        if (res) {
+          this.contrato = res
+          console.log('Contrato ', this.contrato)
+          if (this.contrato.metodoPago === 1) {
+            this.metodoPagoA = true
+            this.metodoPagoB = false
+            console.log('baseu', this.baseu)
+            /* this.img = this.baseu + 'file/' + this.form.img_name */
+          } else if (this.contrato.metodoPago === 2) {
+            this.metodoPagoA = false
+            this.metodoPagoB = true
+          } else {
+            this.metodoPagoA = true
+            this.metodoPagoB = true
+            this.imgA = this.baseu + '/file/' + this.contrato.filePath
+            console.log('baseu', this.imgA)
+          }
         }
       }).catch(error => {
         console.log(error)
