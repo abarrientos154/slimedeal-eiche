@@ -15,7 +15,7 @@
         <div class="text-subtitle2 text-grey text-center">{{userA.email}}</div>
         <div class="text-subtitle2 text-grey text-center">{{userA.phone}}</div>
         <div class="row justify-center q-pa-xs">
-          <q-file v-if="metodoPagoA" bottom-slots v-model="fileUserA" outlined label="Archivo" >
+          <q-file v-if="metodoPagoA" bottom-slots v-model="file" outlined label="Archivo" >
             <q-img
               :src="imgA"
               basic
@@ -54,6 +54,15 @@
                 class="q-mr-md"
                 @click="enviar()"
                 >Enviar
+            </q-btn>
+        </div>
+        <div class="q-pa-md row justify-center">
+            <q-btn
+                no-caps
+                color="primary"
+                class="q-mr-md"
+                @click="rechazar()"
+                >Rechazar
             </q-btn>
         </div>
       </q-card-section>
@@ -121,13 +130,14 @@ export default {
       metodoPagoB: true,
       politicasUserA: false,
       politicasUserB: true,
-      fileUserA: null,
+      file: null,
       fileUserB: null,
       leftDrawerOpen: true,
       rightDrawerOpen: true,
       userA: {},
       userB: {},
-      contrato: {}
+      contrato: {},
+      form: {}
     }
   },
   mounted () {
@@ -140,8 +150,81 @@ export default {
     }
   },
   methods: {
+    rechazar () {
+      this.form.check = this.politicasUserA
+      console.log('form', this.form)
+      console.log('poli', this.politicasUserA)
+      this.$q.dialog({
+        title: 'Confirma',
+        message: '¿Seguro deseas rechazar el contrato?',
+        cancel: true,
+        persistent: true
+      }).onOk(() => {
+        this.$api.put('update_check_alone/' + this.id, this.form).then(res => {
+          if (res) {
+            this.$router.push('/contratos')
+          }
+        })
+      }).onCancel(() => {
+        // console.log('>>>> Cancel')
+      })
+    },
     enviar () {
-      console.log(this.politicasUserA)
+      this.form.check = this.politicasUserA
+      console.log('form', this.form)
+      console.log('poli', this.politicasUserA)
+      console.log('file', this.file)
+      if (this.file && this.politicasUserA && this.metodoPagoA) {
+        var formData = new FormData()
+        formData.append('files', this.file)
+        formData.append('dat', JSON.stringify(this.form))
+        this.$api.put('update_check/' + this.id, formData, {
+          headers: {
+            'Content-Type': undefined
+          }
+        }).then(res => {
+          if (res) {
+            this.$router.push('/contratos')
+          }
+        })
+      }
+      if (this.metodoPagoA && this.file === null && !this.politicasUserA) {
+        this.$q.dialog({
+          message: 'Debes ingresar los datos requeridos para continuar',
+          persistent: true
+        }).onOk(() => {
+        })
+      }
+      if (!this.metodoPagoA && this.politicasUserA) {
+        this.$api.put('update_check_alone/' + this.id, this.form).then(res => {
+          if (res) {
+            this.$router.push('/contratos')
+          }
+        })
+      }
+      if (!this.metodoPagoA && !this.politicasUserA) {
+        this.$q.dialog({
+          message: 'Debes aceptar las politicas de SlimeDeal para continuar',
+          persistent: true
+        }).onOk(() => {
+        })
+      }
+      if (this.metodoPagoA && this.file === null && this.politicasUserA) {
+        this.$q.dialog({
+          message: 'Debes subir el comprobante de pago para continuar',
+          persistent: true
+        }).onOk(() => {
+
+        })
+      }
+      if (this.metodoPagoA && this.file && !this.politicasUserA) {
+        this.$q.dialog({
+          message: 'Debes aceptar las politicas de SlimeDeal para continuar',
+          persistent: true
+        }).onOk(() => {
+
+        })
+      }
     },
     getUserA () {
       this.$api.get('user_info').then(res => {
@@ -171,6 +254,12 @@ export default {
             this.metodoPagoB = true
             this.imgA = this.baseu + '/file/' + this.contrato.filePath
             console.log('baseu', this.imgA)
+          }
+          if (this.contrato.userACheck) {
+            this.politicasUserA = this.contrato.userACheck
+          }
+          if (this.contrato.userAFile) {
+            this.file = this.contrato.userAFile
           }
         }
       }).catch(error => {
