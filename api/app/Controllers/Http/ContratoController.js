@@ -13,6 +13,23 @@ var randomize = require('randomatic');
 /**
  * Resourceful controller for interacting with contratoes
  */
+
+async function changeContractStatus (id, check) {
+  let contratoF = await Contrato.find(id)
+  if (!check) {
+    let contrato = await Contrato.query().where({_id: id}).update({status: 3})
+    return contrato
+  } else {
+    if (contratoF.hasOwnProperty('userACheck') && contratoF.hasOwnProperty('userBCheck')) {
+      let contrato = await Contrato.query().where({_id: id}).update({
+        status: contratoF.userACheck && contratoF.userBCheck ? 1 : 3
+      })
+      return contrato
+    }
+  }
+  return contratoF
+}
+
 class ContratoController {
   /**
    * Show a list of all contratoes.
@@ -67,7 +84,7 @@ class ContratoController {
     } else {
       if (Helpers.appRoot('storage/uploads/contracts')) {
         await profilePic.move(Helpers.appRoot('storage/uploads/contracts'), {
-          name: codeFile,
+          name: codeFile + '.' + profilePic.extname,
           overwrite: true
         })
       } else {
@@ -78,8 +95,8 @@ class ContratoController {
         return profilePic.error()
       } else {
         let nombreArchivo = 'storage/uploads/contracts/' + data.name
-        dat.archiveName = data.name + '.' + profilePic.extname
-        dat.filePath = nombreArchivo + '.' + profilePic.extname
+        dat.archiveName = data.name
+        dat.filePath = nombreArchivo
         dat.userA_id = user._id
         dat.status = 0 // pendiente pero sin confirmar por ningun usuario
         await Contrato.create(dat)
@@ -128,6 +145,7 @@ class ContratoController {
 
   async updateCheck ({ params, request, response, auth }) {
     let contratoF = await Contrato.find(params.id)
+    let codeFile = randomize('Aa0', 30)
     const user = (await auth.getUser()).toJSON()
     const profilePic = request.file('files', {
       size: '100mb'
@@ -137,7 +155,7 @@ class ContratoController {
     let name = user._id === contratoF.userA_id ? 'userA' : 'userB'
     if (Helpers.appRoot('storage/uploads/contracts')) {
       await profilePic.move(Helpers.appRoot('storage/uploads/contracts'), {
-        name: name + '-' + user._id + '-' + contratoF._id.toString(),
+        name: codeFile + '-' + contratoF._id.toString() + '.' + profilePic.extname,
         overwrite: true
       })
     } else {
@@ -146,15 +164,17 @@ class ContratoController {
     let data = { name: profilePic.fileName }
     if (user._id === contratoF.userA_id) {
       var contrato = await Contrato.query().where({_id: params.id }).update({
-        userAFile: `storage/uploads/contracts/${data.name}.${profilePic.extname}`,
+        userAFile: `storage/uploads/contracts/${data.name}`,
         userACheck: dat.check
       })
+
     } else {
       var contrato = await Contrato.query().where({_id: params.id }).update({
-        userBFile: `storage/uploads/contracts/${data.name}.${profilePic.extname}`,
+        userBFile: `storage/uploads/contracts/${data.name}`,
         userBCheck: dat.check
       })
     }
+    await changeContractStatus(params.id, dat.check)
     response.send(contrato)
   }
 
@@ -171,6 +191,7 @@ class ContratoController {
         userBCheck: dat.check
       })
     }
+    await changeContractStatus(params.id, dat.check)
     response.send(contrato)
   }
 
