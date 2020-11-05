@@ -137,7 +137,7 @@ class ContratoController {
     let name = user._id === contratoF.userA_id ? 'userA' : 'userB'
     if (Helpers.appRoot('storage/uploads/contracts')) {
       await profilePic.move(Helpers.appRoot('storage/uploads/contracts'), {
-        name: name + '-' + user._id + '-' + contrato._id.toString(),
+        name: name + '-' + user._id + '-' + contratoF._id,
         overwrite: true
       })
     } else {
