@@ -14,11 +14,13 @@ var randomize = require('randomatic');
  * Resourceful controller for interacting with contratoes
  */
 
-async function changeContractStatus (id, check) {
+async function changeContractStatus (id, check, userA) {
   let contratoF = await Contrato.find(id)
   if (!check) {
-    let contrato = await Contrato.query().where({_id: id}).update({status: 3})
-    return contrato
+    if (contratoF.hasOwnProperty('userACheck') && !userA || contratoF.hasOwnProperty('userBCheck') && userA) {
+      let contrato = await Contrato.query().where({_id: id}).update({status: 3})
+      return contrato
+    }
   } else {
     if (contratoF.hasOwnProperty('userACheck') && contratoF.hasOwnProperty('userBCheck')) {
       let contrato = await Contrato.query().where({_id: id}).update({
@@ -152,7 +154,7 @@ class ContratoController {
     })
     var dat = request.only(['dat'])
     dat = JSON.parse(dat.dat)
-    let name = user._id === contratoF.userA_id ? 'userA' : 'userB'
+
     if (Helpers.appRoot('storage/uploads/contracts')) {
       await profilePic.move(Helpers.appRoot('storage/uploads/contracts'), {
         name: codeFile + '-' + contratoF._id.toString() + '.' + profilePic.extname,
@@ -174,7 +176,8 @@ class ContratoController {
         userBCheck: dat.check
       })
     }
-    await changeContractStatus(params.id, dat.check)
+    let userA = user._id === contratoF.userA_id ? true : false
+    await changeContractStatus(params.id, dat.check, userA)
     response.send(contrato)
   }
 
@@ -191,7 +194,8 @@ class ContratoController {
         userBCheck: dat.check
       })
     }
-    await changeContractStatus(params.id, dat.check)
+    let userA = user._id === contratoF.userA_id ? true : false
+    await changeContractStatus(params.id, dat.check, userA)
     response.send(contrato)
   }
 
