@@ -5,7 +5,7 @@ const routes = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       {
-        path: '/contratos',
+        path: '/dashboard',
         component: () => import('pages/ListContratos.vue')
       },
       {
@@ -23,6 +23,10 @@ const routes = [
       {
         path: '/historial_contratos',
         component: () => import('pages/HistorialContratos.vue')
+      },
+      {
+        path: '/contratos',
+        component: () => import('pages/Contratos.vue')
       }
     ]
   },

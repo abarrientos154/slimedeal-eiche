@@ -10,38 +10,23 @@ export default {
   components: { Contratos },
   data () {
     return {
-      vigentes: [
-        {
-          _id: 'vigente1',
-          title: 'Vigente 1',
-          description: 'description'
-        },
-        {
-          _id: 'vigente2',
-          title: 'Vigente 2',
-          description: 'description'
-        },
-        {
-          _id: 'vigente3',
-          title: 'Vigente 3',
-          description: 'description'
-        },
-        {
-          _id: 'vigente4',
-          title: 'Vigente 4',
-          description: 'description'
-        },
-        {
-          _id: 'vigente5',
-          title: 'Vigente 5',
-          description: 'description'
-        }
-      ]
+      vigentes: []
     }
   },
   mounted () {
+    this.getVigentes()
   },
   methods: {
+    getVigentes () {
+      this.$api.get('contratos_pendientes').then(res => {
+        if (res) {
+          this.vigentes = res.filter(v => v.status === 2)
+          console.log('vigentes ', this.vigentes)
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+    }
   }
 }
 </script>

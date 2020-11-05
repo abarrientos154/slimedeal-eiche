@@ -4,6 +4,7 @@
 
         <div class="q-pa-sm justify-start">
         <q-scroll-area
+          v-if="pendientes.length"
           horizontal
           style="height: 130px"
           class="rounded-borders "
@@ -35,7 +36,7 @@
                         <q-btn color="primary" no-caps label="Ver Contrato" style="width: 130px" @click="ver(card._id)" />
                       </div>
                       <div>
-                        <q-btn color="primary" no-caps label="Descargar" style="width: 130px" />
+                        <q-btn color="primary" no-caps label="Descargar" style="width: 130px" @click="download(card.filePath, card.archiveName)" />
                       </div>
                     </q-item-section>
                   </q-item>
@@ -44,12 +45,14 @@
             </div>
           </div>
         </q-scroll-area>
+        <div v-else class="text-center q-py-md" > No tienes contratos pendientes</div>
       </div>
 
       <div class="text-h6 q-pa-sm q-ml-sm">Contratos Vigentes</div>
 
         <div class="q-pa-sm justify-start">
         <q-scroll-area
+          v-if="vigentes.length"
           horizontal
           style="height: 130px"
           class="rounded-borders "
@@ -81,7 +84,7 @@
                         <q-btn color="primary" no-caps label="Ver Contrato" style="width: 130px" @click="ver(card._id)" />
                       </div>
                       <div>
-                        <q-btn color="primary" no-caps label="Descargar" style="width: 130px" />
+                        <q-btn color="primary" no-caps label="Descargar" style="width: 130px" @click="download(card.filePath, card.archiveName)" />
                       </div>
                     </q-item-section>
                   </q-item>
@@ -90,19 +93,21 @@
             </div>
           </div>
         </q-scroll-area>
+        <div v-else class="text-center q-py-md" > No tienes contratos vigentes</div>
       </div>
 
       <div class="text-h6 q-pa-sm q-ml-sm">Historial</div>
 
         <div class="q-pa-sm justify-start">
         <q-scroll-area
+          v-if="contratos.length"
           horizontal
           style="height: 130px"
           class="rounded-borders "
         >
           <div class="row items-center no-wrap">
             <div
-              v-for="(card,index) in pendientes"
+              v-for="(card,index) in contratos"
               :key="index"
             >
               <div class="q-pa-sm items-center">
@@ -127,7 +132,7 @@
                         <q-btn color="primary" no-caps label="Ver Contrato" style="width: 130px" @click="ver(card._id)" />
                       </div>
                       <div>
-                        <q-btn color="primary" no-caps label="Descargar" style="width: 130px" />
+                        <q-btn color="primary" no-caps label="Descargar" style="width: 130px" @click="download(card.filePath, card.archiveName)" />
                       </div>
                     </q-item-section>
                   </q-item>
@@ -136,6 +141,7 @@
             </div>
           </div>
         </q-scroll-area>
+        <div v-else class="text-center q-py-md" > No tienes ningún contrato</div>
       </div>
   </div>
 </template>
@@ -145,23 +151,8 @@ export default {
   data () {
     return {
       pendientes: [],
-      vigentes: [
-        {
-          _id: 'vigente1',
-          title: 'Vigente 1',
-          description: 'description'
-        },
-        {
-          _id: 'vigente2',
-          title: 'Vigente 2',
-          description: 'description'
-        },
-        {
-          _id: 'vigente3',
-          title: 'Vigente 3',
-          description: 'description'
-        }
-      ]
+      vigentes: [],
+      contratos: []
     }
   },
   mounted () {
@@ -171,7 +162,9 @@ export default {
     getPendientes () {
       this.$api.get('contratos_pendientes').then(res => {
         if (res) {
-          this.pendientes = res
+          this.contratos = res
+          this.pendientes = this.contratos.filter(v => v.status === 0)
+          this.vigentes = this.contratos.filter(v => v.status === 2)
           console.log('pendientes ', this.pendientes)
         }
       }).catch(error => {
@@ -180,6 +173,26 @@ export default {
     },
     ver (id) {
       this.$router.push('/ver_contrato/' + id)
+    },
+    async download (filePath, archiveName) {
+      this.$api.post('get_file_by_directory', { dir: filePath }).then(res => {
+        console.log('aquiii', res)
+        const blob = new Blob([res])
+        // const ext = file.split('.')
+        const fileName = `${archiveName}`
+        console.log(fileName, 'filename')
+        const url = window.URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.href = url
+        link.setAttribute('download', fileName)
+        document.body.appendChild(link)
+        link.click()
+        /*   this.$api.delete('file_delete/' + fileName).then(res => {
+        }) */
+        // this.$q.loading.hide()
+      }).catch(function (error) {
+        console.log('error descargando', error)
+      })
     }
   }
 }
