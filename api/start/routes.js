@@ -53,6 +53,7 @@ addPrefixToGroup(
     Route.post("contrato", "ContratoController.store");
     Route.get("contrato/:id", "ContratoController.show");
     Route.put("update_check/:id", "ContratoController.updateCheck");
+    Route.put("update_check_alone/:id", "ContratoController.updateCheckAlone");
     Route.get("contratos_pendientes", "ContratoController.getContractsByPending");
     Route.get("user_info", "UserController.getUserInfo");
 

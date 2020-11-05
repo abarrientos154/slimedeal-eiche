@@ -217,6 +217,7 @@ class UploadController {
     //let algo = 'storage/uploads/contracts/ITMDeztaqQd17sdFAtYcMYlSPdo9Lu.png'
     //response.download(Helpers.tmpPath(algo))
     let body = request.only(['dir'])
+    console.log(body, 'body')
     response.download(Helpers.appRoot(body.dir))
   }
 
