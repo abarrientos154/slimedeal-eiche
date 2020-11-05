@@ -161,7 +161,7 @@ class ContratoController {
   async updateCheckAlone ({ params, request, response, auth }) {
     let contratoF = await Contrato.find(params.id)
     const user = (await auth.getUser()).toJSON()
-    var dat = request.only(['dat'])
+    var dat = request.only(['check'])
     if (user._id === contratoF.userA_id) {
       var contrato = await Contrato.query().where({_id: params.id }).update({
         userACheck: dat.check
