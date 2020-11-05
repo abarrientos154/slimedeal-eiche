@@ -42,7 +42,7 @@ addPrefixToGroup(
     Route.get("plans", "PlanController.index")
     Route.post("register_upload", "UploadController.registerUpload")
     Route.post("register_upload_img_profile", "UploadController.saveImageProfile")
-    Route.post("get_file_by_directory", "UploadController.getFileByDirectory")
+    Route.get("get_file_by_directory", "UploadController.getFileByDirectory")
 
   })
 );

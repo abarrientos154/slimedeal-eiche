@@ -116,7 +116,7 @@ export default {
       this.$router.push('/ver_contrato/' + id)
     },
     async download (filePath, archiveName) {
-      this.$api.post('get_file_by_directory', { dir: filePath }).then(res => {
+      this.$api.get('get_file_by_directory', { dir: filePath }).then(res => {
         console.log('aquiii', res)
         const blob = new Blob([res])
         // const ext = file.split('.')
