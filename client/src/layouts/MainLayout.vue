@@ -160,13 +160,25 @@
           clickable
           active-class="my-menu-link"
           v-ripple
-          @click="$router.push('/contratos')"
+          @click="$router.push('/dashboard')"
         >
           <q-item-section avatar>
             <q-icon name="dashboard" />
           </q-item-section>
 
           <q-item-section> Dashboard</q-item-section>
+        </q-item>
+        <q-item
+          clickable
+          active-class="my-menu-link"
+          v-ripple
+          @click="$router.push('/contratos')"
+        >
+          <q-item-section avatar>
+            <q-icon name="description" />
+          </q-item-section>
+
+          <q-item-section> Contratos </q-item-section>
         </q-item>
         <q-item
           clickable

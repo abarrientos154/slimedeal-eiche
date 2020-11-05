@@ -16,10 +16,11 @@
         <div class="text-subtitle2 text-grey text-center">{{userA.phone}}</div>
         <div class="row justify-center q-pa-xs">
           <q-file v-if="metodoPagoA" bottom-slots v-model="file" outlined label="Archivo" >
-            <q-img
-              :src="imgA"
-              basic
-            ></q-img>
+            <template v-slot:prepend>
+                <q-avatar>
+                  <img  :src="file ? file : 'noimg.png'">
+                </q-avatar>
+              </template>
                 <template v-slot:prepend>
                   <q-icon name="cloud_upload" color="primary" @click.stop />
                 </template>
@@ -79,9 +80,9 @@
                 src="app-logo-128x128.png"
             ></q-img>
         </div>
-        <div class="text-subtitle1 text-center">Usuario B</div>
-        <div class="text-subtitle2 text-grey text-center">Correo Electronico</div>
-        <div class="text-subtitle2 text-grey text-center">Telefono</div>
+        <div class="text-subtitle1 text-center">{{contrato.name}}</div>
+        <div class="text-subtitle2 text-grey text-center">{{contrato.email}}</div>
+        <!-- <div class="text-subtitle2 text-grey text-center">Telefono</div> -->
         <div class="row justify-center q-pa-xs">
             <q-file disable v-if="metodoPagoB" bottom-slots v-model="fileUserB" outlined label="Archivo" >
                 <template v-slot:prepend>
@@ -124,7 +125,6 @@ export default {
   data () {
     return {
       baseu: '',
-      imgA: 'noneimg.png',
       id: '',
       metodoPagoA: true,
       metodoPagoB: true,
@@ -135,7 +135,6 @@ export default {
       leftDrawerOpen: true,
       rightDrawerOpen: true,
       userA: {},
-      userB: {},
       contrato: {},
       form: {}
     }
@@ -162,7 +161,7 @@ export default {
       }).onOk(() => {
         this.$api.put('update_check_alone/' + this.id, this.form).then(res => {
           if (res) {
-            this.$router.push('/contratos')
+            this.$router.push('/dashboard')
           }
         })
       }).onCancel(() => {
@@ -184,7 +183,7 @@ export default {
           }
         }).then(res => {
           if (res) {
-            this.$router.push('/contratos')
+            this.$router.push('/dashboard')
           }
         })
       }
@@ -198,7 +197,7 @@ export default {
       if (!this.metodoPagoA && this.politicasUserA) {
         this.$api.put('update_check_alone/' + this.id, this.form).then(res => {
           if (res) {
-            this.$router.push('/contratos')
+            this.$router.push('/dashboard')
           }
         })
       }
@@ -252,15 +251,15 @@ export default {
           } else {
             this.metodoPagoA = true
             this.metodoPagoB = true
-            this.imgA = this.baseu + '/file/' + this.contrato.filePath
-            console.log('baseu', this.imgA)
+            /* this.file = this.baseu + '/file/' + this.contrato.filePath
+            console.log('baseu', this.imgA) */
           }
           if (this.contrato.userACheck) {
             this.politicasUserA = this.contrato.userACheck
           }
-          if (this.contrato.userAFile) {
+          /* if (this.contrato.userAFile) {
             this.file = this.contrato.userAFile
-          }
+          } */
         }
       }).catch(error => {
         console.log(error)

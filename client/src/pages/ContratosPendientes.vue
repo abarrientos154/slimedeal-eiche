@@ -20,7 +20,7 @@ export default {
     getPendientes () {
       this.$api.get('contratos_pendientes').then(res => {
         if (res) {
-          this.pendientes = res
+          this.pendientes = res.filter(v => v.status === 0)
           console.log('pendientes ', this.pendientes)
         }
       }).catch(error => {
