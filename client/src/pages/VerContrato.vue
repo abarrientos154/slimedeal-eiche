@@ -80,9 +80,9 @@
                 src="app-logo-128x128.png"
             ></q-img>
         </div>
-        <div class="text-subtitle1 text-center">Usuario B</div>
-        <div class="text-subtitle2 text-grey text-center">Correo Electronico</div>
-        <div class="text-subtitle2 text-grey text-center">Telefono</div>
+        <div class="text-subtitle1 text-center">{{contrato.name}}</div>
+        <div class="text-subtitle2 text-grey text-center">{{contrato.email}}</div>
+        <!-- <div class="text-subtitle2 text-grey text-center">Telefono</div> -->
         <div class="row justify-center q-pa-xs">
             <q-file disable v-if="metodoPagoB" bottom-slots v-model="fileUserB" outlined label="Archivo" >
                 <template v-slot:prepend>
@@ -135,7 +135,6 @@ export default {
       leftDrawerOpen: true,
       rightDrawerOpen: true,
       userA: {},
-      userB: {},
       contrato: {},
       form: {}
     }

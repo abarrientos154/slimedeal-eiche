@@ -151,6 +151,9 @@ export default {
         console.log(error)
       })
     },
+    ver (id) {
+      this.$router.push('/ver_contrato/' + id)
+    },
     filter () {
       this.data = this.contratos
       if (this.todos) {
