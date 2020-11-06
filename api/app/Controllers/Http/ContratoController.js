@@ -48,6 +48,10 @@ async function changeContractStatus (id, check, userA) {
 }
 
 class ContratoController {
+  async show ({ request, response, view }) {
+    let contrato = await Contrato.find(params.id)
+    response.send(contrato)
+  }
 
   async index ({ request, response, view }) {
     //let contrato = await Contrato.query().where({_id: '5fa41a1161ae823c0ba5a80d'}).update({status: 3})
@@ -91,7 +95,7 @@ class ContratoController {
         dat.filePath = nombreArchivo
         dat.userA_id = user._id
         dat.status = 0 // pendiente pero sin confirmar por ningun usuario
-        // Email.sendMail(user.email, 'Nuevo Contrato', `el usuario ${user.name} ${user.lastName} te ha agregado a formar parte de un contrato`)
+        // Email.sendMail(dat.email, 'Nuevo Contrato', `el usuario ${user.name} ${user.lastName} te ha agregado a formar parte de un contrato`)
         await Contrato.create(dat)
       }
       return data
