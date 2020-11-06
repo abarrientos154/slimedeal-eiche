@@ -1,6 +1,6 @@
 <template>
   <div class="q-pa-sm q-mt-md">
-        <div class="text-h6 q-pa-sm q-ml-sm">Contratos Pendientes</div>
+        <div class="text-h6 q-pa-sm q-ml-sm">Contratos en Revisión</div>
 
         <div class="q-pa-sm justify-start">
         <q-scroll-area
@@ -148,7 +148,7 @@
 
 <script>
 import { openURL } from 'quasar'
-import env from '../env'
+import { env } from '../env'
 export default {
   data () {
     return {
@@ -177,8 +177,8 @@ export default {
       this.$router.push('/ver_contrato/' + id)
     },
     async download (filePath, archiveName) {
-      console.log(archiveName)
-      openURL(env.apiUrl + '/file2/' + archiveName)
+        console.log(archiveName)
+         openURL(env.apiUrl + 'file2/' + archiveName)
     }
   }
 }
