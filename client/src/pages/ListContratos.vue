@@ -156,10 +156,10 @@ export default {
     }
   },
   mounted () {
-    this.getPendientes()
+    this.getContratos()
   },
   methods: {
-    getPendientes () {
+    getContratos () {
       this.$api.get('contratos_pendientes').then(res => {
         if (res) {
           this.contratos = res

@@ -4,6 +4,7 @@
 
         <div class="q-pa-sm justify-start">
         <q-scroll-area
+         v-if="data.length"
           horizontal
           style="height: 130px"
           class="rounded-borders "
@@ -44,11 +45,13 @@
             </div>
           </div>
         </q-scroll-area>
+        <div v-else class="text-center q-py-md" > No tienes contratos</div>
       </div>
 
       <q-separator class="q-my-md"/>
 
       <q-card
+      v-if="data.length"
         class="bg-white q-pa-xs shadow-13 my-card"
         style="width: 100%"
       >
