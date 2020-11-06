@@ -43,6 +43,8 @@ addPrefixToGroup(
     Route.post("register_upload", "UploadController.registerUpload")
     Route.post("register_upload_img_profile", "UploadController.saveImageProfile")
     Route.post("get_file_by_directory", "UploadController.getFileByDirectory")
+    Route.get("prueba_correo", "ContratoController.pruebaCorreo")
+    Route.get("get_contracts/:status", "ContratoController.getContractByStatus")
 
   })
 );
@@ -56,6 +58,8 @@ addPrefixToGroup(
     Route.put("update_check_alone/:id", "ContratoController.updateCheckAlone");
     Route.get("contratos_pendientes", "ContratoController.getContractsByPending");
     Route.get("user_info", "UserController.getUserInfo");
+    Route.put("update_status/:id", "ContratoController.updateStatus")
+    Route.get("get_contracts/:status", "ContratoController.getContractByStatus")
 
   }).middleware("auth")
 );

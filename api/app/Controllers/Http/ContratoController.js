@@ -7,42 +7,52 @@ const Contrato = use("App/Models/Contrato")
 const { validate } = use("Validator")
 const Helpers = use('Helpers')
 const mkdirp = use('mkdirp')
+const Email = use("App/Functions/Email")
 const User = use("App/Models/User")
 const fs = require('fs')
 var randomize = require('randomatic');
-/**
- * Resourceful controller for interacting with contratoes
- */
+
+////////////////ESTATUS DEL CONTRATO/////////////////
+/*
+0 = Creado
+1 = Revision una vez que ambas partes del contraton acepten
+2 = Cuando el Administrador acepte. Queda en Vigente
+3 = Rechazado por alguna de las partes.
+*/
 
 async function changeContractStatus (id, check, userA) {
-  let contratoF = await Contrato.find(id)
+  let contratoF = (await Contrato.find(id)).toJSON()
+  //console.log(contratoF, 'asds')
   if (!check) {
     if (contratoF.hasOwnProperty('userACheck') && !userA || contratoF.hasOwnProperty('userBCheck') && userA) {
+      console.log('1')
       let contrato = await Contrato.query().where({_id: id}).update({status: 3})
-      return contrato
+      /* contratoF.status = 3
+      await contratoF.save()
+      return contratoF */
     }
   } else {
+    console.log('2')
     if (contratoF.hasOwnProperty('userACheck') && contratoF.hasOwnProperty('userBCheck')) {
+      console.log('3')
       let contrato = await Contrato.query().where({_id: id}).update({
         status: contratoF.userACheck && contratoF.userBCheck ? 1 : 3
       })
-      return contrato
+
+      /* contratoF.status = contratoF.userACheck && contratoF.userBCheck ? 1 : 3
+      await contratoF.save() */
+      return contratoF
     }
   }
   return contratoF
 }
 
 class ContratoController {
-  /**
-   * Show a list of all contratoes.
-   * GET contratoes
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
+
   async index ({ request, response, view }) {
+    //let contrato = await Contrato.query().where({_id: '5fa41a1161ae823c0ba5a80d'}).update({status: 3})
+    changeContractStatus('5fa41a1161ae823c0ba5a80d', false, false)
+    response.send('ho')
   }
   async getContractsByPending ({ request, response, auth }) {
     const user = (await auth.getUser()).toJSON()
@@ -52,26 +62,6 @@ class ContratoController {
     response.send(contratoPendientes)
   }
 
-  /**
-   * Render a form to be used for creating a new contrato.
-   * GET contratoes/create
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async create ({ request, response, view }) {
-  }
-
-  /**
-   * Create/save a new contrato.
-   * POST contratoes
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
   async store ({ request, response, auth }) {
     const user = (await auth.getUser()).toJSON()
     let codeFile = randomize('Aa0', 30)
@@ -101,49 +91,19 @@ class ContratoController {
         dat.filePath = nombreArchivo
         dat.userA_id = user._id
         dat.status = 0 // pendiente pero sin confirmar por ningun usuario
+        Email.sendMail(body.email, 'Nuevo Contrato', `el usuario ${user.name} ${user.lastName} te ha agregado a formar parte de un contrato`)
         await Contrato.create(dat)
       }
       return data
     }
   }
 
-
-  /**
-   * Display a single contrato.
-   * GET contratoes/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async show ({ params, request, response }) {
-    let contrato = await Contrato.find(params.id)
-    response.send(contrato)
+  async pruebaCorreo ({ request, response, auth }) {
+    let algo = await Email.sendMail('haideemartinez96@gmail.com', 'Nuevo Contrato', `el usuario Test te ha agregado a formar parte de un contrato`)
+    console.log(algo, 'algo')
+    response.send(algo)
   }
 
-  /**
-   * Render a form to update an existing contrato.
-   * GET contratoes/:id/edit
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async edit ({ params, request, response, view }) {
-  }
-
-  /**
-   * Update contrato details.
-   * PUT or PATCH contratoes/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
-  async update ({ params, request, response }) {
-  }
 
   async updateCheck ({ params, request, response, auth }) {
     let contratoF = await Contrato.find(params.id)
@@ -199,16 +159,20 @@ class ContratoController {
     response.send(contrato)
   }
 
-  /**
-   * Delete a contrato with id.
-   * DELETE contratoes/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
-  async destroy ({ params, request, response }) {
+  async updateStatus ({ params, request, response, auth }) {
+    let contratoF = await Contrato.find(params.id)
+    let body = request.only(['status'])
+    contratoF.status = Number(body.status)
+    await contratoF.save()
+    response.send(contratoF)
   }
+
+  async getContractByStatus ({ request, response, auth, params }) {
+    let contratos = (await Contrato.query().where({status: Number(params.status)}).fetch()).toJSON()
+    response.send(contratos)
+  }
+
+
 }
 
 module.exports = ContratoController
