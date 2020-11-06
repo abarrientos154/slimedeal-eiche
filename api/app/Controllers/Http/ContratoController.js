@@ -48,7 +48,7 @@ async function changeContractStatus (id, check, userA) {
 }
 
 class ContratoController {
-  async show ({ request, response, view }) {
+  async show ({ request, response, params }) {
     let contrato = await Contrato.find(params.id)
     response.send(contrato)
   }
