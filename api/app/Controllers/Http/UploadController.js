@@ -59,7 +59,6 @@ class UploadController {
   async getFile({ params, response }) {
     const fileName = params.filename
     return fileName
-    response.download(Helpers.appRoot('storage/uploads') + `/${fileName}`)
   }
 
   async saveImageProfile({ params, response }) {
@@ -211,6 +210,16 @@ class UploadController {
     await shop.save()
     return shop.fileName
   }
+  async getFileByDirectory2({
+    params,
+    response,
+    request
+  }) {
+    const dir = params.dir.split('-').join('/')
+    console.log(dir)
+    response.download(Helpers.appRoot('storage/uploads/contracts') + `/${dir}`)
+  }
+
 
   async getFileByDirectory ({ params, response, request }) {
     //let algo = 'storage/uploads/contracts/ITMDeztaqQd17sdFAtYcMYlSPdo9Lu.png'

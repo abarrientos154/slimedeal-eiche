@@ -147,6 +147,8 @@
 </template>
 
 <script>
+import { openURL } from 'quasar'
+import env from '../env'
 export default {
   data () {
     return {
@@ -156,10 +158,10 @@ export default {
     }
   },
   mounted () {
-    this.getPendientes()
+    this.getContratos()
   },
   methods: {
-    getPendientes () {
+    getContratos () {
       this.$api.get('contratos_pendientes').then(res => {
         if (res) {
           this.contratos = res
@@ -175,24 +177,8 @@ export default {
       this.$router.push('/ver_contrato/' + id)
     },
     async download (filePath, archiveName) {
-      this.$api.post('get_file_by_directory', { dir: filePath }).then(res => {
-        console.log('aquiii', res)
-        const blob = new Blob([res])
-        // const ext = file.split('.')
-        const fileName = `${archiveName}`
-        console.log(fileName, 'filename')
-        const url = window.URL.createObjectURL(blob)
-        const link = document.createElement('a')
-        link.href = url
-        link.setAttribute('download', fileName)
-        document.body.appendChild(link)
-        link.click()
-        /*   this.$api.delete('file_delete/' + fileName).then(res => {
-        }) */
-        // this.$q.loading.hide()
-      }).catch(function (error) {
-        console.log('error descargando', error)
-      })
+      console.log(archiveName)
+      openURL(env.apiUrl + '/file2/' + archiveName)
     }
   }
 }

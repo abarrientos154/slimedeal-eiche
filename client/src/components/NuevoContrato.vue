@@ -95,7 +95,7 @@
       <template v-slot:navigation>
         <q-stepper-navigation>
           <q-btn v-if="step !== 3 && step !==4" @click="$refs.stepper.next()" color="primary" label="Siguiente" />
-          <q-btn v-if="step === 4" color="primary" label="Finalizar" @click="$router.push('dashboard')" v-close-popup />
+          <q-btn v-if="step === 4" color="primary" label="Finalizar" @click="$router.push('contratos')" v-close-popup />
           <q-btn v-if="step === 3" color="primary" @click="$refs.stepper.next(), onSubmit()" label="Enviar" :loading="loading" />
           <q-btn v-if="step > 1 && step < 4" flat color="primary" @click="$refs.stepper.previous()" label="Atras" class="q-ml-sm" />
         </q-stepper-navigation>

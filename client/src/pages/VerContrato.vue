@@ -129,24 +129,25 @@ export default {
       metodoPagoA: true,
       metodoPagoB: true,
       politicasUserA: false,
-      politicasUserB: true,
+      politicasUserB: false,
       file: null,
       fileUserB: null,
       leftDrawerOpen: true,
       rightDrawerOpen: true,
       userA: {},
+      userType: '',
       contrato: {},
       form: {}
     }
   },
   mounted () {
     this.baseu = env.apiUrl
-    this.getUserA()
     if (this.$route.params.id) {
       this.id = this.$route.params.id
       console.log(this.id)
       this.getContrato(this.id)
     }
+    this.getUserA()
   },
   methods: {
     rechazar () {
@@ -228,34 +229,67 @@ export default {
     getUserA () {
       this.$api.get('user_info').then(res => {
         if (res) {
+          var c = res
+          if (this.contrato.email === c.email) {
+            this.userType = 'b'
+          } else {
+            this.userType = 'a'
+          }
+          console.log(this.userType)
           this.userA = res
           console.log('Usuario ', this.userA)
         }
       }).catch(error => {
         console.log(error)
       })
+      this.getContrato(this.id)
     },
     getContrato (id) {
       this.$api.get('contrato/' + id).then(res => {
         if (res) {
           this.contrato = res
           console.log('Contrato ', this.contrato)
-          if (this.contrato.metodoPago === 1) {
-            this.metodoPagoA = true
-            this.metodoPagoB = false
-            console.log('baseu', this.baseu)
-            /* this.img = this.baseu + 'file/' + this.form.img_name */
-          } else if (this.contrato.metodoPago === 2) {
-            this.metodoPagoA = false
-            this.metodoPagoB = true
-          } else {
-            this.metodoPagoA = true
-            this.metodoPagoB = true
-            /* this.file = this.baseu + '/file/' + this.contrato.filePath
-            console.log('baseu', this.imgA) */
+          if (this.userType === 'b') {
+            if (this.contrato.metodoPago === 1) {
+              this.metodoPagoA = false
+              this.metodoPagoB = true
+            } else if (this.contrato.metodoPago === 2) {
+              this.metodoPagoA = true
+              this.metodoPagoB = false
+            } else {
+              this.metodoPagoA = true
+              this.metodoPagoB = true
+              /* this.file = this.baseu + '/file/' + this.contrato.filePath
+              console.log('baseu', this.imgA) */
+            }
+            if (this.contrato.userACheck) {
+              this.politicasUserB = this.contrato.userACheck
+            }
+            if (this.contrato.userBCheck) {
+              this.politicasUserA = this.contrato.userBCheck
+            }
           }
-          if (this.contrato.userACheck) {
-            this.politicasUserA = this.contrato.userACheck
+          if (this.userType === 'a') {
+            if (this.contrato.metodoPago === 1) {
+              this.metodoPagoA = true
+              this.metodoPagoB = false
+              console.log('baseu', this.baseu)
+              /* this.img = this.baseu + 'file/' + this.form.img_name */
+            } else if (this.contrato.metodoPago === 2) {
+              this.metodoPagoA = false
+              this.metodoPagoB = true
+            } else {
+              this.metodoPagoA = true
+              this.metodoPagoB = true
+              /* this.file = this.baseu + '/file/' + this.contrato.filePath
+              console.log('baseu', this.imgA) */
+            }
+            if (this.contrato.userACheck) {
+              this.politicasUserA = this.contrato.userACheck
+            }
+            if (this.contrato.userBCheck) {
+              this.politicasUserB = this.contrato.userBCheck
+            }
           }
           /* if (this.contrato.userAFile) {
             this.file = this.contrato.userAFile
