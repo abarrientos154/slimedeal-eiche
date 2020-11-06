@@ -91,7 +91,7 @@ class ContratoController {
         dat.filePath = nombreArchivo
         dat.userA_id = user._id
         dat.status = 0 // pendiente pero sin confirmar por ningun usuario
-        Email.sendMail(body.email, 'Nuevo Contrato', `el usuario ${user.name} ${user.lastName} te ha agregado a formar parte de un contrato`)
+        // Email.sendMail(user.email, 'Nuevo Contrato', `el usuario ${user.name} ${user.lastName} te ha agregado a formar parte de un contrato`)
         await Contrato.create(dat)
       }
       return data
