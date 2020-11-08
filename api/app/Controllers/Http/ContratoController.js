@@ -172,7 +172,7 @@ class ContratoController {
   }
 
   async getContractByStatus ({ request, response, auth, params }) {
-    let contratos = (await Contrato.query().where({status: Number(params.status)}).fetch()).toJSON()
+    let contratos = (await Contrato.query().where({status: Number(params.status)}).with('datos_userA').with('datos_userB').fetch()).toJSON()
     response.send(contratos)
   }
 

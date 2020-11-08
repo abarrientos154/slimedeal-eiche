@@ -17,6 +17,12 @@ class Contrato extends Model {
     }
     return rulesUser
   }
+  datos_userA () {
+    return this.hasOne('App/Models/User', 'userA_id', '_id')
+  }
+  datos_userB () {
+    return this.hasOne('App/Models/User', 'email', 'email')
+  }
 }
 
 module.exports = Contrato
