@@ -79,7 +79,8 @@ export default {
       form: {},
       isPwd: true,
       loading: false,
-      lorem: 'rfrefrtfretfr'
+      lorem: 'rfrefrtfretfr',
+      user: {}
     }
   },
   methods: {
@@ -92,8 +93,14 @@ export default {
       })
       this.$api.post('login', this.form).then(res => {
         if (res) {
+          this.user = res.info
+          console.log('user', this.user)
           this.login(res)
-          this.$router.push('dashboard')
+          if (this.user.roles[0] === 1) {
+            this.$router.push('dashboard_admin')
+          } else if (this.user.roles[0] === 2) {
+            this.$router.push('dashboard')
+          }
         } else {
           console.log('error de ususario')
           this.loading = false
