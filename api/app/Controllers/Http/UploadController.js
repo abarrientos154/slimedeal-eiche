@@ -215,11 +215,19 @@ class UploadController {
     response,
     request
   }) {
-    const dir = params.dir.split('-').join('/')
-    console.log(dir)
+    const dir = params.dir
+    console.log(dir, 'pasa',Helpers.appRoot('storage/uploads/contracts') + `/${dir}`)
     response.download(Helpers.appRoot('storage/uploads/contracts') + `/${dir}`)
   }
-
+  async getFileByDirectory3({
+    params,
+    response,
+    request
+  }) {
+    const dir = params.dir.split('-').join('/')
+    console.log(dir,'here')
+    response.download(Helpers.appRoot('storage/uploads/register') + `/${dir}`)
+  }
 
   async getFileByDirectory ({ params, response, request }) {
     //let algo = 'storage/uploads/contracts/ITMDeztaqQd17sdFAtYcMYlSPdo9Lu.png'

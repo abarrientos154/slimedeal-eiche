@@ -139,6 +139,7 @@ class UserController {
     token.verify = user.verify
     let data = {}
     data.SLIM_SESSION_INFO = token
+    data.info = user
     return data
   }
 

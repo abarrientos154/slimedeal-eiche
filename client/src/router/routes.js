@@ -9,8 +9,16 @@ const routes = [
         component: () => import('pages/ListContratos.vue')
       },
       {
+        path: '/dashboard_admin',
+        component: () => import('pages/dashboardAdmin.vue')
+      },
+      {
         path: '/ver_contrato/:id',
         component: () => import('pages/VerContrato.vue')
+      },
+      {
+        path: '/ver_contrato_admin/:id',
+        component: () => import('pages/VerContratoAdmin.vue')
       },
       {
         path: '/contratos_vigentes',

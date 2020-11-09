@@ -137,10 +137,15 @@
       elevated
     >
     <div class="self-center">
-  <q-img
-                    style="width:100px"
-                    src="app-logo-128x128.png"
-                  ></q-img>
+      <div class="row justify-center q-pa-sm">
+        <q-avatar size="100px" font-size="52px" >
+          <q-img
+            v-if="construir"
+            style="width:100px"
+            :src="img"
+          ></q-img>
+        </q-avatar>
+      </div>
       <q-list
         bordered
         separator
@@ -334,11 +339,13 @@
 
 <script>
 import NuevoContrato from '../components/NuevoContrato'
+import env from '../env'
 export default {
   name: 'MainLayout',
   components: { NuevoContrato },
   data () {
     return {
+      user: {},
       newContrat: false,
       contratos: [
         {
@@ -370,8 +377,20 @@ export default {
       rightDrawerOpen: true,
       date: '2020/10/20',
       nNotify: 3,
-      myNotification: {}
+      myNotification: {},
+      construir: false
     }
+  },
+  mounted () {
+    this.$api.get('user_info').then(v => {
+      if (v) {
+        this.user = v.roles[0]
+        console.log('user', this.user)
+        var name = v.archiveName.split('.')[0]
+        this.img = env.apiUrl + '/file3/' + name
+        this.construir = true
+      }
+    })
   }
 }
 </script>

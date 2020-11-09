@@ -1,16 +1,16 @@
 <template>
   <div class="q-pa-sm q-mt-md">
-        <div class="text-h6 q-pa-sm q-ml-sm">Contratos en Revisión</div>
+        <div class="text-h6 q-pa-sm q-ml-sm">Contratos en Revisión</div>̣̣
         <div class="q-pa-sm justify-start">
         <q-scroll-area
-          v-if="pendientes.length"
+          v-if="revision.length"
           horizontal
           style="height: 130px"
           class="rounded-borders "
         >
           <div class="row items-center no-wrap">
             <div
-              v-for="(card,index) in pendientes"
+              v-for="(card,index) in revision"
               :key="index"
             >
               <div class="q-pa-sm items-center">
@@ -44,7 +44,7 @@
             </div>
           </div>
         </q-scroll-area>
-        <div v-else class="text-center q-py-md" > No tienes contratos pendientes</div>
+        <div v-else class="text-center q-py-md" > No tienes contratos en revisión</div>
       </div>
 
       <div class="text-h6 q-pa-sm q-ml-sm">Contratos Vigentes</div>
@@ -147,37 +147,43 @@
 
 <script>
 import { openURL } from 'quasar'
-import { env } from '../env'
+import env from '../env'
 export default {
   data () {
     return {
-      pendientes: [],
+      revision: [],
       vigentes: [],
       contratos: []
     }
   },
   mounted () {
-    this.getPendientes()
+    this.getContratos()
   },
   methods: {
-    getPendientes () {
-      this.$api.get('contratos_pendientes').then(res => {
+    getContratos () {
+      this.$api.get('get_contracts/' + 1).then(res => {
         if (res) {
-          this.contratos = res
-          this.pendientes = this.contratos.filter(v => v.status === 0)
-          this.vigentes = this.contratos.filter(v => v.status === 2)
-          console.log('pendientes ', this.pendientes)
+          this.revision = res
+          console.log('revision ', this.revision)
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+      this.$api.get('get_contracts/' + 2).then(res => {
+        if (res) {
+          this.vigentes = res
+          console.log('vigentes ', this.vigentes)
         }
       }).catch(error => {
         console.log(error)
       })
     },
     ver (id) {
-      this.$router.push('/ver_contrato/' + id)
+      this.$router.push('ver_contrato_admin/' + id)
     },
     async download (filePath, archiveName) {
-        console.log(archiveName)
-         openURL(env.apiUrl + 'file2/' + archiveName)
+      console.log(archiveName)
+      openURL(env.apiUrl + 'file2/' + archiveName)
     }
   }
 }
