@@ -229,17 +229,6 @@ class UploadController {
     response.download(Helpers.appRoot('storage/uploads/register') + `/${dir}`)
   }
 
-  async getFileByDirectory4({
-    params,
-    response,
-    request
-  }) {
-    const dir = params.dir.split('-').join('/')
-    console.log(dir,'heree')
-    response.download(Helpers.appRoot() + `/${dir}`)
-  }
-
-
   async getFileByDirectory ({ params, response, request }) {
     //let algo = 'storage/uploads/contracts/ITMDeztaqQd17sdFAtYcMYlSPdo9Lu.png'
     //response.download(Helpers.tmpPath(algo))
