@@ -165,7 +165,7 @@
           clickable
           active-class="my-menu-link"
           v-ripple
-          @click="$router.push('/dashboard')"
+          @click="rol > 1 ? $router.push('/dashboard') : $router.push('/dashboard_admin')"
         >
           <q-item-section avatar>
             <q-icon name="dashboard" />
@@ -177,7 +177,7 @@
           clickable
           active-class="my-menu-link"
           v-ripple
-          @click="$router.push('/contratos')"
+          @click="rol > 1 ? $router.push('/contratos') : ''"
         >
           <q-item-section avatar>
             <q-icon name="description" />
@@ -186,6 +186,7 @@
           <q-item-section> Contratos </q-item-section>
         </q-item>
         <q-item
+        v-if="rol > 1"
           clickable
           active-class="my-menu-link"
           v-ripple
@@ -201,7 +202,7 @@
           clickable
           active-class="my-menu-link"
           v-ripple
-          @click="$router.push('/contratos_vigentes')"
+          @click="rol > 1 ? $router.push('/contratos_vigentes') : ''"
         >
           <q-item-section avatar>
             <q-icon name="description" />
@@ -213,7 +214,7 @@
           clickable
           active-class="my-menu-link"
           v-ripple
-          @click="$router.push('/historial_contratos')"
+          @click="rol > 1 ? $router.push('/historial_contratos') : ''"
         >
           <q-item-section avatar>
             <q-icon name="hourglass_empty" />
@@ -233,7 +234,7 @@
           <q-item-section> Saldos movidos </q-item-section>
         </q-item>
       </q-list>
-       <div class="q-pa-md">
+       <div v-if="rol > 1" class="q-pa-md">
                   <q-btn
                     rounded
                     no-caps
@@ -345,7 +346,7 @@ export default {
   components: { NuevoContrato },
   data () {
     return {
-      user: {},
+      rol: null,
       newContrat: false,
       contratos: [
         {
@@ -384,8 +385,8 @@ export default {
   mounted () {
     this.$api.get('user_info').then(v => {
       if (v) {
-        this.user = v.roles[0]
-        console.log('user', this.user)
+        this.rol = v.roles[0]
+        console.log('user rol', this.rol)
         var name = v.archiveName.split('.')[0]
         this.img = env.apiUrl + '/file3/' + name
         this.construir = true
