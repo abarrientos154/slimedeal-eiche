@@ -49,7 +49,7 @@ async function changeContractStatus (id, check, userA) {
 
 class ContratoController {
   async show ({ request, response, params }) {
-    let contrato = await Contrato.find(params.id)
+    let contrato = (await Contrato.query().where({_id: params.id}).with('datos_userA').with('datos_userB').first()).toJSON()
     response.send(contrato)
   }
 

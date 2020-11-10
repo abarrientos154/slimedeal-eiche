@@ -46,7 +46,6 @@ addPrefixToGroup(
     Route.get("prueba_correo", "ContratoController.pruebaCorreo")
     Route.get("file2/:dir", "UploadController.getFileByDirectory2");
     Route.get("file3/:dir", "UploadController.getFileByDirectory3");
-
   })
 );
 
