@@ -2,7 +2,7 @@
   <div class="row justify-between fullheight">
     <q-card
       class="bg-white shadow-13 row q-pb-none"
-      style="width: 200px; height: 100%; min-height: 540px; max-height: 700px;"
+      style="width: 200px; height: 100%; min-height: 600px; max-height: 700px;"
     >
     <q-card-section style="width:100%; height:100%">
         <div class="row justify-center">
@@ -14,23 +14,12 @@
         <div class="text-subtitle1 text-center">NombreA</div>
         <div class="text-subtitle2 text-grey text-center">EmailA</div>
         <div class="text-subtitle2 text-grey text-center">TelefonoA</div>
-        <div class="row justify-center q-pa-xs">
-          <q-file disable v-if="metodoPagoA" bottom-slots v-model="file" outlined label="Archivo" >
-            <template v-slot:prepend>
-                <q-avatar>
-                  <img  :src="file ? file : 'noimg.png'">
-                </q-avatar>
-              </template>
-                <template v-slot:prepend>
-                  <q-icon name="cloud_upload" color="primary" @click.stop />
-                </template>
-                <template v-slot:append>
-                  <q-icon name="close" color="negative" @click.stop="model = null" class="cursor-pointer" />
-                </template>
-                <template v-slot:hint>
-                  Comprobante de transferencia bancaria
-                </template>
-        </q-file>
+        <div v-if="metodoPagoA" class="row justify-center q-pa-xs">
+          <q-img
+                style="width:70px"
+                :src="imgComprobanteA"
+            ></q-img>
+            <div class="text-caption q-pa-sm text-grey">Comprobante de transferencia bancaria</div>
         </div>
         <div v-if="metodoPagoA" class="q-py-md row justify-center">
             <q-btn
@@ -55,6 +44,7 @@
                     padding="sm"
                     size="md"
                     color="primary"
+                    @click="aprobarContrato()"
                     >Aprobar
                 </q-btn>
             </div>
@@ -64,6 +54,7 @@
                     padding="sm"
                     size="md"
                     color="primary"
+                    @click="rechazarContrato()"
                     >Rechazar
                 </q-btn>
             </div>
@@ -85,18 +76,12 @@
         <div class="text-subtitle1 text-center">{{contrato.name}}</div>
         <div class="text-subtitle2 text-grey text-center">{{contrato.email}}</div>
         <!-- <div class="text-subtitle2 text-grey text-center">Telefono</div> -->
-        <div class="row justify-center q-pa-xs">
-            <q-file disable v-if="metodoPagoB" bottom-slots v-model="fileUserB" outlined label="Archivo" >
-                <template v-slot:prepend>
-                  <q-icon name="cloud_upload" color="primary" @click.stop />
-                </template>
-                <template v-slot:append>
-                  <q-icon name="close" color="negative" @click.stop="model = null" class="cursor-pointer" />
-                </template>
-                <template v-slot:hint>
-                  Comprobante de transferencia bancaria
-                </template>
-        </q-file>
+        <div v-if="metodoPagoB" class="row justify-center q-pa-xs">
+            <q-img
+                style="width:70px"
+                :src="imgComprobanteB"
+            ></q-img>
+            <div class="text-caption q-pa-sm text-grey">Comprobante de transferencia bancaria</div>
         </div>
         <div v-if="metodoPagoB" class="q-pa-md row justify-center">
             <q-btn
@@ -126,8 +111,9 @@ export default {
   components: {},
   data () {
     return {
-      baseu: '',
       id: '',
+      imgComprobanteA: '',
+      imgComprobanteB: '',
       metodoPagoA: true,
       metodoPagoB: true,
       politicasUserA: false,
@@ -141,27 +127,29 @@ export default {
     }
   },
   mounted () {
-    this.baseu = env.apiUrl
     if (this.$route.params.id) {
       this.id = this.$route.params.id
-      console.log(this.id)
       this.getContrato(this.id)
     }
   },
   methods: {
-    rechazar () {
-      this.form.check = this.politicasUserA
-      console.log('form', this.form)
-      console.log('poli', this.politicasUserA)
+    aprobarContrato () {
+      this.$api.put('update_status/' + this.id, { status: 2 }).then(res => {
+        if (res) {
+          this.$router.push('/dashboard_admin')
+        }
+      })
+    },
+    rechazarContrato () {
       this.$q.dialog({
         title: 'Confirma',
         message: '¿Seguro deseas rechazar el contrato?',
         cancel: true,
         persistent: true
       }).onOk(() => {
-        this.$api.put('update_check_alone/' + this.id, this.form).then(res => {
+        this.$api.put('update_status/' + this.id, { status: 4 }).then(res => {
           if (res) {
-            this.$router.push('/dashboard')
+            this.$router.push('/dashboard_admin')
           }
         })
       }).onCancel(() => {
@@ -173,15 +161,32 @@ export default {
         if (res) {
           this.contrato = res
           console.log('Contrato ', this.contrato)
+          var rutaf = []
           if (this.contrato.metodoPago === 1) {
             this.metodoPagoA = true
             this.metodoPagoB = false
+            if (this.contrato.userAFile) {
+              rutaf = this.contrato.userAFile.split('/')
+              this.imgComprobanteA = env.apiUrl + '/file2/' + rutaf[rutaf.length - 1]
+            }
           } else if (this.contrato.metodoPago === 2) {
             this.metodoPagoA = false
             this.metodoPagoB = true
+            if (this.contrato.userBFile) {
+              rutaf = this.contrato.userBFile.split('/')
+              this.imgComprobanteB = env.apiUrl + '/file2/' + rutaf[rutaf.length - 1]
+            }
           } else {
             this.metodoPagoA = true
             this.metodoPagoB = true
+            if (this.contrato.userAFile) {
+              rutaf = this.contrato.userAFile.split('/')
+              this.imgComprobanteA = env.apiUrl + '/file2/' + rutaf[rutaf.length - 1]
+            }
+            if (this.contrato.userBFile) {
+              rutaf = this.contrato.userBFile.split('/')
+              this.imgComprobanteB = env.apiUrl + '/file2/' + rutaf[rutaf.length - 1]
+            }
           }
           if (this.contrato.userACheck) {
             this.politicasUserA = this.contrato.userACheck
@@ -189,9 +194,6 @@ export default {
           if (this.contrato.userBCheck) {
             this.politicasUserB = this.contrato.userBCheck
           }
-          /* if (this.contrato.userAFile) {
-            this.file = this.contrato.userAFile
-          } */
         }
       }).catch(error => {
         console.log(error)
