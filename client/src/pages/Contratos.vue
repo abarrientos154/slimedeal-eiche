@@ -122,6 +122,8 @@
 </template>
 
 <script>
+import { openURL } from 'quasar'
+import env from '../env'
 export default {
   data () {
     return {
@@ -154,6 +156,10 @@ export default {
     ver (id) {
       this.$router.push('/ver_contrato/' + id)
     },
+    async download (filePath, archiveName) {
+      console.log(archiveName)
+      openURL(env.apiUrl + '/file2/' + archiveName)
+    },
     filter () {
       this.data = this.contratos
       if (this.todos) {
@@ -173,7 +179,7 @@ export default {
         this.vigentes = false
       }
       if (this.rechazados) {
-        this.data = this.data.filter(v => v.status === 3)
+        this.data = this.data.filter(v => v.status === 3 || v.status === 4)
         this.rechazados = false
       }
     }

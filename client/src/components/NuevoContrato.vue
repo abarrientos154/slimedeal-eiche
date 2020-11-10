@@ -34,7 +34,7 @@
           outlined
         ></q-input>
 
-        <q-file bottom-slots v-model="file" rounded outlined label="Subir Archivo" :error="$v.file.$error" error-message="Este campo es requerido" @blur="$v.file.$touch()">
+        <q-file accept=".pdf" bottom-slots v-model="file" rounded outlined label="Subir Archivo" :error="$v.file.$error" error-message="Este campo es requerido" @blur="$v.file.$touch()">
                 <template v-slot:prepend>
                   <q-icon name="cloud_upload" color="primary" @click.stop />
                 </template>

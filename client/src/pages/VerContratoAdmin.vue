@@ -11,9 +11,9 @@
                 src="app-logo-128x128.png"
             ></q-img>
         </div>
-        <div class="text-subtitle1 text-center">NombreA</div>
-        <div class="text-subtitle2 text-grey text-center">EmailA</div>
-        <div class="text-subtitle2 text-grey text-center">TelefonoA</div>
+        <div class="text-subtitle1 text-center">{{contrato.datos_userA.name}}</div>
+        <div class="text-subtitle2 text-grey text-center">{{contrato.datos_userA.email}}</div>
+        <div class="text-subtitle2 text-grey text-center">{{contrato.datos_userA.phone}}</div>
         <div v-if="metodoPagoA" class="row justify-center q-pa-xs">
           <q-img
                 style="width:70px"
@@ -37,7 +37,7 @@
           <q-item-label class="text-caption">Estoy de acuerdo con las políticas establecidas por SlimeDeal.</q-item-label>
         </q-item-section>
       </q-item>
-        <div class="q-pt-xl row justify-around">
+        <div v-if="contrato.status === 1" class="q-pt-xl row justify-around">
             <div>
                 <q-btn
                     no-caps
@@ -73,9 +73,9 @@
                 src="app-logo-128x128.png"
             ></q-img>
         </div>
-        <div class="text-subtitle1 text-center">{{contrato.name}}</div>
-        <div class="text-subtitle2 text-grey text-center">{{contrato.email}}</div>
-        <!-- <div class="text-subtitle2 text-grey text-center">Telefono</div> -->
+        <div class="text-subtitle1 text-center">{{contrato.datos_userB.name ? contrato.datos_userB.name : contrato.name}}</div>
+        <div class="text-subtitle2 text-grey text-center">{{contrato.datos_userB.email ? contrato.datos_userB.email : contrato.email}}</div>
+        <div v-if="contrato.datos_userB.phone" class="text-subtitle2 text-grey text-center">{{contrato.datos_userB.phone}}</div>
         <div v-if="metodoPagoB" class="row justify-center q-pa-xs">
             <q-img
                 style="width:70px"

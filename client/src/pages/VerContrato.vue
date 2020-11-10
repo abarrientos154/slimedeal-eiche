@@ -21,12 +21,7 @@
                 :src="imgComprobanteA"
             ></q-img>
             <div v-if="imgComprobanteA != ''" class="text-caption q-pa-sm text-grey">Comprobante de transferencia bancaria</div>
-          <q-file v-else :disable="disable" bottom-slots v-model="file" outlined label="Archivo" >
-            <template v-slot:prepend>
-                <q-avatar>
-                  <img  :src="file ? file : 'noimg.png'">
-                </q-avatar>
-              </template>
+          <q-file v-else :disable="disable" bottom-slots v-model="file" outlined label="Archivo" accept=".jpg, image/*" >
                 <template v-slot:prepend>
                   <q-icon name="cloud_upload" color="primary" @click.stop />
                 </template>
@@ -75,6 +70,10 @@
       </q-card-section>
     </q-card>
 
+    <div class="bg-white row q-pb-none">
+      <pdf :src="pdf" style="width: 100%"></pdf>
+    </div>
+
     <q-card
       class="bg-white shadow-13"
       style="width: 200px"
@@ -86,9 +85,9 @@
                 src="app-logo-128x128.png"
             ></q-img>
         </div>
-        <div class="text-subtitle1 text-center">{{contrato.name}}</div>
-        <div class="text-subtitle2 text-grey text-center">{{contrato.email}}</div>
-        <!-- <div class="text-subtitle2 text-grey text-center">Telefono</div> -->
+        <div class="text-subtitle1 text-center">{{userB.name ? userB.name : contrato.name}}</div>
+        <div class="text-subtitle2 text-grey text-center">{{userB.email ? userB.email : contrato.email}}</div>
+        <div v-if="userB.phone" class="text-subtitle2 text-grey text-center">{{userB.phone}}</div>
         <div v-if="metodoPagoB" class="row justify-center q-pa-xs">
             <q-img
                 v-if="imgComprobanteB != ''"
@@ -121,12 +120,14 @@
 
 <script>
 import env from '../env'
+import pdf from 'vue-pdf'
 export default {
+  components: { pdf },
   name: 'MainLayout',
-  components: {},
   data () {
     return {
       id: '',
+      pdf: '',
       imgComprobanteA: '',
       imgComprobanteB: '',
       disable: false,
@@ -139,31 +140,37 @@ export default {
       leftDrawerOpen: true,
       rightDrawerOpen: true,
       userA: {},
+      userB: {},
       userType: '',
       contrato: {},
+      typeContract: {},
       form: {}
     }
   },
   mounted () {
     if (this.$route.params.id) {
       this.id = this.$route.params.id
-      this.getContrato(this.id)
+      this.$api.get('contrato/' + this.id).then(res => {
+        if (res) {
+          this.typeContract = res
+          this.getUser()
+        }
+      }).catch(error => {
+        console.log(error)
+      })
     }
-    this.getUser()
   },
   methods: {
     rechazar () {
-      this.form.check = this.politicasUserA
-      console.log('form', this.form)
       this.$q.dialog({
         title: 'Confirma',
         message: '¿Seguro deseas rechazar el contrato?',
         cancel: true,
         persistent: true
       }).onOk(() => {
-        this.$api.put('update_check_alone/' + this.id, this.form).then(res => {
+        this.$api.put('update_status/' + this.id, { status: 3 }).then(res => {
           if (res) {
-            this.$router.push('/dashboard')
+            this.$router.push('/dashboard_admin')
           }
         })
       }).onCancel(() => {
@@ -231,7 +238,7 @@ export default {
         if (res) {
           var c = res
           // Obtiene el usuario logueado, si es a o b
-          if (this.contrato.email === c.email) {
+          if (this.typeContract.email === c.email) {
             this.userType = 'b'
           } else {
             this.userType = 'a'
@@ -239,17 +246,19 @@ export default {
           console.log(this.userType)
           this.userA = res
           console.log('Usuario ', this.userA)
+          this.getContrato(this.id)
         }
       }).catch(error => {
         console.log(error)
       })
-      this.getContrato(this.id)
     },
     getContrato (id) {
       // obtiene info del contrato
       this.$api.get('contrato/' + id).then(res => {
         if (res) {
           this.contrato = res
+          this.pdf = env.apiUrl + '/file2/' + this.contrato.archiveName
+          console.log('pdf', this.pdf)
           // si el contrato tiene un estatus que no sea pendiente no se puede modificar
           if (this.contrato.status > 0) {
             this.disable = true
@@ -257,6 +266,7 @@ export default {
           console.log('Contrato ', this.contrato)
           var rutaf = []
           if (this.userType === 'b') {
+            this.userB = this.contrato.datos_userA
             if (this.contrato.metodoPago === 1) {
               this.metodoPagoA = false
               this.metodoPagoB = true
@@ -302,6 +312,7 @@ export default {
             }
           }
           if (this.userType === 'a') {
+            this.userB = this.contrato.datos_userB
             if (this.contrato.metodoPago === 1) {
               this.metodoPagoA = true
               this.metodoPagoB = false
@@ -343,6 +354,22 @@ export default {
             if (this.contrato.userBCheck) {
               this.politicasUserB = this.contrato.userBCheck
             }
+          }
+          if (this.contrato.status === 4) {
+            this.$q.dialog({
+              message: 'El contrato fue rechazado por el Administrador',
+              persistent: true
+            }).onOk(() => {
+
+            })
+          }
+          if (this.contrato.status === 3) {
+            this.$q.dialog({
+              message: 'El contrato fue rechazado por uno de los participantes',
+              persistent: true
+            }).onOk(() => {
+
+            })
           }
         }
       }).catch(error => {
