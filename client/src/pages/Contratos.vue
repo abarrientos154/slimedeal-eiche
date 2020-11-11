@@ -85,7 +85,7 @@
               <div class="row q-pa-sm items-center">
                 <div class="text-subtitle2 q-px-md">{{index + 1}}</div>
                 <q-card
-                  :class="card.status == 0 ? 'bg-blue-3' : card.status == 1 ? 'bg-amber-6' : card.status == 2 ? 'bg-light-green-13' : card.status == 3 ? 'bg-red' : 'bg-white'"
+                  :class="card.status == 0 ? 'bg-blue-3' : card.status == 1 ? 'bg-amber-6' : card.status == 2 ? 'bg-light-green-13' : card.status == 3 || card.status == 4 ? 'bg-red' : 'bg-white'"
                   style="width: 90%; height: 100px"
                 >
                   <q-item class="absolute-center" style="width: 100%">
