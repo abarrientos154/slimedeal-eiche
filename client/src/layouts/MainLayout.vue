@@ -185,7 +185,7 @@
 
           <q-item-section> Contratos </q-item-section>
         </q-item>
-        <q-item
+       <!--  <q-item
         v-if="rol > 1"
           clickable
           active-class="my-menu-link"
@@ -221,7 +221,7 @@
           </q-item-section>
 
           <q-item-section> Historial de Contratos </q-item-section>
-        </q-item>
+        </q-item> -->
         <q-item
           clickable
           active-class="my-menu-link"
@@ -233,18 +233,30 @@
 
           <q-item-section> Saldos movidos </q-item-section>
         </q-item>
+        <q-item
+          clickable
+          active-class="my-menu-link"
+          v-ripple
+          @click="$router.push('/')"
+        >
+          <q-item-section avatar>
+            <q-icon name="login" />
+          </q-item-section>
+
+          <q-item-section> Cerrar Sesión </q-item-section>
+        </q-item>
       </q-list>
        <div v-if="rol > 1" class="q-pa-md">
-                  <q-btn
-                    rounded
-                    no-caps
-                    label="Nuevo contrato"
-                    icon-right="add"
-                    color="primary"
-                    class="q-mr-md"
-                    @click="newContrat=true"
-                  />
-                </div>
+          <q-btn
+            rounded
+            no-caps
+            label="Nuevo contrato"
+            icon-right="add"
+            color="primary"
+            class="q-mr-md"
+            @click="newContrat=true"
+          />
+        </div>
     </div>
     </q-drawer>
 
@@ -347,6 +359,7 @@ export default {
   data () {
     return {
       rol: null,
+      id: '',
       newContrat: false,
       contratos: [
         {
@@ -386,9 +399,9 @@ export default {
     this.$api.get('user_info').then(v => {
       if (v) {
         this.rol = v.roles[0]
-        console.log('user rol', this.rol)
-        var name = v.archiveName.split('.')[0]
-        this.img = env.apiUrl + '/file3/' + name
+        this.id = v._id
+        console.log('id', this.id)
+        this.img = env.apiUrl + '/file3/' + this.id
         this.construir = true
       }
     })
