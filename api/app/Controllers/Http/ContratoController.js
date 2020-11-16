@@ -95,7 +95,8 @@ class ContratoController {
         dat.filePath = nombreArchivo
         dat.userA_id = user._id
         dat.status = 0 // pendiente pero sin confirmar por ningun usuario
-        Email.sendMail(dat.email, 'Nuevo Contrato', `el usuario ${user.name} ${user.lastName} te ha agregado a formar parte de un contrato`)
+        let mail = await Email.sendMail(dat.email, 'Nuevo Contrato', `el usuario ${user.name} ${user.lastName} te ha agregado a formar parte de un contrato. Ingrese al link http://slimedeal.eichechile.com`, 'app/logo_app.png')
+        console.log(mail)
         await Contrato.create(dat)
       }
       return data
