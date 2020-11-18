@@ -95,7 +95,18 @@ class ContratoController {
         dat.filePath = nombreArchivo
         dat.userA_id = user._id
         dat.status = 0 // pendiente pero sin confirmar por ningun usuario
-        let mail = await Email.sendMail(dat.email, 'Nuevo Contrato', `el usuario ${user.name} ${user.lastName} te ha agregado a formar parte de un contrato. Ingrese al link http://slimedeal.eichechile.com`, 'app/logo_app.png')
+        let mail = await Email.sendMail(dat.email, 'Nuevo Contrato', `
+          <center>
+            <img src="http://slimedeal.eichechile.com/app-logo-128x128.png" alt="logo" />
+          </center>
+          <h2 style="text-align:center">
+            El usuario ${user.name} ${user.lastName} te ha agregado a formar parte de un contrato.
+          </h2>
+          <div style="text-align:center">
+            Ingrese al link http://slimedeal.eichechile.com
+          </div>
+
+          `)
         console.log(mail)
         await Contrato.create(dat)
       }
@@ -104,9 +115,16 @@ class ContratoController {
   }
 
   async pruebaCorreo ({ request, response, auth }) {
-    let algo = await Email.sendMail('haideemartinez96@gmail.com', 'Nuevo Contrato', `el usuario Test te ha agregado a formar parte de un contrato`)
-    console.log(algo, 'algo')
-    response.send(algo)
+    let test = await Email.sendMail('haideemartinez96@gmail.com', 'Nuevo Contrato', `
+      <div>
+        <div style="text-color: red">Nuevo Contrato</div>
+        <center>
+          <img src="http://slimedeal.eichechile.com/app-logo-128x128.png" alt="logo" />
+        </center>
+      </h2>
+    `)
+    console.log(test, 'algo')
+    response.send(test)
   }
 
 
