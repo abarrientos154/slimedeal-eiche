@@ -128,7 +128,7 @@ export default {
     },
     async guardar () {
       this.$v.$touch()
-      if (!this.$v.form.$error || !this.$v.password.$error || !this.$v.repeatPassword.$error || !this.$v.file.$error) {
+      if (!this.$v.form.$error && !this.$v.password.$error && !this.$v.repeatPassword.$error && !this.$v.file.$error && !this.$v.perfilFile.$error) {
         this.$q.loading.show({
           message: 'Guardando Sus Datos, Por Favor Espere...'
         })
@@ -155,7 +155,12 @@ export default {
               })
               this.$q.loading.hide()
             } else if (res) {
-              this.$router.go(-1)
+              this.$router.push('/')
+              this.$q.notify({
+                message: 'Registrado Con Exito',
+                color: 'warning',
+                type: 'negative'
+              })
               this.$q.loading.hide()
             } else {
               this.$q.loading.hide()
