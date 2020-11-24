@@ -53,6 +53,23 @@ class ContratoController {
     response.send(contrato)
   }
 
+  async misContratosPagados ({ response, auth }) {
+    const user = (await auth.getUser()).toJSON()
+    let contrato = (await Contrato.query().where({
+      $or: [{ userA_id: user._id }, { email: user.email }]
+    }).fetch()).toJSON()
+    let mandar = []
+    for (let j of contrato) {
+      if (j.email === user.email && j.userBFile) {
+        mandar.push(j)
+      }
+      if (j.userA_id === user._id && j.userAFile) {
+        mandar.push(j)
+      }
+    }
+    response.send(mandar)
+  }
+
   async index ({ request, response, view }) {
     //let contrato = await Contrato.query().where({_id: '5fa41a1161ae823c0ba5a80d'}).update({status: 3})
     changeContractStatus('5fa41a1161ae823c0ba5a80d', false, false)

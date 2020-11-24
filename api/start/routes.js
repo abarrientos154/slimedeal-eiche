@@ -60,6 +60,7 @@ addPrefixToGroup(
     Route.get("user_info", "UserController.getUserInfo");
     Route.put("update_status/:id", "ContratoController.updateStatus")
     Route.get("get_contracts/:status", "ContratoController.getContractByStatus")
+    Route.get("mis_contratos_pagados", "ContratoController.misContratosPagados")
 
   }).middleware("auth")
 );
