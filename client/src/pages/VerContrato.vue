@@ -33,15 +33,7 @@
                 </template>
         </q-file>
         </div>
-        <div v-if="metodoPagoA && !disable" class="q-py-md row justify-center">
-            <q-btn
-                no-caps
-                color="primary"
-                class="q-mr-md"
-                >Cargar
-            </q-btn>
-        </div>
-        <q-item v-ripple>
+        <q-item class="q-mt-md" v-ripple>
         <q-item-section avatar top>
           <q-checkbox :disable="disable" v-model="politicasUserA" color="primary" />
         </q-item-section>
@@ -61,7 +53,7 @@
         <div v-if="!disable" class="q-pa-md row justify-center">
             <q-btn
                 no-caps
-                color="primary"
+                color="red"
                 class="q-mr-md"
                 @click="rechazar()"
                 >Rechazar
@@ -97,7 +89,7 @@
             <div v-else class="text-h6 bg-grey-13 q-pa-sm">Sin Archivo</div>
             <div class="text-caption q-pa-sm text-grey">Comprobante de transferencia bancaria</div>
         </div>
-        <div v-if="metodoPagoB" class="q-pa-md row justify-center">
+        <div v-if="metodoPagoB && imgComprobanteB != ''" class="q-pa-md row justify-center">
             <q-btn
                 no-caps
                 color="primary"
@@ -312,7 +304,11 @@ export default {
             }
           }
           if (this.userType === 'a') {
-            this.userB = this.contrato.datos_userB
+            if (this.contrato.datos_userB) {
+              this.userB = this.contrato.datos_userB
+            } else {
+              this.userB = {}
+            }
             if (this.contrato.metodoPago === 1) {
               this.metodoPagoA = true
               this.metodoPagoB = false

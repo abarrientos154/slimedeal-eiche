@@ -1,7 +1,7 @@
 <template>
   <div class="q-pa-sm q-mt-md">
       <q-card
-        class="bg-white q-pa-xs shadow-13 my-card"
+        class="bg-white q-pt-xs q-px-xs q-pb-md shadow-13 my-card"
         style="width: 100%"
       >
       <div class="text-h6 q-pa-sm q-ml-sm">Saldos Movidos</div>
@@ -47,6 +47,25 @@ export default {
     this.getContratos()
   },
   methods: {
+    /* getUser () {
+      this.$api.get('user_info').then(res => {
+        if (res) {
+          var c = res
+          // Obtiene el usuario logueado, si es a o b
+          if (this.typeContract.email === c.email) {
+            this.userType = 'b'
+          } else {
+            this.userType = 'a'
+          }
+          console.log(this.userType)
+          this.userA = res
+          console.log('Usuario ', this.userA)
+          this.getContrato(this.id)
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+    }, */
     getContratos () {
       this.$api.get('contratos_pendientes').then(res => {
         if (res) {
