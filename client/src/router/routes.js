@@ -35,6 +35,10 @@ const routes = [
       {
         path: '/contratos',
         component: () => import('pages/Contratos.vue')
+      },
+      {
+        path: '/saldos_movidos',
+        component: () => import('pages/SaldosMovidos.vue')
       }
     ]
   },

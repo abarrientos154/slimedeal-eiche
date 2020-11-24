@@ -22,6 +22,9 @@
                   autofocus
                   outlined
                   rounded
+                  :error="$v.form.email.$error"
+                  error-message="Este campo es requerido"
+                  @blur="$v.form.email.$touch()"
                 >
                   <template v-slot:append>
                     <q-icon name="mail"></q-icon>
@@ -40,6 +43,9 @@
                   placeholder="Ingrese su contraseña"
                   rounded
                   outlined
+                  :error="$v.form.password.$error"
+                  error-message="Este campo es requerido"
+                  @blur="$v.form.password.$touch()"
                 >
                 </q-input>
                 </div>
@@ -73,6 +79,7 @@
 
 <script>
 import { mapMutations, mapActions } from 'vuex'
+import { required } from 'vuelidate/lib/validators'
 export default {
   data () {
     return {
@@ -83,31 +90,40 @@ export default {
       user: {}
     }
   },
+  validations: {
+    form: {
+      email: { required },
+      password: { required }
+    }
+  },
   methods: {
     ...mapMutations('generals', ['login']),
     ...mapActions('generals', ['saveUser']),
     onSubmit () {
-      this.loading = true
-      this.$q.loading.show({
-        message: 'Iniciando sesión'
-      })
-      this.$api.post('login', this.form).then(res => {
-        if (res) {
-          this.user = res.info
-          console.log('user', this.user)
-          this.login(res)
-          if (this.user.roles[0] === 1) {
-            this.$router.push('dashboard_admin')
-          } else if (this.user.roles[0] === 2) {
-            this.$router.push('dashboard')
+      this.$v.$touch()
+      if (!this.$v.form.$error) {
+        this.loading = true
+        this.$q.loading.show({
+          message: 'Iniciando sesión'
+        })
+        this.$api.post('login', this.form).then(res => {
+          if (res) {
+            this.user = res.info
+            console.log('user', this.user)
+            this.login(res)
+            if (this.user.roles[0] === 1) {
+              this.$router.push('dashboard_admin')
+            } else if (this.user.roles[0] === 2) {
+              this.$router.push('dashboard')
+            }
+          } else {
+            console.log('error de ususario')
+            this.loading = false
+            this.$q.loading.hide()
           }
-        } else {
-          console.log('error de ususario')
-          this.loading = false
           this.$q.loading.hide()
-        }
-        this.$q.loading.hide()
-      })
+        })
+      }
     }
   }
 }

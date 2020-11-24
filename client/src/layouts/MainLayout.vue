@@ -226,6 +226,7 @@
           clickable
           active-class="my-menu-link"
           v-ripple
+          @click="$router.push('/saldos_movidos')"
         >
           <q-item-section avatar>
             <q-icon name="compare_arrows" />
@@ -237,7 +238,7 @@
           clickable
           active-class="my-menu-link"
           v-ripple
-          @click="$router.push('/')"
+          @click="salir()"
         >
           <q-item-section avatar>
             <q-icon name="login" />
@@ -352,6 +353,7 @@
 
 <script>
 import NuevoContrato from '../components/NuevoContrato'
+import { mapMutations } from 'vuex'
 import env from '../env'
 export default {
   name: 'MainLayout',
@@ -405,6 +407,13 @@ export default {
         this.construir = true
       }
     })
+  },
+  methods: {
+    ...mapMutations('generals', ['logout']),
+    salir () {
+      this.logout()
+      this.$router.push('/')
+    }
   }
 }
 </script>

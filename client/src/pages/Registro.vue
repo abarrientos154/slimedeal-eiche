@@ -30,7 +30,7 @@
             <q-input class="q-mr-xs" v-model="repeatPassword" type="password" rounded outlined label="Repetir Contraseña" :error="$v.repeatPassword.$error" error-message="Este campo es requerido" @blur="$v.repeatPassword.$touch()"/>
           </div>
            <div class="col-xs-11 col-sm-6 col-md-6 col-lg-6 q-pb-md">
-            <q-file bottom-slots v-model="file" rounded outlined label="Subir Archivo" :error="$v.file.$error" error-message="Este campo es requerido" @blur="$v.file.$touch()">
+            <q-file bottom-slots v-model="file" accept=".jpg, image/*" rounded outlined label="Subir Archivo" :error="$v.file.$error" error-message="Este campo es requerido" @blur="$v.file.$touch()">
               <template v-slot:prepend>
                 <q-icon name="cloud_upload" color="primary" @click.stop />
               </template>
@@ -62,7 +62,7 @@
             <q-input class="q-mr-xs" v-model="form.additionalData" rounded outlined label="Ingrese Datos Adicionales" :error="$v.form.additionalData.$error" error-message="Este campo es requerido" @blur="$v.form.additionalData.$touch()"/>
           </div>
           <div class="col-xs-11 col-sm-6 col-md-6 col-lg-6 q-pb-md">
-            <q-file bottom-slots v-model="perfilFile" rounded outlined label="Subir Foto de Perfil" :error="$v.perfilFile.$error" error-message="Este campo es requerido" @blur="$v.perfilFile.$touch()" @input="test">
+            <q-file bottom-slots accept=".jpg, image/*" v-model="perfilFile" rounded outlined label="Subir Foto de Perfil" :error="$v.perfilFile.$error" error-message="Este campo es requerido" @blur="$v.perfilFile.$touch()" @input="test">
               <template v-slot:prepend>
                 <q-avatar>
                   <img  :src="imgPerfil ? imgPerfil : 'noimg.png'">
