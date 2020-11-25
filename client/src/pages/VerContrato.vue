@@ -351,6 +351,7 @@ export default {
               this.politicasUserB = this.contrato.userBCheck
             }
           }
+          console.log('ruta', this.imgComprobanteA)
           if (this.contrato.status === 4) {
             this.$q.dialog({
               message: 'El contrato fue rechazado por el Administrador',
