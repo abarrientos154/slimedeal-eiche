@@ -19,22 +19,24 @@
           error-message="Este campo es requerido"
           @blur="$v.form.title.$touch()"
           placeholder="Título del contrato"
+          hint="¿Como se llamara este Contrato?"
           rounded
           outlined
         ></q-input>
         <q-input
-          class="row justify-center q-pb-sm"
+          class="row justify-center q-pb-sm q-mt-lg"
           v-model="form.description"
           :error="$v.form.description.$error"
           error-message="Este campo es requerido"
           @blur="$v.form.description.$touch()"
           placeholder="Descripcion del contrato"
-          autogrow
+          type="textarea"
+          hint="Danos una breve descripción del Contrato, quienes participan y la causa del Contrato"
           rounded
           outlined
         ></q-input>
 
-        <q-file accept=".pdf" bottom-slots v-model="file" rounded outlined label="Subir Archivo" :error="$v.file.$error" error-message="Este campo es requerido" @blur="$v.file.$touch()">
+        <q-file class="q-mt-xl" accept=".pdf" bottom-slots v-model="file" rounded outlined label="Adjuntar contrato PDF" :error="$v.file.$error" error-message="Este campo es requerido" @blur="$v.file.$touch()">
                 <template v-slot:prepend>
                   <q-icon name="cloud_upload" color="primary" @click.stop />
                 </template>
@@ -59,7 +61,7 @@
         icon="assignment"
         :done="step > 3"
       >
-        <div class="text-h6">¿Quiénes van a participar?</div>
+        <div class="text-h6">¿Quien sera el otro participante o contraparte?</div>
         <q-input
           class="row justify-center q-pb-sm"
           v-model="form.name"
@@ -83,13 +85,15 @@
         ></q-input>
       </q-step>
 
-      <q-step
-        :name="4"
-        title="Paso 4"
-        icon="add_comment"
-      >
-      <div>Su contrato ha sido enviado correctamente, recibiras una copia en tu correo electrónico validando que se inició tu proceso de contrato.</div><br>
-        <div class="text-subtitle1">Tu contrato se encuentra en estado <strong>Abierto</strong></div>
+      <q-step :name="4" title="Paso 4" icon="add_comment">
+      <div>
+        <p>La invitación a este contrato fue enviada exitosamente. Recibiras una copia  en tu correo confirmando que se inicio un contrato en SlimeDeal.</p>
+        <p>Debes esperar siempre la respuesta de tu contraparte. Si tu invitado no tiene cuenta en SlimeDeal no te preocupes. Podra crearse una cuenta y firmar su parte del contrato</p>
+        <p>Recuerda que si es un contrato donde debes pagar tu o ambas partes, debes ajuntar tu comprobante a una de nuestras cuentas seguras de SlimeDeal</p>
+        <p>Revisa frecuentemente el estado del contrato. En este momento se encuentra abierto</p>
+        <p>Tu contrato y tu dinero estan seguros en nuestras manos. <strong>SlimeDeal lo hace posible por ti</strong> </p>
+        <q-checkbox v-model="accept" label="He pagado y/o aceptado el contrato de mi contraparte" />
+      </div>
       </q-step>
 
       <template v-slot:navigation>
@@ -113,6 +117,7 @@ export default {
       form: {},
       file: null,
       loading: false,
+      accept: false,
       metodoPago: [
         { label: 'Paga usuario A', value: 1 }, { label: 'Paga usuario B', value: 2 }, { label: 'Ambos pagan', value: 3 }
       ]
