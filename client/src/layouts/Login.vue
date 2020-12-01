@@ -47,6 +47,13 @@
                   error-message="Este campo es requerido"
                   @blur="$v.form.password.$touch()"
                 >
+                <template v-slot:append>
+                  <q-icon
+                    :name="isPwd ? 'visibility_off' : 'visibility'"
+                    class="cursor-pointer"
+                    @click="isPwd = !isPwd"
+                  />
+                </template>
                 </q-input>
                 </div>
                 <div class="row justify-center q-pa-md">
@@ -112,9 +119,9 @@ export default {
             console.log('user', this.user)
             this.login(res)
             if (this.user.roles[0] === 1) {
-              this.$router.push('dashboard_admin')
+              this.$router.push('inicio_admin')
             } else if (this.user.roles[0] === 2) {
-              this.$router.push('dashboard')
+              this.$router.push('inicio')
             }
           } else {
             console.log('error de ususario')

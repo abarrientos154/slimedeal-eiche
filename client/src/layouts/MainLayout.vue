@@ -165,13 +165,13 @@
           clickable
           active-class="my-menu-link"
           v-ripple
-          @click="rol > 1 ? $router.push('/dashboard') : $router.push('/dashboard_admin')"
+          @click="rol > 1 ? $router.push('/inicio') : $router.push('/inicio_admin')"
         >
           <q-item-section avatar>
             <q-icon name="dashboard" />
           </q-item-section>
 
-          <q-item-section> Dashboard</q-item-section>
+          <q-item-section> Inicio</q-item-section>
         </q-item>
         <q-item
           clickable
@@ -223,6 +223,7 @@
           <q-item-section> Historial de Contratos </q-item-section>
         </q-item> -->
         <q-item
+          v-if="rol > 1"
           clickable
           active-class="my-menu-link"
           v-ripple
@@ -282,47 +283,50 @@
         class="q-mb-md"
       />
         <q-pull>
-            <div
-              v-for="(mazo, index) in contratos"
-              :key="index"
-              class="q-mb-sm"
-            >
-              <q-card
-                class="my-card bg-primary shadow-10"
+          <div class="text-h6 q-pa-sm q-ml-sm">Contratos Vigentes</div>
+            <div v-if="vigentes.length">
+              <div
+                v-for="(mazo, index) in vigentes"
+                :key="index"
+                class="q-mb-sm"
               >
-                <q-item class="q-pa-xs">
-                  <q-item-section avatar>
-                    <img
-                      :src="mazo.img"
-                      style="width: 70px"
-                    >
-                  </q-item-section>
-                  <q-item-section>
-                    <div class="q-pa-xs justify-start">
-                      <q-scroll-area
-                        horizontal
-                        style="height: 30px; width: 100%"
-                        class="rounded-borders "
-                      >
-                        <div class="text-h5 text-white text-bold">{{ mazo.name }}</div>
-                      </q-scroll-area>
-                    </div>
-                    <q-item-label>
-                      <q-scroll-area
-                        horizontal
-                        style="height: 30px; width: 100%"
-                        class="rounded-borders"
-                      >
-                        <div class="text-subtitle1 text-white">{{ mazo.description }}</div>
-                      </q-scroll-area>
-                    </q-item-label>
-                  </q-item-section>
-                  <q-item-section >
-                    <q-item-label class="text-subtitle1 text-white text-bold q-pa-sm"> {{ mazo.date }}</q-item-label>
-                  </q-item-section>
-                </q-item>
-              </q-card>
+                <q-card
+                  class="my-card bg-primary shadow-10"
+                >
+                  <q-item class="q-pa-xs">
+                    <q-item-section avatar>
+                      <q-avatar>
+                        <img src="https://cdn.quasar.dev/img/avatar2.jpg">
+                      </q-avatar>
+                    </q-item-section>
+                    <q-item-section>
+                      <div class="q-pa-xs justify-start">
+                        <q-scroll-area
+                          horizontal
+                          style="height: 30px; width: 100%"
+                          class="rounded-borders "
+                        >
+                          <div class="text-h6 text-white text-bold">{{ mazo.title }}</div>
+                        </q-scroll-area>
+                      </div>
+                      <q-item-label>
+                        <q-scroll-area
+                          horizontal
+                          style="height: 30px; width: 100%"
+                          class="rounded-borders"
+                        >
+                          <div class="text-subtitle1 text-white">{{ mazo.description }}</div>
+                        </q-scroll-area>
+                      </q-item-label>
+                    </q-item-section>
+                    <q-item-section >
+                      <q-item-label class="text-subtitle1 text-white text-bold q-pa-sm"> {{ mazo.created_at }}</q-item-label>
+                    </q-item-section>
+                  </q-item>
+                </q-card>
+              </div>
             </div>
+            <div v-else class="text-center q-py-md" > No tienes contratos vigentes</div>
           </q-pull>
     </div>
     </q-drawer>
@@ -363,32 +367,7 @@ export default {
       rol: null,
       id: '',
       newContrat: false,
-      contratos: [
-        {
-          name: 'uno',
-          description: 'contrtov',
-          date: '10/10/2020',
-          img: '../statics/app-logo-128x128.png'
-        },
-        {
-          name: 'dos',
-          description: 'contrtov',
-          date: '10/10/2020',
-          img: '../statics/app-logo-128x128.png'
-        },
-        {
-          name: 'tres',
-          description: 'contrtov',
-          date: '10/10/2020',
-          img: '../statics/app-logo-128x128.png'
-        },
-        {
-          name: 'cuatro',
-          description: 'contrtov',
-          date: '10/10/2020',
-          img: '../statics/app-logo-128x128.png'
-        }
-      ],
+      vigentes: [],
       leftDrawerOpen: true,
       rightDrawerOpen: true,
       date: '2020/10/20',
@@ -405,6 +384,9 @@ export default {
         console.log('id', this.id)
         this.img = env.apiUrl + '/file3/' + this.id
         this.construir = true
+        if (this.rol > 1) {
+          this.getVigentes()
+        }
       }
     })
   },
@@ -413,6 +395,16 @@ export default {
     salir () {
       this.logout()
       this.$router.push('/')
+    },
+    getVigentes () {
+      this.$api.get('contratos_pendientes').then(res => {
+        if (res) {
+          this.vigentes = res.filter(v => v.status === 2)
+          console.log('Ej Vigentes')
+        }
+      }).catch(error => {
+        console.log(error)
+      })
     }
   }
 }

@@ -5,11 +5,11 @@ const routes = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       {
-        path: '/dashboard',
+        path: '/inicio',
         component: () => import('pages/ListContratos.vue')
       },
       {
-        path: '/dashboard_admin',
+        path: '/inicio_admin',
         component: () => import('pages/dashboardAdmin.vue')
       },
       {

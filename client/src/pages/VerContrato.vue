@@ -162,7 +162,7 @@ export default {
       }).onOk(() => {
         this.$api.put('update_status/' + this.id, { status: 3 }).then(res => {
           if (res) {
-            this.$router.push('/dashboard_admin')
+            this.$router.push('/inicio')
           }
         })
       }).onCancel(() => {
@@ -183,7 +183,7 @@ export default {
           }
         }).then(res => {
           if (res) {
-            this.$router.push('/dashboard')
+            this.$router.push('/inicio')
           }
         })
       }
@@ -197,7 +197,7 @@ export default {
       if (!this.metodoPagoA && this.politicasUserA) {
         this.$api.put('update_check_alone/' + this.id, this.form).then(res => {
           if (res) {
-            this.$router.push('/dashboard')
+            this.$router.push('/inicio')
           }
         })
       }

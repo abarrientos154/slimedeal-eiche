@@ -136,7 +136,7 @@ export default {
     aprobarContrato () {
       this.$api.put('update_status/' + this.id, { status: 2 }).then(res => {
         if (res) {
-          this.$router.push('/dashboard_admin')
+          this.$router.push('/inicio_admin')
         }
       })
     },
@@ -149,7 +149,7 @@ export default {
       }).onOk(() => {
         this.$api.put('update_status/' + this.id, { status: 4 }).then(res => {
           if (res) {
-            this.$router.push('/dashboard_admin')
+            this.$router.push('/inicio_admin')
           }
         })
       }).onCancel(() => {
