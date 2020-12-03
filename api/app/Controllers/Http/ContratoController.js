@@ -46,13 +46,20 @@ async function changeContractStatus (id, check, userA) {
   }
   return contratoF
 }
-
 class ContratoController {
   async show ({ request, response, params }) {
     let contrato = (await Contrato.query().where({_id: params.id}).with('datos_userA').with('datos_userB').first()).toJSON()
     response.send(contrato)
   }
-
+  async actualizarContratoVigencia ({ request, response, params }) {
+    let body = request.only(['fechaV'])
+    if (body.fechaV === null) {
+      let contrato = await Contrato.query().where({_id: params.id}).update({status: 2})
+    } else {
+      let contrato = await Contrato.query().where({_id: params.id}).update({status: 2, fechaV: body.fechaV})
+    }
+    response.send(body)
+  }
   async misContratosPagados ({ response, auth }) {
     const user = (await auth.getUser()).toJSON()
     let contrato = (await Contrato.query().where({
