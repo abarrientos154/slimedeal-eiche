@@ -1,6 +1,6 @@
 <template>
   <div class="q-pa-sm q-mt-md">
-        <div class="text-h6 q-pa-sm q-ml-sm">Contratos en Revisión</div>̣̣
+        <div class="text-h6 q-pa-sm q-ml-sm">Contratos para revisión</div>̣̣
         <div class="q-pa-sm justify-start">
         <q-scroll-area
           v-if="revision.length"

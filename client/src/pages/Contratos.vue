@@ -68,10 +68,13 @@
                     <q-btn color="amber-8" no-caps label="Revisión" style="width: 85px" @click="revision = true; filter()" />
                 </div>
                 <div class="q-pr-xs">
-                    <q-btn color="light-green-14" no-caps label="Vigentes" style="width: 85px" @click="vigentes = true; filter()" />
+                    <q-btn color="positive" no-caps label="Vigentes" style="width: 85px" @click="vigentes = true; filter()" />
                 </div>
                 <div class="q-pr-xs">
                     <q-btn color="red" no-caps label="Rechazados" style="width: 85px" @click="rechazados = true; filter()" />
+                </div>
+                <div class="q-pr-xs">
+                    <q-btn color="blue-grey" no-caps label="Vencidos" style="width: 85px" @click="vencidos = true; filter()" />
                 </div>
             </div>
       </div>
@@ -85,7 +88,7 @@
               <div class="row q-pa-sm items-center">
                 <div class="text-subtitle2 q-px-md">{{index + 1}}</div>
                 <q-card
-                  :class="card.status == 0 ? 'bg-blue-3' : card.status == 1 ? 'bg-amber-6' : card.status == 2 ? 'bg-light-green-13' : card.status == 3 || card.status == 4 ? 'bg-red' : 'bg-white'"
+                  :class="card.status == 0 ? 'bg-blue-3' : card.status == 1 ? 'bg-amber-6' : card.status == 2 && vic(card) ? 'bg-positive' : card.status == 2 && !vic(card) ? 'bg-blue-grey-4' : card.status == 3 || card.status == 4 ? 'bg-red' : 'bg-white'"
                   style="width: 90%; height: 100px"
                 >
                   <q-item class="absolute-center" style="width: 100%">
@@ -122,6 +125,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 import { openURL } from 'quasar'
 import env from '../env'
 export default {
@@ -130,17 +134,31 @@ export default {
       contratos: [],
       contratosP: [],
       data: [],
+      today: moment(),
       todos: false,
       pendientes: false,
       revision: false,
       vigentes: false,
-      rechazados: false
+      rechazados: false,
+      vencidos: false
     }
   },
   mounted () {
     this.getContratos()
+    console.log('today', this.today)
   },
   methods: {
+    vic (val) {
+      if (val.fechaV) {
+        if (moment(val.fechaV) >= this.today) {
+          return true
+        } else {
+          return false
+        }
+      } else {
+        return true
+      }
+    },
     getContratos () {
       this.$api.get('contratos_pendientes').then(res => {
         if (res) {
@@ -175,12 +193,16 @@ export default {
         this.revision = false
       }
       if (this.vigentes) {
-        this.data = this.data.filter(v => v.status === 2)
+        this.data = this.data.filter(v => v.status === 2 && moment(v.fechaV) >= this.today)
         this.vigentes = false
       }
       if (this.rechazados) {
         this.data = this.data.filter(v => v.status === 3 || v.status === 4)
         this.rechazados = false
+      }
+      if (this.vencidos) {
+        this.data = this.data.filter(v => v.status === 2 && moment(v.fechaV) <= this.today)
+        this.vencidos = false
       }
     }
   }

@@ -2,7 +2,7 @@
   <div class="row justify-between fullheight">
     <q-card
       class="bg-white shadow-13 row q-pb-none"
-      style="width: 200px; height: 100%; min-height: 600px; max-height: 700px;"
+      style="width: 200px; height: 100%; min-height: 900px; max-height: 1000px;"
     >
     <q-card-section style="width:100%; height:100%">
         <div class="row justify-center">
@@ -44,7 +44,7 @@
                     padding="sm"
                     size="md"
                     color="primary"
-                    @click="aprobarContrato()"
+                    @click="seeDialog()"
                     >Aprobar
                 </q-btn>
             </div>
@@ -62,6 +62,148 @@
       </q-card-section>
     </q-card>
 
+    <div class="col column">
+      <div class="col bg-white row q-pb-none">
+        <pdf :src="pdf" style="width: 100%"></pdf>
+      </div>
+
+      <div class="row justify-center">
+        <q-btn
+          no-caps
+          padding="sm"
+          size="md"
+          color="primary"
+          @click="seeEstatus = true"
+          >Ver estatus
+        </q-btn>
+      </div>
+    </div>
+
+    <q-dialog v-model="seeEstatus" persistent>
+      <q-card>
+        <q-card-section class="row justify-end">
+        <q-btn icon="close" flat round dense v-close-popup />
+        </q-card-section>
+        <q-card-section class="row items-center q-pa-sm">
+          <div class="col q-px-xs q-pb-sm">
+            <q-timeline :layout="layout" color="secondary">
+              <q-timeline-entry heading>
+                Estado del contrato
+              </q-timeline-entry>
+
+              <q-timeline-entry
+                title="Estado Pendiente"
+                side="left"
+                icon="pending_actions"
+                color="blue-7"
+              >
+                <div>
+                  El contrato se encuentra en espera de que los participantes realicen las transacciones requeridas y estén de acuerdo con los términos y condiciones de SlimeDeal.
+                </div>
+              </q-timeline-entry>
+
+              <q-timeline-entry
+                v-if="contrato.status == 3"
+                title="Rechazado por uno de los participantes"
+                side="right"
+                color="red"
+                icon="done_all"
+              >
+                <div>
+                  El contrato fue rechazado por uno de sus participantes.
+                </div>
+              </q-timeline-entry>
+
+              <q-timeline-entry
+                v-if="contrato.status == 1 || contrato.status == 2 || contrato.status == 4 || contrato.status == 5"
+                title="Estado en Revisión"
+                side="right"
+                icon="preview"
+                color="amber-8"
+              >
+                <div>
+                  El contrato se encuentra en espera de que el administrador de SlimeDeal lo apruebe.
+                </div>
+              </q-timeline-entry>
+
+              <q-timeline-entry
+                v-if="contrato.status == 4"
+                title="Rechazado por el administrador"
+                side="left"
+                icon="done_all"
+                color="red"
+              >
+                <div>
+                  El contrato fue rechazado por el administrador de SlimeDeal.
+                </div>
+              </q-timeline-entry>
+
+              <q-timeline-entry
+                v-if="contrato.status == 2 || contrato.status == 5"
+                title="Estado en Vigencia"
+                side="left"
+                icon="check"
+                color="positive"
+              >
+                <div>
+                  El contrato se encuentra en estado de vigencia ya que fue aprobado por el administrador.
+                </div>
+              </q-timeline-entry>
+
+              <q-timeline-entry
+                v-if="contrato.status == 5"
+                title="Estado Vencido"
+                side="right"
+                icon="done_all"
+                color="blue-grey"
+              >
+                <div>
+                  El contrato ha superado la fecha de vigencia establecida por el administrador de SlimeDeal.
+                </div>
+              </q-timeline-entry>
+            </q-timeline>
+          </div>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
+
+    <q-dialog v-model="aprobarCont" persistent>
+      <q-card>
+        <q-card-section class="row justify-between">
+          <div class="text-subtitle1">Fecha hasta la cual estará vigente el contrato</div>
+          <q-btn icon="close" flat round dense v-close-popup />
+        </q-card-section>
+        <q-card-section class="row items-center q-pa-sm">
+          <q-input
+                :disable="vigenciaIndefinida"
+                class="col-12 row justify-center q-pb-lg"
+                label="Ingrese fecha"
+                v-model="form.fechaV"
+                :error="$v.form.fechaV.$error"
+                error-message="Este campo es requerido"
+                @blur="$v.form.fechaV.$touch()"
+                rounded
+                outlined mask="date" :rules="['date']">
+            <template v-slot:append>
+              <q-icon name="event" class="cursor-pointer">
+                <q-popup-proxy ref="qDateProxy" transition-show="scale" transition-hide="scale">
+                  <q-date  v-model="form.fechaV">
+                    <div class="row items-center justify-end">
+                      <q-btn v-close-popup label="Cerrar" color="primary" flat />
+                    </div>
+                  </q-date>
+                </q-popup-proxy>
+              </q-icon>
+            </template>
+          </q-input>
+           <q-checkbox v-model="vigenciaIndefinida" label="Vigencia indefinida" color="primary" />
+           <div class="col-12 row justify-center">
+            <q-btn color="primary" label="Guardar" @click="aprobarContrato()" />
+           </div>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
+
     <q-card
       class="bg-white shadow-13"
       style="width: 200px"
@@ -73,7 +215,7 @@
                 src="app-logo-128x128.png"
             ></q-img>
         </div>
-        <div class="text-subtitle1 text-center">{{contrato.datos_userB.name ? contrato.datos_userB.name : contrato.name}}</div>
+        <div class="text-subtitle1 text-center">{{contrato.datos_userB != null ? contrato.datos_userB.name : contrato.name}}</div>
         <div class="text-subtitle2 text-grey text-center">{{contrato.datos_userB.email ? contrato.datos_userB.email : contrato.email}}</div>
         <div v-if="contrato.datos_userB.phone" class="text-subtitle2 text-grey text-center">{{contrato.datos_userB.phone}}</div>
         <div v-if="metodoPagoB" class="row justify-center q-pa-xs">
@@ -106,12 +248,20 @@
 
 <script>
 import env from '../env'
+import pdf from 'vue-pdf'
+import { required } from 'vuelidate/lib/validators'
 export default {
   name: 'MainLayout',
-  components: {},
+  components: { pdf },
+  props: {
+    selec: { default: 'Fecha' }
+  },
   data () {
     return {
       id: '',
+      pdf: '',
+      aprobarCont: false,
+      vigenciaIndefinida: false,
       imgComprobanteA: '',
       imgComprobanteB: '',
       metodoPagoA: true,
@@ -123,7 +273,31 @@ export default {
       leftDrawerOpen: true,
       rightDrawerOpen: true,
       contrato: {},
+      seeEstatus: false,
       form: {}
+    }
+  },
+  computed: {
+    layout () {
+      return this.$q.screen.lt.sm ? 'dense' : (this.$q.screen.lt.md ? 'comfortable' : 'loose')
+    }
+  },
+  validations: {
+    form: {
+      fechaV: { required }
+    }
+  },
+  watch: {
+    selec (val) {
+      this.id = val
+      this.$api.get('contrato/' + this.id).then(res => {
+        if (res) {
+          this.typeContract = res
+          this.getUser()
+        }
+      }).catch(error => {
+        console.log(error)
+      })
     }
   },
   mounted () {
@@ -134,7 +308,10 @@ export default {
   },
   methods: {
     aprobarContrato () {
-      this.$api.put('update_status/' + this.id, { status: 2 }).then(res => {
+      if (this.vigenciaIndefinida) {
+        this.form.fechaV = null
+      }
+      this.$api.put('actualizar_contrato/' + this.id, this.form).then(res => {
         if (res) {
           this.$router.push('/inicio_admin')
         }
@@ -160,6 +337,7 @@ export default {
       this.$api.get('contrato/' + id).then(res => {
         if (res) {
           this.contrato = res
+          this.pdf = env.apiUrl + '/file2/' + this.contrato.archiveName
           console.log('Contrato ', this.contrato)
           var rutaf = []
           if (this.contrato.metodoPago === 1) {
@@ -198,6 +376,10 @@ export default {
       }).catch(error => {
         console.log(error)
       })
+    },
+    seeDialog () {
+      this.aprobarCont = true
+      this.form = {}
     }
   }
 }

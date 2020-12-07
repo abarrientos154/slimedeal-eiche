@@ -2,7 +2,7 @@
   <div class="row justify-between fullheight">
     <q-card
       class="bg-white shadow-13 row q-pb-none"
-      style="width: 200px; height: 100%; min-height: 600px; max-height: 700px;"
+      style="width: 200px; height: 100%; min-height: 900px; max-height: 1000px;"
     >
     <q-card-section style="width:100%; height:100%">
         <div class="row justify-center">
@@ -62,9 +62,110 @@
       </q-card-section>
     </q-card>
 
-    <div class="bg-white row q-pb-none">
-      <pdf :src="pdf" style="width: 100%"></pdf>
+    <div class="col column">
+      <div class="col bg-white row q-pb-none">
+        <pdf :src="pdf" style="width: 100%"></pdf>
+      </div>
+
+      <div class="row justify-center">
+        <q-btn
+          no-caps
+          padding="sm"
+          size="md"
+          color="primary"
+          @click="seeEstatus = true"
+          >Ver estatus
+        </q-btn>
+      </div>
     </div>
+
+    <q-dialog v-model="seeEstatus" persistent>
+      <q-card>
+        <q-card-section class="row justify-end">
+        <q-btn icon="close" flat round dense v-close-popup />
+        </q-card-section>
+        <q-card-section class="row items-center q-pa-sm">
+          <div class="col q-px-xs q-pb-sm">
+            <q-timeline :layout="layout" color="secondary">
+              <q-timeline-entry heading>
+                Estado del contrato
+              </q-timeline-entry>
+
+              <q-timeline-entry
+                title="Estado Pendiente"
+                side="left"
+                icon="pending_actions"
+                color="blue-7"
+              >
+                <div>
+                  El contrato se encuentra en espera de que los participantes realicen las transacciones requeridas y estén de acuerdo con los términos y condiciones de SlimeDeal.
+                </div>
+              </q-timeline-entry>
+
+              <q-timeline-entry
+                v-if="contrato.status == 3"
+                title="Rechazado por uno de los participantes"
+                side="right"
+                color="red"
+                icon="done_all"
+              >
+                <div>
+                  El contrato fue rechazado por uno de sus participantes.
+                </div>
+              </q-timeline-entry>
+
+              <q-timeline-entry
+                v-if="contrato.status == 1 || contrato.status == 2 || contrato.status == 4 || contrato.status == 5"
+                title="Estado en Revisión"
+                side="right"
+                icon="preview"
+                color="amber-8"
+              >
+                <div>
+                  El contrato se encuentra en espera de que el administrador de SlimeDeal lo apruebe.
+                </div>
+              </q-timeline-entry>
+
+              <q-timeline-entry
+                v-if="contrato.status == 4"
+                title="Rechazado por el administrador"
+                side="left"
+                icon="done_all"
+                color="red"
+              >
+                <div>
+                  El contrato fue rechazado por el administrador de SlimeDeal.
+                </div>
+              </q-timeline-entry>
+
+              <q-timeline-entry
+                v-if="contrato.status == 2 || contrato.status == 5"
+                title="Estado en Vigencia"
+                side="left"
+                icon="check"
+                color="positive"
+              >
+                <div>
+                  El contrato se encuentra en estado de vigencia ya que fue aprobado por el administrador.
+                </div>
+              </q-timeline-entry>
+
+              <q-timeline-entry
+                v-if="contrato.status == 5"
+                title="Estado Vencido"
+                side="right"
+                icon="done_all"
+                color="blue-grey"
+              >
+                <div>
+                  El contrato ha superado la fecha de vigencia establecida por el administrador de SlimeDeal.
+                </div>
+              </q-timeline-entry>
+            </q-timeline>
+          </div>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
 
     <q-card
       class="bg-white shadow-13"
@@ -116,10 +217,14 @@ import pdf from 'vue-pdf'
 export default {
   components: { pdf },
   name: 'MainLayout',
+  props: {
+    selec: { default: 'Fecha' }
+  },
   data () {
     return {
       id: '',
       pdf: '',
+      seeEstatus: false,
       imgComprobanteA: '',
       imgComprobanteB: '',
       disable: false,
@@ -137,6 +242,24 @@ export default {
       contrato: {},
       typeContract: {},
       form: {}
+    }
+  },
+  watch: {
+    selec (val) {
+      this.id = val
+      this.$api.get('contrato/' + this.id).then(res => {
+        if (res) {
+          this.typeContract = res
+          this.getUser()
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+    }
+  },
+  computed: {
+    layout () {
+      return this.$q.screen.lt.sm ? 'dense' : (this.$q.screen.lt.md ? 'comfortable' : 'loose')
     }
   },
   mounted () {

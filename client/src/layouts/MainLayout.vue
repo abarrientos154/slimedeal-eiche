@@ -283,15 +283,16 @@
         class="q-mb-md"
       />
         <q-pull>
-          <div class="text-h6 q-pa-sm q-ml-sm">Contratos Vigentes</div>
-            <div v-if="vigentes.length">
+          <div class="text-h6 q-pa-sm q-ml-sm">{{rol > 1 ? 'Contratos Vigentes' : 'Contratos para revisión'}}</div>
+            <div v-if="data.length">
               <div
-                v-for="(mazo, index) in vigentes"
+                v-for="(mazo, index) in data"
                 :key="index"
-                class="q-mb-sm"
+                class="q-mb-sm q-mx-sm"
               >
                 <q-card
                   class="my-card bg-primary shadow-10"
+                  @click="ver(mazo._id)"
                 >
                   <q-item class="q-pa-xs">
                     <q-item-section avatar>
@@ -306,7 +307,7 @@
                           style="height: 30px; width: 100%"
                           class="rounded-borders "
                         >
-                          <div class="text-h6 text-white text-bold">{{ mazo.title }}</div>
+                          <div class="text-subtitle1 text-white text-bold">{{ mazo.title }}</div>
                         </q-scroll-area>
                       </div>
                       <q-item-label>
@@ -320,18 +321,18 @@
                       </q-item-label>
                     </q-item-section>
                     <q-item-section >
-                      <q-item-label class="text-subtitle1 text-white text-bold q-pa-sm"> {{ mazo.created_at }}</q-item-label>
+                      <q-item-label class="text-caption text-white text-bold q-pr-xs row justify-end  "> {{ mazo.created_at }}</q-item-label>
                     </q-item-section>
                   </q-item>
                 </q-card>
               </div>
             </div>
-            <div v-else class="text-center q-py-md" > No tienes contratos vigentes</div>
+            <div v-else class="text-center q-py-md" >{{rol > 1 ? 'No tienes contratos vigente' : ' No tienes contratos para revisión'}}</div>
           </q-pull>
     </div>
     </q-drawer>
     <q-page-container class="fullheight">
-      <router-view />
+      <router-view :selec="seleccion" />
       <!-- <div class="row justify-center">
         <div class="q-pa-md">
          <q-btn
@@ -356,6 +357,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 import NuevoContrato from '../components/NuevoContrato'
 import { mapMutations } from 'vuex'
 import env from '../env'
@@ -366,14 +368,16 @@ export default {
     return {
       rol: null,
       id: '',
+      seleccion: '',
+      now: moment(),
       newContrat: false,
-      vigentes: [],
       leftDrawerOpen: true,
       rightDrawerOpen: true,
       date: '2020/10/20',
       nNotify: 3,
       myNotification: {},
-      construir: false
+      construir: false,
+      data: []
     }
   },
   mounted () {
@@ -381,11 +385,13 @@ export default {
       if (v) {
         this.rol = v.roles[0]
         this.id = v._id
-        console.log('id', this.id)
+        console.log('id', this.id, 'rol ', this.rol)
         this.img = env.apiUrl + '/file3/' + this.id
         this.construir = true
         if (this.rol > 1) {
           this.getVigentes()
+        } else {
+          this.getRevision()
         }
       }
     })
@@ -399,12 +405,42 @@ export default {
     getVigentes () {
       this.$api.get('contratos_pendientes').then(res => {
         if (res) {
-          this.vigentes = res.filter(v => v.status === 2)
-          console.log('Ej Vigentes')
+          this.data = res.filter(v => v.status === 2).map(v => {
+            return {
+              ...v,
+              created_at: moment(v.created_at).format('DD-MM-YYYY')
+            }
+          })
+          console.log('Ej Vigentes', this.data)
         }
       }).catch(error => {
         console.log(error)
       })
+    },
+    getRevision () {
+      this.$api.get('get_contracts/' + 1).then(res => {
+        if (res) {
+          this.data = res.map(v => {
+            return {
+              ...v,
+              created_at: moment(v.created_at).format('DD-MM-YYYY')
+            }
+          })
+          console.log('Ej Revision', this.data)
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    ver (id) {
+      console.log(id)
+      if (this.rol > 1) {
+        this.seleccion = id
+        this.$router.push('/ver_contrato/' + id)
+      } else {
+        this.seleccion = id
+        this.$router.push('/ver_contrato_admin/' + id)
+      }
     }
   }
 }
