@@ -147,6 +147,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 import { openURL } from 'quasar'
 import env from '../env'
 export default {
@@ -154,7 +155,8 @@ export default {
     return {
       pendientes: [],
       vigentes: [],
-      contratos: []
+      contratos: [],
+      today: moment()
     }
   },
   mounted () {
@@ -166,7 +168,7 @@ export default {
         if (res) {
           this.contratos = res
           this.pendientes = this.contratos.filter(v => v.status === 0)
-          this.vigentes = this.contratos.filter(v => v.status === 2)
+          this.vigentes = this.contratos.filter(v => v.status === 2 && moment(v.fechaV) >= this.today)
           console.log('pendientes ', this.pendientes)
         }
       }).catch(error => {
