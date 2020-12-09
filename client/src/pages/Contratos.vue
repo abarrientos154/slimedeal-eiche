@@ -22,7 +22,7 @@
                   <q-item class="absolute-center" style="width: 100%">
                     <q-item-section avatar>
                       <q-avatar>
-                        <img src="https://cdn.quasar.dev/img/avatar2.jpg">
+                        <img :src="imgC(card)">
                       </q-avatar>
                     </q-item-section>
 
@@ -94,7 +94,7 @@
                   <q-item class="absolute-center" style="width: 100%">
                     <q-item-section avatar>
                       <q-avatar>
-                        <img src="https://cdn.quasar.dev/img/avatar2.jpg">
+                        <img :src="imgC(card)">
                       </q-avatar>
                     </q-item-section>
 
@@ -147,6 +147,16 @@ export default {
     this.getContratos()
   },
   methods: {
+    imgC (val) {
+      var im = ''
+      if (val.datos_userA) {
+        im = env.apiUrl + '/file3/' + val.datos_userA._id
+        return im
+      } else {
+        im = 'app-logo-128x128.png'
+        return im
+      }
+    },
     vic (val) {
       if (val.fechaV) {
         if (moment(val.fechaV) >= this.today) {

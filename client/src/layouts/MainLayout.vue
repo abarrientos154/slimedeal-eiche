@@ -150,7 +150,7 @@
         bordered
         separator
       >
-        <q-item
+        <!-- <q-item
           clickable
           active-class="my-menu-link"
           v-ripple
@@ -160,7 +160,7 @@
           </q-item-section>
 
           <q-item-section> Mi perfil</q-item-section>
-        </q-item>
+        </q-item> -->
         <q-item
           clickable
           active-class="my-menu-link"
@@ -297,7 +297,7 @@
                   <q-item class="q-pa-xs">
                     <q-item-section avatar>
                       <q-avatar>
-                        <img src="https://cdn.quasar.dev/img/avatar2.jpg">
+                        <img :src="imgC(mazo)">
                       </q-avatar>
                     </q-item-section>
                     <q-item-section>
@@ -397,6 +397,16 @@ export default {
     })
   },
   methods: {
+    imgC (val) {
+      var im = ''
+      if (val.datos_userA) {
+        im = env.apiUrl + '/file3/' + val.datos_userA._id
+        return im
+      } else {
+        im = 'app-logo-128x128.png'
+        return im
+      }
+    },
     ...mapMutations('generals', ['logout']),
     salir () {
       this.logout()
