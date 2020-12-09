@@ -3,10 +3,10 @@
             <q-card class="shadow-13 absolute-center" style="width:80%; height:85%">
               <q-card-section style="width:100%; height:100%">
                 <div class="absolute-center" style="width:100%">
-                <div class="row justify-center">
+                <div class="row justify-center q-pb-md">
                   <q-img
                     style="width:100px"
-                    src="app-logo-128x128.png"
+                    src="slimelogo.png"
                   ></q-img>
                 </div>
                 <div class="row justify-center text-subtitle1 text-grey">Ingresa a la plataforma</div>
