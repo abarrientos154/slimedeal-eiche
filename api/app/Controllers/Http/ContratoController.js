@@ -86,7 +86,7 @@ class ContratoController {
     const user = (await auth.getUser()).toJSON()
     let contratoPendientes = (await Contrato.where({
       $or: [{ userA_id: user._id }, { email: user.email }]
-    }).fetch()).toJSON()
+    }).with('datos_userA').fetch()).toJSON()
     response.send(contratoPendientes)
   }
 
