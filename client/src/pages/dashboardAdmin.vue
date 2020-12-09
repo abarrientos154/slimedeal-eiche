@@ -1,5 +1,14 @@
 <template>
-  <div class="q-pa-sm q-mt-md">
+  <div>
+    <div class="bg-primary col full-width q-pa-sm">
+      <div class="row justify-center">
+        <q-img
+          style="width:100px"
+          src="slime_logo_hw.png"
+        ></q-img>
+      </div>
+    </div>
+    <div class="q-pa-sm q-mt-md">
         <div class="text-h6 q-pa-sm q-ml-sm">Contratos para revisión</div>̣̣
         <div class="q-pa-sm justify-start">
         <q-scroll-area
@@ -142,10 +151,12 @@
         </q-scroll-area>
         <div v-else class="text-center q-py-md" > No tienes ningún contrato</div>
       </div>
+    </div>
   </div>
 </template>
 
 <script>
+import moment from 'moment'
 import { openURL } from 'quasar'
 import env from '../env'
 export default {
@@ -153,7 +164,8 @@ export default {
     return {
       revision: [],
       vigentes: [],
-      contratos: []
+      contratos: [],
+      today: moment()
     }
   },
   mounted () {
@@ -171,7 +183,7 @@ export default {
       })
       this.$api.get('get_contracts/' + 2).then(res => {
         if (res) {
-          this.vigentes = res
+          this.vigentes = res.filter(v => moment(v.fechaV) >= this.today)
           console.log('vigentes ', this.vigentes)
         }
       }).catch(error => {

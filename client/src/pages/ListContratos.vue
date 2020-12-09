@@ -1,5 +1,14 @@
 <template>
-  <div class="q-pa-sm q-mt-md">
+  <div>
+    <div class="bg-primary col full-width q-pa-sm">
+      <div class="row justify-center">
+        <q-img
+          style="width:100px"
+          src="slime_logo_hw.png"
+        ></q-img>
+      </div>
+    </div>
+    <div class="q-pa-sm q-mt-md">
         <div class="text-h6 q-pa-sm q-ml-sm">Contratos Pendientes</div>
 
         <div class="q-pa-sm justify-start">
@@ -143,10 +152,12 @@
         </q-scroll-area>
         <div v-else class="text-center q-py-md" > No tienes ningún contrato</div>
       </div>
+    </div>
   </div>
 </template>
 
 <script>
+import moment from 'moment'
 import { openURL } from 'quasar'
 import env from '../env'
 export default {
@@ -154,7 +165,8 @@ export default {
     return {
       pendientes: [],
       vigentes: [],
-      contratos: []
+      contratos: [],
+      today: moment()
     }
   },
   mounted () {
@@ -166,7 +178,7 @@ export default {
         if (res) {
           this.contratos = res
           this.pendientes = this.contratos.filter(v => v.status === 0)
-          this.vigentes = this.contratos.filter(v => v.status === 2)
+          this.vigentes = this.contratos.filter(v => v.status === 2 && moment(v.fechaV) >= this.today)
           console.log('pendientes ', this.pendientes)
         }
       }).catch(error => {

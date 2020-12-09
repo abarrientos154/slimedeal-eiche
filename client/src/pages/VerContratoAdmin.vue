@@ -5,11 +5,13 @@
       style="width: 200px; height: 100%; min-height: 900px; max-height: 1000px;"
     >
     <q-card-section style="width:100%; height:100%">
-        <div class="row justify-center">
+        <div class="row justify-center q-pb-sm">
+          <q-avatar size="70px" font-size="52px" >
             <q-img
                 style="width:70px"
-                src="app-logo-128x128.png"
+                :src="perfilA"
             ></q-img>
+          </q-avatar>
         </div>
         <div class="text-subtitle1 text-center">{{contrato.datos_userA.name}}</div>
         <div class="text-subtitle2 text-grey text-center">{{contrato.datos_userA.email}}</div>
@@ -151,7 +153,7 @@
               </q-timeline-entry>
 
               <q-timeline-entry
-                v-if="contrato.status == 5"
+                v-if="vence"
                 title="Estado Vencido"
                 side="right"
                 icon="done_all"
@@ -209,11 +211,13 @@
       style="width: 200px"
     >
     <q-card-section style="width:100%; height:100%">
-    <div class="row justify-center">
+    <div class="row justify-center q-pb-sm">
+      <q-avatar size="70px" font-size="52px" >
             <q-img
                 style="width:70px"
-                src="app-logo-128x128.png"
+                :src="perfilB"
             ></q-img>
+      </q-avatar>
         </div>
         <div class="text-subtitle1 text-center">{{contrato.datos_userB != null ? contrato.datos_userB.name : contrato.name}}</div>
         <div class="text-subtitle2 text-grey text-center">{{contrato.datos_userB.email ? contrato.datos_userB.email : contrato.email}}</div>
@@ -247,6 +251,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 import env from '../env'
 import pdf from 'vue-pdf'
 import { required } from 'vuelidate/lib/validators'
@@ -260,10 +265,14 @@ export default {
     return {
       id: '',
       pdf: '',
+      today: moment(),
+      vence: false,
       aprobarCont: false,
       vigenciaIndefinida: false,
       imgComprobanteA: '',
       imgComprobanteB: '',
+      perfilA: '',
+      perfilB: '',
       metodoPagoA: true,
       metodoPagoB: true,
       politicasUserA: false,
@@ -337,6 +346,17 @@ export default {
       this.$api.get('contrato/' + id).then(res => {
         if (res) {
           this.contrato = res
+          this.perfilA = env.apiUrl + '/file3/' + this.contrato.datos_userA._id
+          this.perfilB = env.apiUrl + '/file3/' + this.contrato.datos_userB._id
+          /* if (this.contrato.fechaV) {
+            if (moment(this.contrato.fechaV) < this.today) {
+              this.vence = true
+            } else {
+              this.vence = false
+            }
+          } else {
+            this.vence = false
+          } */
           this.pdf = env.apiUrl + '/file2/' + this.contrato.archiveName
           console.log('Contrato ', this.contrato)
           var rutaf = []

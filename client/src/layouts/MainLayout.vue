@@ -405,7 +405,7 @@ export default {
     getVigentes () {
       this.$api.get('contratos_pendientes').then(res => {
         if (res) {
-          this.data = res.filter(v => v.status === 2).map(v => {
+          this.data = res.filter(v => v.status === 2 && moment(v.fechaV) >= this.now).map(v => {
             return {
               ...v,
               created_at: moment(v.created_at).format('DD-MM-YYYY')

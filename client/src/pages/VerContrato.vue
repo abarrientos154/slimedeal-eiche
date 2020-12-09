@@ -5,11 +5,13 @@
       style="width: 200px; height: 100%; min-height: 900px; max-height: 1000px;"
     >
     <q-card-section style="width:100%; height:100%">
-        <div class="row justify-center">
+        <div class="row justify-center q-pb-sm">
+          <q-avatar size="70px" font-size="52px" >
             <q-img
                 style="width:70px"
-                src="app-logo-128x128.png"
+                :src="perfilA"
             ></q-img>
+          </q-avatar>
         </div>
         <div class="text-subtitle1 text-center">{{userA.name}}</div>
         <div class="text-subtitle2 text-grey text-center">{{userA.email}}</div>
@@ -39,6 +41,14 @@
         </q-item-section>
         <q-item-section>
           <q-item-label class="text-caption">Estoy de acuerdo con las políticas establecidas por SlimeDeal.</q-item-label>
+        </q-item-section>
+      </q-item>
+      <q-item class="q-mt-md" v-ripple>
+        <q-item-section avatar top>
+          <q-checkbox :disable="disableL" v-model="listoCA" color="primary" />
+        </q-item-section>
+        <q-item-section>
+          <q-item-label class="text-caption">Ya pagué y envié los comprobantes requeridos.</q-item-label>
         </q-item-section>
       </q-item>
       <div v-if="!disable" class="q-pa-md row justify-center">
@@ -107,7 +117,7 @@
                 title="Rechazado por uno de los participantes"
                 side="right"
                 color="red"
-                icon="done_all"
+                icon="cancel"
               >
                 <div>
                   El contrato fue rechazado por uno de sus participantes.
@@ -130,7 +140,7 @@
                 v-if="contrato.status == 4"
                 title="Rechazado por el administrador"
                 side="left"
-                icon="done_all"
+                icon="cancel"
                 color="red"
               >
                 <div>
@@ -151,10 +161,10 @@
               </q-timeline-entry>
 
               <q-timeline-entry
-                v-if="contrato.status == 5"
+                v-if="vence"
                 title="Estado Vencido"
                 side="right"
-                icon="done_all"
+                icon="cancel"
                 color="blue-grey"
               >
                 <div>
@@ -172,11 +182,13 @@
       style="width: 200px"
     >
     <q-card-section style="width:100%; height:100%">
-    <div class="row justify-center">
+    <div class="row justify-center q-pb-sm">
+      <q-avatar size="70px" font-size="52px" >
             <q-img
                 style="width:70px"
-                src="app-logo-128x128.png"
+                :src="perfilB"
             ></q-img>
+      </q-avatar>
         </div>
         <div class="text-subtitle1 text-center">{{userB.name ? userB.name : contrato.name}}</div>
         <div class="text-subtitle2 text-grey text-center">{{userB.email ? userB.email : contrato.email}}</div>
@@ -206,12 +218,21 @@
           <q-item-label class="text-caption">Estoy de acuerdo con las políticas establecidas por SlimeDeal.</q-item-label>
         </q-item-section>
       </q-item>
+      <q-item class="q-mt-md" v-ripple>
+        <q-item-section avatar top>
+          <q-checkbox disable v-model="listoCB" color="primary" />
+        </q-item-section>
+        <q-item-section>
+          <q-item-label class="text-caption">Ya pagué y envié los comprobantes requeridos.</q-item-label>
+        </q-item-section>
+      </q-item>
     </q-card-section>
     </q-card>
   </div>
 </template>
 
 <script>
+import moment from 'moment'
 import env from '../env'
 import pdf from 'vue-pdf'
 export default {
@@ -224,14 +245,21 @@ export default {
     return {
       id: '',
       pdf: '',
+      today: moment(),
+      vence: false,
       seeEstatus: false,
       imgComprobanteA: '',
       imgComprobanteB: '',
+      perfilA: '',
+      perfilB: '',
       disable: false,
+      disableL: false,
       metodoPagoA: true,
       metodoPagoB: true,
       politicasUserA: false,
       politicasUserB: false,
+      listoCA: false,
+      listoCB: false,
       file: null,
       fileUserB: null,
       leftDrawerOpen: true,
@@ -296,7 +324,7 @@ export default {
       this.form.check = this.politicasUserA
       console.log('form', this.form)
       console.log('file', this.file)
-      if (this.file && this.politicasUserA && this.metodoPagoA) {
+      if (this.file && this.politicasUserA && this.metodoPagoA && this.listoCA) {
         var formData = new FormData()
         formData.append('files', this.file)
         formData.append('dat', JSON.stringify(this.form))
@@ -310,28 +338,42 @@ export default {
           }
         })
       }
-      if (this.metodoPagoA && this.file === null && !this.politicasUserA) {
+      if (this.metodoPagoA && this.file === null && !this.politicasUserA && !this.listoCA) {
         this.$q.dialog({
-          message: 'Debes ingresar los datos requeridos para continuar',
+          message: 'Debes ingresar todos los datos requeridos para continuar',
           persistent: true
         }).onOk(() => {
         })
       }
-      if (!this.metodoPagoA && this.politicasUserA) {
+      if (!this.metodoPagoA && this.politicasUserA && this.listoCA) {
         this.$api.put('update_check_alone/' + this.id, this.form).then(res => {
           if (res) {
             this.$router.push('/inicio')
           }
         })
       }
-      if (!this.metodoPagoA && !this.politicasUserA) {
+      if (!this.metodoPagoA && !this.politicasUserA && !this.listoCA) {
+        this.$q.dialog({
+          message: 'Debes ingresar todos los datos requeridos para continuar',
+          persistent: true
+        }).onOk(() => {
+        })
+      }
+      if (!this.metodoPagoA && this.politicasUserA && !this.listoCA) {
+        this.$q.dialog({
+          message: 'Debes ingresar todos los datos requeridos para continuar',
+          persistent: true
+        }).onOk(() => {
+        })
+      }
+      if (!this.metodoPagoA && !this.politicasUserA && this.listoCA) {
         this.$q.dialog({
           message: 'Debes aceptar las politicas de SlimeDeal para continuar',
           persistent: true
         }).onOk(() => {
         })
       }
-      if (this.metodoPagoA && this.file === null && this.politicasUserA) {
+      if (this.metodoPagoA && this.file === null && this.politicasUserA && this.listoCA) {
         this.$q.dialog({
           message: 'Debes subir el comprobante de pago para continuar',
           persistent: true
@@ -339,9 +381,41 @@ export default {
 
         })
       }
-      if (this.metodoPagoA && this.file && !this.politicasUserA) {
+      if (this.metodoPagoA && this.file === null && !this.politicasUserA && this.listoCA) {
+        this.$q.dialog({
+          message: 'Debes ingresar todos los datos requeridos para continuar',
+          persistent: true
+        }).onOk(() => {
+
+        })
+      }
+      if (this.metodoPagoA && this.file === null && this.politicasUserA && !this.listoCA) {
+        this.$q.dialog({
+          message: 'Debes ingresar todos los datos requeridos para continuar',
+          persistent: true
+        }).onOk(() => {
+
+        })
+      }
+      if (this.metodoPagoA && this.file && !this.politicasUserA && this.listoCA) {
         this.$q.dialog({
           message: 'Debes aceptar las politicas de SlimeDeal para continuar',
+          persistent: true
+        }).onOk(() => {
+
+        })
+      }
+      if (this.metodoPagoA && this.file && !this.politicasUserA && !this.listoCA) {
+        this.$q.dialog({
+          message: 'Debes ingresar todos los datos requeridos para continuar',
+          persistent: true
+        }).onOk(() => {
+
+        })
+      }
+      if (this.metodoPagoA && this.file && this.politicasUserA && !this.listoCA) {
+        this.$q.dialog({
+          message: 'Debes ingresar todos los datos requeridos para continuar',
           persistent: true
         }).onOk(() => {
 
@@ -372,6 +446,15 @@ export default {
       this.$api.get('contrato/' + id).then(res => {
         if (res) {
           this.contrato = res
+          if (this.contrato.fechaV) {
+            if (moment(this.contrato.fechaV) < this.today) {
+              this.vence = true
+            } else {
+              this.vence = false
+            }
+          } else {
+            this.vence = false
+          }
           this.pdf = env.apiUrl + '/file2/' + this.contrato.archiveName
           console.log('pdf', this.pdf)
           // si el contrato tiene un estatus que no sea pendiente no se puede modificar
@@ -382,6 +465,8 @@ export default {
           var rutaf = []
           if (this.userType === 'b') {
             this.userB = this.contrato.datos_userA
+            this.perfilA = env.apiUrl + '/file3/' + this.contrato.datos_userB._id
+            this.perfilB = env.apiUrl + '/file3/' + this.contrato.datos_userA._id
             if (this.contrato.metodoPago === 1) {
               this.metodoPagoA = false
               this.metodoPagoB = true
@@ -420,17 +505,24 @@ export default {
             }
             if (this.contrato.userACheck) {
               this.politicasUserB = this.contrato.userACheck
+              this.listoCB = this.contrato.userACheck
             }
             if (this.contrato.userBCheck) {
               this.politicasUserA = this.contrato.userBCheck
+              this.listoCA = this.contrato.userBCheck
+              this.disableL = true
               this.disable = true
             }
           }
           if (this.userType === 'a') {
             if (this.contrato.datos_userB) {
               this.userB = this.contrato.datos_userB
+              this.perfilA = env.apiUrl + '/file3/' + this.contrato.datos_userA._id
+              this.perfilB = env.apiUrl + '/file3/' + this.contrato.datos_userB._id
             } else {
               this.userB = {}
+              this.perfilA = env.apiUrl + '/file3/' + this.contrato.datos_userA._id
+              this.perfilB = 'app-logo-128x128.png'
             }
             if (this.contrato.metodoPago === 1) {
               this.metodoPagoA = true
@@ -468,10 +560,13 @@ export default {
             }
             if (this.contrato.userACheck) {
               this.politicasUserA = this.contrato.userACheck
+              this.listoCA = this.contrato.userACheck
+              this.disableL = true
               this.disable = true
             }
             if (this.contrato.userBCheck) {
               this.politicasUserB = this.contrato.userBCheck
+              this.listoCB = this.contrato.userBCheck
             }
           }
           console.log('ruta', this.imgComprobanteA)

@@ -145,7 +145,6 @@ export default {
   },
   mounted () {
     this.getContratos()
-    console.log('today', this.today)
   },
   methods: {
     vic (val) {
