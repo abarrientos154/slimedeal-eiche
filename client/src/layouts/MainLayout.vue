@@ -248,15 +248,37 @@
           <q-item-section> Cerrar Sesión </q-item-section>
         </q-item>
       </q-list>
-       <div v-if="rol > 1" class="q-pa-md">
+       <div v-if="rol > 1" class="row justify-center q-pa-md">
           <q-btn
             rounded
             no-caps
+            glossy
             label="Nuevo contrato"
             icon-right="add"
             color="primary"
             class="q-mr-md"
             @click="newContrat=true"
+          />
+        </div>
+        <div class="row justify-center q-pa-md">
+          <q-btn
+            rounded
+            glossy
+            no-caps
+            label="Tutorial"
+            color="primary"
+            class="q-mr-md"
+          />
+        </div>
+        <div class="row justify-center q-pa-md">
+          <q-btn
+            rounded
+            no-caps
+            glossy
+            label="Redes Sociales"
+            color="primary"
+            class="q-mr-md"
+            @click="redesSociales = true"
           />
         </div>
     </div>
@@ -267,6 +289,34 @@
         <q-card-section class="row justify-end"><q-btn icon="close" flat round dense v-close-popup /></q-card-section>
         <q-card-section class="row items-center q-pa-sm">
           <NuevoContrato />
+        </q-card-section>
+      </q-card>
+    </q-dialog>
+
+    <q-dialog v-model="redesSociales" persistent>
+      <q-card>
+        <q-card-section class="row justify-between">
+          <div class="text-subtitle1">Redes Sociales</div>
+          <q-btn icon="close" flat round dense v-close-popup />
+        </q-card-section>
+        <q-card-section class="row items-center">
+          <div class="row justify-center">
+            <div class="col-4 row justify-center q-pa-md">
+              <q-btn round flat style="width:70px" >
+                <img src="facebook.png" style="width:70px">
+              </q-btn>
+            </div>
+            <div class="col-4 row justify-center q-pa-md">
+              <q-btn rounded flat style="width:70px" >
+                <img src="instagram.png" style="width:70px">
+              </q-btn>
+            </div>
+            <div class="col-4 row justify-center q-pa-md">
+              <q-btn round flat style="width:70px" >
+                <img src="twitter.png" style="width:70px">
+              </q-btn>
+            </div>
+          </div>
         </q-card-section>
       </q-card>
     </q-dialog>
@@ -371,6 +421,7 @@ export default {
       seleccion: '',
       now: moment(),
       newContrat: false,
+      redesSociales: false,
       leftDrawerOpen: true,
       rightDrawerOpen: true,
       date: '2020/10/20',
