@@ -5,8 +5,8 @@
                 <div class="absolute-center" style="width:100%">
                 <div class="row justify-center q-pb-md">
                   <q-img
-                    style="width:100px"
-                    src="slimelogo.png"
+                    style="width:200px"
+                    src="logo.png"
                   ></q-img>
                 </div>
                 <div class="row justify-center text-subtitle1 text-grey">Ingresa a la plataforma</div>

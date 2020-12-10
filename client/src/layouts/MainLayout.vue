@@ -437,11 +437,12 @@ export default {
         this.rol = v.roles[0]
         this.id = v._id
         console.log('id', this.id, 'rol ', this.rol)
-        this.img = env.apiUrl + '/file3/' + this.id
         this.construir = true
         if (this.rol > 1) {
+          this.img = env.apiUrl + '/file3/' + this.id
           this.getVigentes()
         } else {
+          this.img = 'app-logo-128x128.png'
           this.getRevision()
         }
       }
