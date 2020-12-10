@@ -75,7 +75,7 @@
                 </div>
                 </div>
                 <div class="row absolute-bottom justify-center q-py-sm">
-                  <div class="q-px-sm text-subtitle2 text-grey">Términos y condiciones de uso</div>
+                  <div class="q-px-sm text-subtitle2 text-grey" @click="openURL('http://www.slimedeal.com/tos')" >Términos y condiciones de uso</div>
                   <div class="q-px-sm text-subtitle2 text-grey">Página web</div>
                   <div class="q-px-sm text-subtitle2 text-grey">Desarrollado por Eiche</div>
                 </div>
@@ -85,6 +85,7 @@
 </template>
 
 <script>
+import { openURL } from 'quasar'
 import { mapMutations, mapActions } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
 export default {
@@ -131,6 +132,9 @@ export default {
           this.$q.loading.hide()
         })
       }
+    },
+    iraweb () {
+      openURL('http://eiche.cl')
     }
   }
 }
