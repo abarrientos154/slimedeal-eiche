@@ -26,11 +26,11 @@ module.exports = {
     driver: 'smtp',
     pool: true,
     port: Env.get('MAIL_PORT', 465),
-    host: Env.get('MAIL_HOST', 'softlutionszone.com'),
+    host: Env.get('MAIL_HOST', 'mail.slimedeal.com'),
     secure: true,
     auth: {
-      user: Env.get('MAIL_USERNAME', 'guiomarket@softlutionszone.com'),
-      pass: Env.get('MAIL_PASSWORD', 'KS.BSrOB#p7m')
+      user: Env.get('MAIL_USERNAME', 'revisiones@slimedeal.com'),
+      pass: Env.get('MAIL_PASSWORD', 'VIU0oMKnk3B1')
     },
     tls: {
       // do not fail on invalid certs
