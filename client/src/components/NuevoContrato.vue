@@ -52,7 +52,7 @@
         icon="create_new_folder"
         :done="step > 2"
       >
-        <q-select rounded outlined v-model="form.metodoPago" map-options emit-value :options="metodoPago" label="Escoge uno de nuestros métodos de pago" :error="$v.form.metodoPago.$error" error-message="Este campo es requerido" @blur="$v.form.metodoPago.$touch()" />
+        <q-select rounded outlined v-model="form.metodoPago" map-options emit-value :options="metodoPago" label="Escoge las condiciones de pago del contrato" :error="$v.form.metodoPago.$error" error-message="Este campo es requerido" @blur="$v.form.metodoPago.$touch()" />
       </q-step>
 
       <q-step

@@ -69,7 +69,7 @@
         <pdf :src="pdf" style="width: 100%"></pdf>
       </div>
 
-      <div class="row justify-center">
+      <div class="row justify-center fixed-bottom">
         <q-btn
           no-caps
           padding="sm"
