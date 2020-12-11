@@ -121,13 +121,13 @@ class ContratoController {
         dat.status = 0 // pendiente pero sin confirmar por ningun usuario
         let mail = await Email.sendMail(dat.email, 'Nuevo Contrato', `
           <center>
-            <img src="http://slimedeal.eichechile.com/logo.png" alt="logo" />
+            <img src="https://app.slimedeal.com/logo.png" alt="logo" />
           </center>
           <h2 style="text-align:center">
             El usuario ${user.name} ${user.lastName} te ha agregado a formar parte de un contrato.
           </h2>
           <div style="text-align:center">
-            Ingrese al link http://slimedeal.eichechile.com
+            Ingrese al link https://app.slimedeal.com/
           </div>
 
           `)
