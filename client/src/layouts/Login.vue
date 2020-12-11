@@ -76,8 +76,8 @@
                 </div>
                 <div class="row absolute-bottom justify-center q-py-sm">
                   <div clickable v-ripple class="q-px-sm text-subtitle2 text-grey" @click="iraweb('www.slimedeal.com/tos')" >Términos y condiciones de uso</div>
-                  <div clickable v-ripple class="q-px-sm text-subtitle2 text-grey" @click="iraweb('www.slimedeal.com')" >Página web</div>
-                  <div clickable v-ripple class="q-px-sm text-subtitle2 text-grey">Desarrollado por Eiche</div>
+                  <div clickable v-ripple class="q-px-sm text-subtitle2 text-grey" @click="iraweb('www.slimedeal.com')" >SlimeDeal</div>
+                 <!--  <div clickable v-ripple class="q-px-sm text-subtitle2 text-grey">Desarrollado por Eiche</div> -->
                 </div>
               </q-card-section>
             </q-card>
