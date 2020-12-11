@@ -75,9 +75,9 @@
                 </div>
                 </div>
                 <div class="row absolute-bottom justify-center q-py-sm">
-                  <div class="q-px-sm text-subtitle2 text-grey" @click="openURL('http://www.slimedeal.com/tos')" >Términos y condiciones de uso</div>
-                  <div class="q-px-sm text-subtitle2 text-grey">Página web</div>
-                  <div class="q-px-sm text-subtitle2 text-grey">Desarrollado por Eiche</div>
+                  <div clickable v-ripple class="q-px-sm text-subtitle2 text-grey" @click="iraweb('www.slimedeal.com/tos')" >Términos y condiciones de uso</div>
+                  <div clickable v-ripple class="q-px-sm text-subtitle2 text-grey" @click="iraweb('www.slimedeal.com')" >Página web</div>
+                  <div clickable v-ripple class="q-px-sm text-subtitle2 text-grey">Desarrollado por Eiche</div>
                 </div>
               </q-card-section>
             </q-card>
@@ -133,8 +133,8 @@ export default {
         })
       }
     },
-    iraweb () {
-      openURL('http://eiche.cl')
+    iraweb (ruta) {
+      openURL('http://' + ruta)
     }
   }
 }

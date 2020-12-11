@@ -1,4 +1,14 @@
 <template>
+  <div>
+    <div class="bg-primary col full-width q-pa-sm">
+      <div class="row justify-center">
+        <q-img
+          style="width:100px"
+          src="slime_logo_hw.png"
+        ></q-img>
+      </div>
+    </div>
+
   <div class="row justify-between fullheight">
     <q-card
       class="bg-white shadow-13 row q-pb-none"
@@ -69,14 +79,22 @@
                 >Rechazar
             </q-btn>
         </div>
+        <div v-if="contrato.status === 2" class="q-pa-md row justify-center">
+            <q-btn
+                no-caps
+                color="red"
+                class="q-mr-md"
+                @click="newDisputa = true"
+                >Abrir Disputa
+            </q-btn>
+        </div>
       </q-card-section>
     </q-card>
 
     <div class="col column">
-      <div class="col bg-white row q-pb-none">
         <pdf :src="pdf" style="width: 100%"></pdf>
-      </div>
-      <div class="row justify-center fixed-bottom">
+
+      <div class="row justify-center q-mb-md">
         <q-btn
           no-caps
           padding="sm"
@@ -87,6 +105,29 @@
         </q-btn>
       </div>
     </div>
+
+    <q-dialog v-model="newDisputa" persistent>
+      <q-card>
+        <q-card-section class="row justify-between">
+          <div class="text-subtitle1">Disputa del contrato</div>
+          <q-btn icon="close" flat round dense v-close-popup />
+        </q-card-section>
+        <q-card-section class="row items-center q-pa-sm">
+          <q-input
+                class="col-12 row justify-center q-pb-lg"
+                label="Título de la disputa"
+                v-model="disputa.title"
+                :error="$v.disputa.title.$error"
+                error-message="Este campo es requerido"
+                @blur="$v.disputa.title.$touch()"
+                rounded>
+          </q-input>
+           <div class="col-12 row justify-center">
+            <q-btn color="primary" label="Enviar" />
+           </div>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
 
     <q-dialog v-model="seeEstatus" persistent>
       <q-card>
@@ -228,9 +269,11 @@
     </q-card-section>
     </q-card>
   </div>
+  </div>
 </template>
 
 <script>
+import { required } from 'vuelidate/lib/validators'
 import moment from 'moment'
 import env from '../env'
 import pdf from 'vue-pdf'
@@ -247,6 +290,7 @@ export default {
       today: moment(),
       vence: false,
       seeEstatus: false,
+      newDisputa: false,
       imgComprobanteA: '',
       imgComprobanteB: '',
       perfilA: '',
@@ -287,6 +331,13 @@ export default {
   computed: {
     layout () {
       return this.$q.screen.lt.sm ? 'dense' : (this.$q.screen.lt.md ? 'comfortable' : 'loose')
+    }
+  },
+  validations: {
+    disputa: {
+      title: { required },
+      description: { required },
+      part: { required }
     }
   },
   mounted () {

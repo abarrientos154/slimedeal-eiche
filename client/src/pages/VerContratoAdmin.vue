@@ -1,8 +1,18 @@
 <template>
+  <div>
+    <div class="bg-primary col full-width q-pa-sm">
+      <div class="row justify-center">
+        <q-img
+          style="width:100px"
+          src="slime_logo_hw.png"
+        ></q-img>
+      </div>
+    </div>
+
   <div class="row justify-between fullheight">
     <q-card
       class="bg-white shadow-13 row q-pb-none"
-      style="width: 200px; height: 100%; min-height: 900px; max-height: 1000px;"
+      style="width: 200px; height: 100%; min-height: 880px; max-height: 1000px;"
     >
     <q-card-section style="width:100%; height:100%">
         <div class="row justify-center q-pb-sm">
@@ -65,11 +75,9 @@
     </q-card>
 
     <div class="col column">
-      <div class="col bg-white row q-pb-none">
         <pdf :src="pdf" style="width: 100%"></pdf>
-      </div>
 
-      <div class="row justify-center fixed-bottom">
+      <div class="row justify-center q-mb-md">
         <q-btn
           no-caps
           padding="sm"
@@ -247,6 +255,7 @@
       </q-item>
     </q-card-section>
     </q-card>
+  </div>
   </div>
 </template>
 

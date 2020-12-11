@@ -1,5 +1,15 @@
 <template>
-  <div class="q-pa-sm q-mt-md">
+  <div>
+    <div class="bg-primary col full-width q-pa-sm">
+      <div class="row justify-center">
+        <q-img
+          style="width:100px"
+          src="slime_logo_hw.png"
+        ></q-img>
+      </div>
+    </div>
+
+    <div class="q-pa-sm q-mt-md">
       <div class="text-h6 q-pa-sm q-ml-sm">Contratos Pendientes</div>
 
         <div class="q-pa-sm justify-start">
@@ -121,6 +131,7 @@
           </div>
       </div>
     </q-card>
+    </div>
   </div>
 </template>
 

@@ -239,6 +239,30 @@
           clickable
           active-class="my-menu-link"
           v-ripple
+          @click="iraweb('slimedeal.com/tuto')"
+        >
+          <q-item-section avatar>
+            <q-icon name="video_settings" />
+          </q-item-section>
+
+          <q-item-section> Tutorial </q-item-section>
+        </q-item>
+        <q-item
+          clickable
+          active-class="my-menu-link"
+          v-ripple
+          @click="iraweb('slimedeal.com/cosd')"
+        >
+          <q-item-section avatar>
+            <q-icon name="share" />
+          </q-item-section>
+
+          <q-item-section> Cuentas Oficiales SD </q-item-section>
+        </q-item>
+        <q-item
+          clickable
+          active-class="my-menu-link"
+          v-ripple
           @click="salir()"
         >
           <q-item-section avatar>
@@ -260,7 +284,7 @@
             @click="newContrat=true"
           />
         </div>
-        <div class="row justify-center q-pa-md">
+        <!-- <div class="row justify-center q-pa-md">
           <q-btn
             rounded
             glossy
@@ -268,6 +292,7 @@
             label="Tutorial"
             color="primary"
             class="q-mr-md"
+            @click="iraweb('slimedeal.com/tuto')"
           />
         </div>
         <div class="row justify-center q-pa-md">
@@ -275,12 +300,12 @@
             rounded
             no-caps
             glossy
-            label="Redes Sociales"
+            label="Cuentas Oficiales SD"
             color="primary"
             class="q-mr-md"
-            @click="redesSociales = true"
+            @click="iraweb('slimedeal.com/cosd')"
           />
-        </div>
+        </div> -->
     </div>
     </q-drawer>
 
@@ -357,7 +382,7 @@
                           style="height: 30px; width: 100%"
                           class="rounded-borders "
                         >
-                          <div class="text-subtitle1 text-white text-bold">{{ mazo.title }}</div>
+                          <div class="text-subtitle2 text-white text-bold">{{ mazo.title }}</div>
                         </q-scroll-area>
                       </div>
                       <q-item-label>
@@ -366,12 +391,12 @@
                           style="height: 30px; width: 100%"
                           class="rounded-borders"
                         >
-                          <div class="text-subtitle1 text-white">{{ mazo.description }}</div>
+                          <div class="text-caption text-white">{{ mazo.description }}</div>
                         </q-scroll-area>
                       </q-item-label>
                     </q-item-section>
                     <q-item-section >
-                      <q-item-label class="text-caption text-white text-bold q-pr-xs row justify-end  "> {{ mazo.created_at }}</q-item-label>
+                      <q-item-label class="text-caption text-white q-pr-xs row justify-end  "> {{ mazo.created_at }}</q-item-label>
                     </q-item-section>
                   </q-item>
                 </q-card>
@@ -407,6 +432,7 @@
 </template>
 
 <script>
+import { openURL } from 'quasar'
 import moment from 'moment'
 import NuevoContrato from '../components/NuevoContrato'
 import { mapMutations } from 'vuex'
@@ -449,6 +475,9 @@ export default {
     })
   },
   methods: {
+    iraweb (ruta) {
+      openURL('http://' + ruta)
+    },
     imgC (val) {
       var im = ''
       if (val.datos_userA) {
