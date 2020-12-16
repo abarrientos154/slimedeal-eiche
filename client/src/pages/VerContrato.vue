@@ -82,8 +82,9 @@
         <div v-if="contrato.status === 2" class="q-pa-md row justify-center">
             <q-btn
                 no-caps
-                color="red"
-                class="q-mr-md"
+                color="warning"
+                class="q-mr-md text-dark"
+                text-color="black"
                 @click="newDisputa = true"
                 >Abrir Disputa
             </q-btn>
@@ -107,24 +108,50 @@
     </div>
 
     <q-dialog v-model="newDisputa" persistent>
-      <q-card>
+      <q-card style="width: 100%">
         <q-card-section class="row justify-between">
           <div class="text-subtitle1">Disputa del contrato</div>
           <q-btn icon="close" flat round dense v-close-popup />
         </q-card-section>
         <q-card-section class="row items-center q-pa-sm">
-          <q-input
-                class="col-12 row justify-center q-pb-lg"
-                label="Título de la disputa"
-                v-model="disputa.title"
-                :error="$v.disputa.title.$error"
-                error-message="Este campo es requerido"
-                @blur="$v.disputa.title.$touch()"
-                rounded>
-          </q-input>
-           <div class="col-12 row justify-center">
-            <q-btn color="primary" label="Enviar" />
-           </div>
+          <q-card class="shadow-13 q-pa-md q-ma-md" style="width: 100%">
+            <q-input
+                  class="col-12 row justify-center q-pb-lg"
+                  label="Título de la disputa"
+                  v-model="disputa.title"
+                  :error="$v.disputa.title.$error"
+                  error-message="Este campo es requerido"
+                  @blur="$v.disputa.title.$touch()"
+                  outlined
+                  rounded>
+            </q-input>
+            <q-input
+                  class="col-12 row justify-center q-pb-lg q-mb-sm"
+                  placeholder="Motivo de la disputa"
+                  v-model="disputa.description"
+                  :error="$v.disputa.description.$error"
+                  error-message="Este campo es requerido"
+                  @blur="$v.disputa.description.$touch()"
+                  type="textarea"
+                  hint="Danos una breve descripción del motivo por el cual el contrato fue infringido"
+                  outlined
+                  rounded>
+            </q-input>
+            <q-file class="q-mb-sm" bottom-slots v-model="disputa.part" rounded outlined label="Archivo" accept=".jpg, image/*" :error="$v.disputa.part.$error" error-message="Este campo es requerido" @blur="$v.disputa.part.$touch()" >
+                  <template v-slot:prepend>
+                    <q-icon name="cloud_upload" color="primary" @click.stop />
+                  </template>
+                  <template v-slot:append>
+                    <q-icon name="close" color="negative" @click.stop="model = null" class="cursor-pointer" />
+                  </template>
+                  <template v-slot:hint>
+                    Parte que se infringio del contrato
+                  </template>
+            </q-file>
+            <div class="col-12 row justify-center q-ma-md">
+              <q-btn color="primary" label="Enviar" v-close-popup />
+            </div>
+          </q-card>
         </q-card-section>
       </q-card>
     </q-dialog>
@@ -312,7 +339,8 @@ export default {
       userType: '',
       contrato: {},
       typeContract: {},
-      form: {}
+      form: {},
+      disputa: {}
     }
   },
   watch: {
