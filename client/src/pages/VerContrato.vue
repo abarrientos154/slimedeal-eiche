@@ -154,7 +154,7 @@
           </q-card>
         </q-card-section>
       </q-card>
-    </q-dialog>
+    </q-dialog> -->
 
     <q-dialog v-model="seeEstatus" persistent>
       <q-card>
@@ -300,7 +300,7 @@
 </template>
 
 <script>
-import { required } from 'vuelidate/lib/validators'
+/* import { required } from 'vuelidate/lib/validators' */
 import moment from 'moment'
 import env from '../env'
 import pdf from 'vue-pdf'
@@ -362,11 +362,11 @@ export default {
     }
   },
   validations: {
-    disputa: {
+    /*  disputa: {
       title: { required },
       description: { required },
       part: { required }
-    }
+    } */
   },
   mounted () {
     if (this.$route.params.id) {

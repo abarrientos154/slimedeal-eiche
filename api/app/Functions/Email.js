@@ -3,10 +3,11 @@ const Mail = use('Mail')
 exports.sendMail = async (to, subject, message, attach, cc, bcc) => {
   try {
     await Mail.raw(message, (msg) => {
-      msg.from('guiomarket@softlutionszone.com', 'Slimedeal')
+      console.log(msg,'test')
+      msg.from('revisiones@slimedeal.com', 'Slimedeal')
       msg.to(to)
       msg.subject(subject)
-      msg.cc('slimedeal@user.com')
+     // msg.cc('slimedeal@user.com')
       msg.bcc(bcc)
       if (attach) {
         msg.attach(attach)

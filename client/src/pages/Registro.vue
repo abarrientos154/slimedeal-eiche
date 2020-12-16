@@ -192,8 +192,8 @@ export default {
                 this.$router.push('/')
                 this.$q.notify({
                   message: 'Registrado Con Exito',
-                  color: 'warning',
-                  type: 'negative'
+                  color: 'positive',
+                  type: 'positive'
                 })
                 this.$q.loading.hide()
               } else {

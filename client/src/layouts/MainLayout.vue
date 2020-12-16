@@ -138,14 +138,19 @@
     >
     <div class="self-center">
       <div class="row justify-center q-pa-sm">
-        <q-avatar size="100px" font-size="52px" >
+        <q-avatar v-if="construir" size="100px" font-size="52px" >
           <q-img
-            v-if="construir"
             style="width:100px"
             :src="img"
           ></q-img>
         </q-avatar>
+          <q-img
+            v-if="adminIMG"
+            style="width:100px"
+            :src="img"
+          ></q-img>
       </div>
+
       <q-list
         bordered
         separator
@@ -454,6 +459,7 @@ export default {
       nNotify: 3,
       myNotification: {},
       construir: false,
+      adminIMG: false,
       data: []
     }
   },
@@ -463,12 +469,13 @@ export default {
         this.rol = v.roles[0]
         this.id = v._id
         console.log('id', this.id, 'rol ', this.rol)
-        this.construir = true
         if (this.rol > 1) {
+          this.construir = true
           this.img = env.apiUrl + '/file3/' + this.id
           this.getVigentes()
         } else {
-          this.img = 'app-logo-128x128.png'
+          this.adminIMG = true
+          this.img = 'slime_logo.png'
           this.getRevision()
         }
       }
