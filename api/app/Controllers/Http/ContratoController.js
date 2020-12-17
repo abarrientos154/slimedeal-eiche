@@ -152,6 +152,33 @@ class ContratoController {
   }
 
 
+  async crearDisputa ({ params, request, response, auth }) {
+    let contratoF = await Contrato.find(params.id)
+    let codeFile = randomize('Aa0', 30)
+    const user = (await auth.getUser()).toJSON()
+    const profilePic = request.file('files', {
+      size: '100mb'
+    })
+    var dat = request.only(['dat'])
+    dat = JSON.parse(dat.dat)
+
+    if (Helpers.appRoot('storage/uploads/contracts')) {
+      await profilePic.move(Helpers.appRoot('storage/uploads/contracts'), {
+        name: codeFile + '-' + contratoF._id.toString() + '.' + profilePic.extname,
+        overwrite: true
+      })
+    } else {
+      mkdirp.sync(`${__dirname}/storage/Excel`)
+    }
+    let data = { picture: `storage/uploads/contracts/${profilePic.fileName}`, ...dat, user: user }
+      var contrato = await Contrato.query().where({_id: params.id }).update({
+        disputa: data,
+        status: 5
+      })
+    response.send(contrato)
+  }
+
+
   async updateCheck ({ params, request, response, auth }) {
     let contratoF = await Contrato.find(params.id)
     let codeFile = randomize('Aa0', 30)

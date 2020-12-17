@@ -77,7 +77,7 @@
     <div class="col column">
         <pdf :src="pdf" style="width: 100%"></pdf>
 
-      <div class="row justify-center q-mb-md">
+      <div class="row justify-center q-my-md">
         <q-btn
           no-caps
           padding="sm"

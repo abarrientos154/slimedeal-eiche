@@ -79,14 +79,23 @@
                 >Rechazar
             </q-btn>
         </div>
-        <div v-if="contrato.status === 2" class="q-pa-md row justify-center">
+        <div v-if="contrato.status === 2 && !vence" class="q-pa-md row justify-center">
             <q-btn
                 no-caps
                 color="warning"
-                class="q-mr-md text-dark"
+                class="q-mr-md"
                 text-color="black"
                 @click="newDisputa = true"
                 >Abrir Disputa
+            </q-btn>
+        </div>
+        <div v-if="contrato.status === 5" class="q-pa-md row justify-center">
+            <q-btn
+                no-caps
+                color="orange"
+                class="q-mr-md"
+                @click="seeDisputa = true"
+                >Ver Disputa
             </q-btn>
         </div>
       </q-card-section>
@@ -95,7 +104,7 @@
     <div class="col column">
         <pdf :src="pdf" style="width: 100%"></pdf>
 
-      <div class="row justify-center q-mb-md">
+      <div class="row justify-center q-my-md">
         <q-btn
           no-caps
           padding="sm"
@@ -110,7 +119,7 @@
     <q-dialog v-model="newDisputa" persistent>
       <q-card style="width: 100%">
         <q-card-section class="row justify-between">
-          <div class="text-subtitle1">Disputa del contrato</div>
+          <div class="text-h5">Abrir Disputa</div>
           <q-btn icon="close" flat round dense v-close-popup />
         </q-card-section>
         <q-card-section class="row items-center q-pa-sm">
@@ -137,7 +146,7 @@
                   outlined
                   rounded>
             </q-input>
-            <q-file class="q-mb-sm" bottom-slots v-model="disputa.part" rounded outlined label="Archivo" accept=".jpg, image/*" :error="$v.disputa.part.$error" error-message="Este campo es requerido" @blur="$v.disputa.part.$touch()" >
+            <q-file class="q-mb-sm" bottom-slots v-model="disputaPart" rounded outlined label="Archivo" accept=".jpg, image/*" :error="$v.disputaPart.$error" error-message="Este campo es requerido" @blur="$v.disputaPart.$touch()" >
                   <template v-slot:prepend>
                     <q-icon name="cloud_upload" color="primary" @click.stop />
                   </template>
@@ -149,12 +158,46 @@
                   </template>
             </q-file>
             <div class="col-12 row justify-center q-ma-md">
-              <q-btn color="primary" label="Enviar" v-close-popup />
+              <q-btn color="primary" label="Enviar" @click="sendDisputa()" v-close-popup />
             </div>
           </q-card>
         </q-card-section>
       </q-card>
-    </q-dialog> -->
+    </q-dialog>
+
+    <q-dialog v-model="seeDisputa" persistent>
+      <q-card style="width: 100%">
+        <q-card-section class="row justify-between">
+          <div class="text-h5">Disputa</div>
+          <q-btn icon="close" flat round dense v-close-popup />
+        </q-card-section>
+        <q-card-section class="row items-center q-pa-sm">
+          <q-card class="shadow-13 q-pa-md q-ma-md" style="width: 100%">
+            <q-field rounded outlined class="col-12 row justify-center q-pb-lg" label="Título de la disputa" stack-label>
+              <template v-slot:control>
+                <div class="self-center full-width no-outline" tabindex="0">{{disputa.title}}</div>
+              </template>
+            </q-field>
+            <q-field autogrow rounded outlined class="col-12 row justify-center q-pb-lg" label="Descripción de la disputa" stack-label>
+              <template v-slot:control>
+                <p class="self-center full-width no-outline" tabindex="0">{{disputa.description}}</p>
+              </template>
+            </q-field>
+            <div class="col-12 row justify-center q-pb-lg" >
+              <q-img
+                  class="col-12"
+                  style="width:400px"
+                  :src="imgDisputa"
+              ></q-img>
+              <div class="col-12 text-center text-caption q-pa-sm">Parte del contrato infringida</div>
+            </div>
+            <div class="col-12 row justify-center q-ma-md">
+              <q-btn color="primary" label="Cerrar" v-close-popup />
+            </div>
+          </q-card>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
 
     <q-dialog v-model="seeEstatus" persistent>
       <q-card>
@@ -300,7 +343,7 @@
 </template>
 
 <script>
-/* import { required } from 'vuelidate/lib/validators' */
+import { required } from 'vuelidate/lib/validators'
 import moment from 'moment'
 import env from '../env'
 import pdf from 'vue-pdf'
@@ -340,7 +383,13 @@ export default {
       contrato: {},
       typeContract: {},
       form: {},
-      disputa: {}
+      disputa: {
+        title: '',
+        description: ''
+      },
+      disputaPart: null,
+      seeDisputa: false,
+      imgDisputa: ''
     }
   },
   watch: {
@@ -362,11 +411,11 @@ export default {
     }
   },
   validations: {
-    /*  disputa: {
+    disputa: {
       title: { required },
-      description: { required },
-      part: { required }
-    } */
+      description: { required }
+    },
+    disputaPart: { required }
   },
   mounted () {
     if (this.$route.params.id) {
@@ -510,9 +559,7 @@ export default {
           } else {
             this.userType = 'a'
           }
-          console.log(this.userType)
           this.userA = res
-          console.log('Usuario ', this.userA)
           this.getContrato(this.id)
         }
       }).catch(error => {
@@ -534,7 +581,6 @@ export default {
             this.vence = false
           }
           this.pdf = env.apiUrl + '/file2/' + this.contrato.archiveName
-          console.log('pdf', this.pdf)
           // si el contrato tiene un estatus que no sea pendiente no se puede modificar
           if (this.contrato.status > 0) {
             this.disable = true
@@ -578,8 +624,6 @@ export default {
               } else {
                 this.imgComprobanteB = ''
               }
-              console.log('imga', this.imgComprobanteA)
-              console.log('imgb', this.imgComprobanteB)
             }
             if (this.contrato.userACheck) {
               this.politicasUserB = this.contrato.userACheck
@@ -590,6 +634,9 @@ export default {
               this.listoCA = this.contrato.userBCheck
               this.disableL = true
               this.disable = true
+            }
+            if (this.contrato.status === 3) {
+              this.disableL = true
             }
           }
           if (this.userType === 'a') {
@@ -642,12 +689,20 @@ export default {
               this.disableL = true
               this.disable = true
             }
+            if (this.contrato.status === 3) {
+              this.disableL = true
+            }
             if (this.contrato.userBCheck) {
               this.politicasUserB = this.contrato.userBCheck
               this.listoCB = this.contrato.userBCheck
             }
           }
-          console.log('ruta', this.imgComprobanteA)
+          var disRuta = []
+          if (this.contrato.status === 5) {
+            this.disputa = this.contrato.disputa
+            disRuta = this.contrato.disputa.picture.split('/')
+            this.imgDisputa = env.apiUrl + '/file2/' + disRuta[disRuta.length - 1]
+          }
           if (this.contrato.status === 4) {
             this.$q.dialog({
               message: 'El contrato fue rechazado por el Administrador',
@@ -668,6 +723,36 @@ export default {
       }).catch(error => {
         console.log(error)
       })
+    },
+    async sendDisputa () {
+      console.log('Disputa', this.disputa)
+      this.$v.disputa.title.$touch()
+      this.$v.disputa.description.$touch()
+      if (this.$v.disputa.title.$error || this.$v.disputa.description.$error || this.$v.disputaPart.$error) {
+        this.$q.notify({
+          message: 'Faltan Campos por Llenar',
+          color: 'negative',
+          textColor: 'white',
+          icon: 'error'
+        })
+      } else {
+        console.log('disputa', this.disputa)
+        console.log('file Disputa', this.disputaPart)
+        if (this.disputaPart) {
+          var formData = new FormData()
+          formData.append('files', this.disputaPart)
+          formData.append('dat', JSON.stringify(this.disputa))
+          this.$api.put('disputa_contrato/' + this.id, formData, {
+            headers: {
+              'Content-Type': undefined
+            }
+          }).then(res => {
+            if (res) {
+              this.$router.push('/contratos')
+            }
+          })
+        }
+      }
     }
   }
 }
