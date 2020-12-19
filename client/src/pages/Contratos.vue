@@ -84,7 +84,10 @@
                     <q-btn color="red" no-caps label="Rechazados" style="width: 85px" @click="rechazados = true; filter()" />
                 </div>
                 <div class="q-pr-xs">
-                    <q-btn color="blue-grey" no-caps label="Vencidos" style="width: 85px" @click="vencidos = true; filter()" />
+                    <q-btn color="blue-grey" no-caps label="Culminados" style="width: 85px" @click="vencidos = true; filter()" />
+                </div>
+                <div class="q-pr-xs">
+                    <q-btn color="indigo-4" no-caps label="Mediación" style="width: 85px" @click="mediacion = true; filter()" />
                 </div>
             </div>
       </div>
@@ -98,7 +101,7 @@
               <div class="row q-pa-sm items-center">
                 <div class="text-subtitle2 q-px-md">{{index + 1}}</div>
                 <q-card
-                  :class="card.status == 0 ? 'bg-blue-3' : card.status == 1 ? 'bg-amber-6' : card.status == 2 && vic(card) ? 'bg-positive' : card.status == 2 && !vic(card) ? 'bg-blue-grey-4' : card.status == 3 || card.status == 4 ? 'bg-red' : 'bg-white'"
+                  :class="card.status == 0 ? 'bg-blue-3' : card.status == 1 ? 'bg-amber-6' : card.status == 2 && vic(card) ? 'bg-positive' : card.status == 2 && !vic(card) ? 'bg-blue-grey-4' : card.status == 6 ? 'bg-blue-grey-4' : card.status == 3 || card.status == 4 ? 'bg-red' : card.status == 5 && vic(card) ? 'bg-indigo-4' : 'bg-white'"
                   style="width: 90%; height: 100px"
                 >
                   <q-item class="absolute-center" style="width: 100%">
@@ -151,7 +154,8 @@ export default {
       revision: false,
       vigentes: false,
       rechazados: false,
-      vencidos: false
+      vencidos: false,
+      mediacion: false
     }
   },
   mounted () {
@@ -221,8 +225,12 @@ export default {
         this.rechazados = false
       }
       if (this.vencidos) {
-        this.data = this.data.filter(v => v.status === 2 && moment(v.fechaV) <= this.today)
+        this.data = this.data.filter(v => (v.status === 2 && moment(v.fechaV) <= this.today) || v.status === 6)
         this.vencidos = false
+      }
+      if (this.mediacion) {
+        this.data = this.data.filter(v => v.status === 5 && moment(v.fechaV) >= this.today)
+        this.mediacion = false
       }
     }
   }

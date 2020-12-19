@@ -63,6 +63,7 @@ addPrefixToGroup(
     Route.get("mis_contratos_pagados", "ContratoController.misContratosPagados")
     Route.put("actualizar_contrato/:id", "ContratoController.actualizarContratoVigencia")
     Route.put("disputa_contrato/:id", "ContratoController.crearDisputa")
+    Route.put("admin_disputa/:id", "ContratoController.adminDisputa")
 
   }).middleware("auth")
 );

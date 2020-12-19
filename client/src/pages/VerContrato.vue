@@ -89,7 +89,7 @@
                 >Abrir Disputa
             </q-btn>
         </div>
-        <div v-if="contrato.status === 5" class="q-pa-md row justify-center">
+        <div v-if="contrato.status === 5 || contrato.status === 6" class="q-pa-md row justify-center">
             <q-btn
                 no-caps
                 color="orange"
@@ -178,11 +178,15 @@
                 <div class="self-center full-width no-outline" tabindex="0">{{disputa.title}}</div>
               </template>
             </q-field>
-            <q-field autogrow rounded outlined class="col-12 row justify-center q-pb-lg" label="Descripción de la disputa" stack-label>
-              <template v-slot:control>
-                <p class="self-center full-width no-outline" tabindex="0">{{disputa.description}}</p>
-              </template>
-            </q-field>
+            <q-input
+                  class="col-12 row justify-center q-pb-lg"
+                  label="Descripción de la disputa"
+                  v-model="disputa.description"
+                  type="textarea"
+                  disable
+                  outlined
+                  rounded>
+            </q-input>
             <div class="col-12 row justify-center q-pb-lg" >
               <q-img
                   class="col-12"
@@ -235,7 +239,7 @@
               </q-timeline-entry>
 
               <q-timeline-entry
-                v-if="contrato.status == 1 || contrato.status == 2 || contrato.status == 4 || contrato.status == 5"
+                v-if="contrato.status == 1 || contrato.status == 2 || contrato.status == 4 || contrato.status == 5 || contrato.status == 6"
                 title="Estado en Revisión"
                 side="right"
                 icon="preview"
@@ -259,7 +263,7 @@
               </q-timeline-entry>
 
               <q-timeline-entry
-                v-if="contrato.status == 2 || contrato.status == 5"
+                v-if="contrato.status == 2 || contrato.status == 5 || contrato.status == 6"
                 title="Estado en Vigencia"
                 side="left"
                 icon="check"
@@ -271,14 +275,26 @@
               </q-timeline-entry>
 
               <q-timeline-entry
-                v-if="vence"
-                title="Estado Vencido"
+                v-if="contrato.status == 5 || contrato.status == 6"
+                title="Estado en Mediación"
                 side="right"
+                icon="refresh"
+                color="indigo-4"
+              >
+                <div>
+                  El contrato se encuentra en estado de mediacion ya que se inició una disputa.
+                </div>
+              </q-timeline-entry>
+
+              <q-timeline-entry
+                v-if="vence || contrato.status == 6"
+                title="Estado Culminado"
+                :side="contrato.status == 6 ? 'left' : 'right'"
                 icon="cancel"
                 color="blue-grey"
               >
                 <div>
-                  El contrato ha superado la fecha de vigencia establecida por el administrador de SlimeDeal.
+                  {{contrato.status == 6 ? 'El contrato culminó ya que el administrador aprobo la disputa.' : 'El contrato ha superado la fecha de vigencia establecida por el administrador de SlimeDeal.'}}
                 </div>
               </q-timeline-entry>
             </q-timeline>
@@ -698,7 +714,7 @@ export default {
             }
           }
           var disRuta = []
-          if (this.contrato.status === 5) {
+          if (this.contrato.status === 5 || this.contrato.status === 6) {
             this.disputa = this.contrato.disputa
             disRuta = this.contrato.disputa.picture.split('/')
             this.imgDisputa = env.apiUrl + '/file2/' + disRuta[disRuta.length - 1]
@@ -714,6 +730,22 @@ export default {
           if (this.contrato.status === 3) {
             this.$q.dialog({
               message: 'El contrato fue rechazado por uno de los participantes',
+              persistent: true
+            }).onOk(() => {
+
+            })
+          }
+          if (this.contrato.status === 5) {
+            this.$q.dialog({
+              message: 'El contrato tiene una disputa iniciada',
+              persistent: true
+            }).onOk(() => {
+
+            })
+          }
+          if (this.contrato.status === 6) {
+            this.$q.dialog({
+              message: 'El contrato culmino por una disputa aprobada',
               persistent: true
             }).onOk(() => {
 

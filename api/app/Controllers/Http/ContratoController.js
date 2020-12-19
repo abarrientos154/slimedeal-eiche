@@ -178,6 +178,23 @@ class ContratoController {
     response.send(contrato)
   }
 
+  async adminDisputa ({ params, request, response, auth }) {
+    var dat = request.only(['dat'])
+    console.log(dat)
+
+    if (dat.dat == 'a') {
+      var contrato = await Contrato.query().where({_id: params.id }).update({
+        status: 6
+      })
+    } else {
+      var contrato = await Contrato.query().where({_id: params.id }).update({
+        disputa: null,
+        status: 2
+      })
+    }
+    response.send(contrato)
+  }
+
 
   async updateCheck ({ params, request, response, auth }) {
     let contratoF = await Contrato.find(params.id)

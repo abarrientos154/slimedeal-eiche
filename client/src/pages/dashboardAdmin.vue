@@ -104,6 +104,54 @@
         <div v-else class="text-center q-py-md" > No tienes contratos vigentes</div>
       </div>
 
+      <div class="text-h6 q-pa-sm q-ml-sm">Contratos en Mediación</div>
+
+        <div class="q-pa-sm justify-start">
+        <q-scroll-area
+          v-if="mediacion.length"
+          horizontal
+          style="height: 130px"
+          class="rounded-borders "
+        >
+          <div class="row items-center no-wrap">
+            <div
+              v-for="(card,index) in mediacion"
+              :key="index"
+            >
+              <div class="q-pa-sm items-center">
+                <q-card
+                  class="bg-white my-card"
+                  style="width: 340px; height: 100px"
+                >
+                  <q-item class="absolute-center" style="width: 100%">
+                    <q-item-section avatar>
+                      <q-avatar>
+                        <img :src="imgC(card)">
+                      </q-avatar>
+                    </q-item-section>
+
+                    <q-item-section>
+                      <q-item-label>{{card.title}}</q-item-label>
+                      <q-item-label caption>{{card.description}}</q-item-label>
+                    </q-item-section>
+
+                    <q-item-section>
+                      <div class="q-pb-sm">
+                        <q-btn color="primary" no-caps label="Ver Contrato" style="width: 130px" @click="ver(card._id)" />
+                      </div>
+                      <div>
+                        <q-btn color="primary" no-caps label="Descargar" style="width: 130px" @click="download(card.filePath, card.archiveName)" />
+                      </div>
+                    </q-item-section>
+                  </q-item>
+                </q-card>
+              </div>
+            </div>
+          </div>
+        </q-scroll-area>
+        <div v-else class="text-center q-py-md" > No tienes contratos en mediación</div>
+      </div>
+
       <div class="text-h6 q-pa-sm q-ml-sm">Historial</div>
 
         <div class="q-pa-sm justify-start">
@@ -164,6 +212,7 @@ export default {
     return {
       revision: [],
       vigentes: [],
+      mediacion: [],
       contratos: [],
       today: moment()
     }
@@ -186,7 +235,6 @@ export default {
       this.$api.get('get_contracts/' + 1).then(res => {
         if (res) {
           this.revision = res
-          console.log('revision ', this.revision)
         }
       }).catch(error => {
         console.log(error)
@@ -194,7 +242,13 @@ export default {
       this.$api.get('get_contracts/' + 2).then(res => {
         if (res) {
           this.vigentes = res.filter(v => moment(v.fechaV) >= this.today)
-          console.log('vigentes ', this.vigentes)
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+      this.$api.get('get_contracts/' + 5).then(res => {
+        if (res) {
+          this.mediacion = res.filter(v => moment(v.fechaV) >= this.today)
         }
       }).catch(error => {
         console.log(error)
@@ -204,7 +258,6 @@ export default {
       this.$router.push('ver_contrato_admin/' + id)
     },
     async download (filePath, archiveName) {
-      console.log(archiveName)
       openURL(env.apiUrl + 'file2/' + archiveName)
     }
   }

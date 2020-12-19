@@ -71,6 +71,15 @@
                 </q-btn>
             </div>
         </div>
+        <div v-if="contrato.status === 5" class="q-pa-md row justify-center">
+          <q-btn
+              no-caps
+              color="orange"
+              class="q-mr-md"
+              @click="seeDisputa = true"
+              >Ver Disputa
+          </q-btn>
+        </div>
       </q-card-section>
     </q-card>
 
@@ -88,6 +97,54 @@
         </q-btn>
       </div>
     </div>
+
+    <q-dialog v-model="seeDisputa" persistent>
+      <q-card style="width: 100%">
+        <q-card-section class="row justify-between">
+          <div class="text-h5">Disputa</div>
+          <q-btn icon="close" flat round dense v-close-popup />
+        </q-card-section>
+        <q-card-section class="row items-center q-pa-sm">
+          <q-card class="shadow-13 q-pa-md q-ma-md" style="width: 100%">
+            <q-field rounded outlined class="col-12 row justify-center q-pb-lg" label="Usuario solicitante" stack-label>
+              <template v-slot:control>
+                <div class="self-center full-width no-outline" tabindex="0">{{disputa.user.name + ' ' + disputa.user.lastName}}</div>
+              </template>
+            </q-field>
+            <q-field rounded outlined class="col-12 row justify-center q-pb-lg" label="Título de la disputa" stack-label>
+              <template v-slot:control>
+                <div class="self-center full-width no-outline" tabindex="0">{{disputa.title}}</div>
+              </template>
+            </q-field>
+            <q-input
+                  class="col-12 row justify-center q-pb-lg"
+                  label="Descripción de la disputa"
+                  v-model="disputa.description"
+                  type="textarea"
+                  disable
+                  outlined
+                  rounded>
+            </q-input>
+            <div class="col-12 row justify-center q-pb-lg" >
+              <q-img
+                  class="col-12"
+                  style="width:400px"
+                  :src="imgDisputa"
+              ></q-img>
+              <div class="col-12 text-center text-caption q-pa-sm">Parte del contrato infringida</div>
+            </div>
+            <div class="col-12 row justify-around q-ma-md">
+              <div>
+                <q-btn color="red" label="Rechazar" @click="disputaAction('r')" />
+              </div>
+              <div>
+                <q-btn color="primary" label="Aprobar" @click="disputaAction('a')" />
+              </div>
+            </div>
+          </q-card>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
 
     <q-dialog v-model="seeEstatus" persistent>
       <q-card>
@@ -161,8 +218,20 @@
               </q-timeline-entry>
 
               <q-timeline-entry
-                v-if="vence"
-                title="Estado Vencido"
+                v-if="contrato.status == 5 || contrato.status == 6"
+                title="Estado en Mediación"
+                side="right"
+                icon="refresh"
+                color="indigo-4"
+              >
+                <div>
+                  El contrato se encuentra en estado de mediacion ya que se inició una disputa.
+                </div>
+              </q-timeline-entry>
+
+              <q-timeline-entry
+                v-if="vence || contrato.status == 6"
+                title="Estado Culminado"
                 side="right"
                 icon="done_all"
                 color="blue-grey"
@@ -276,12 +345,14 @@ export default {
       pdf: '',
       today: moment(),
       vence: false,
+      seeDisputa: false,
       aprobarCont: false,
       vigenciaIndefinida: false,
       imgComprobanteA: '',
       imgComprobanteB: '',
       perfilA: '',
       perfilB: '',
+      imgDisputa: '',
       metodoPagoA: true,
       metodoPagoB: true,
       politicasUserA: false,
@@ -292,7 +363,11 @@ export default {
       rightDrawerOpen: true,
       contrato: {},
       seeEstatus: false,
-      form: {}
+      form: {},
+      disputa: {
+        title: '',
+        description: ''
+      }
     }
   },
   computed: {
@@ -334,6 +409,39 @@ export default {
           this.$router.push('/inicio_admin')
         }
       })
+    },
+    disputaAction (accion) {
+      if (accion === 'a') {
+        this.$q.dialog({
+          title: 'Confirma',
+          message: '¿Seguro deseas aprobar la disputa?',
+          cancel: true,
+          persistent: true
+        }).onOk(() => {
+          this.$api.put('admin_disputa/' + this.id, { dat: accion }).then(res => {
+            if (res) {
+              this.$router.push('/inicio_admin')
+            }
+          })
+        }).onCancel(() => {
+          // console.log('>>>> Cancel')
+        })
+      } else {
+        this.$q.dialog({
+          title: 'Confirma',
+          message: '¿Seguro deseas rechazar la disputa?',
+          cancel: true,
+          persistent: true
+        }).onOk(() => {
+          this.$api.put('admin_disputa/' + this.id, { dat: accion }).then(res => {
+            if (res) {
+              this.$router.push('/inicio_admin')
+            }
+          })
+        }).onCancel(() => {
+          // console.log('>>>> Cancel')
+        })
+      }
     },
     rechazarContrato () {
       this.$q.dialog({
@@ -394,6 +502,18 @@ export default {
               rutaf = this.contrato.userBFile.split('/')
               this.imgComprobanteB = env.apiUrl + '/file2/' + rutaf[rutaf.length - 1]
             }
+          }
+          var disRuta = []
+          if (this.contrato.status === 5) {
+            this.$q.dialog({
+              message: 'El contrato tiene una disputa iniciada',
+              persistent: true
+            }).onOk(() => {
+
+            })
+            this.disputa = this.contrato.disputa
+            disRuta = this.contrato.disputa.picture.split('/')
+            this.imgDisputa = env.apiUrl + '/file2/' + disRuta[disRuta.length - 1]
           }
           if (this.contrato.userACheck) {
             this.politicasUserA = this.contrato.userACheck
