@@ -333,6 +333,7 @@
                 no-caps
                 color="primary"
                 class="q-mr-md"
+                @click="download()"
                 >Descargar
             </q-btn>
         </div>
@@ -361,6 +362,7 @@
 <script>
 import { required } from 'vuelidate/lib/validators'
 import moment from 'moment'
+import { openURL } from 'quasar'
 import env from '../env'
 import pdf from 'vue-pdf'
 export default {
@@ -447,6 +449,18 @@ export default {
     }
   },
   methods: {
+    async download () {
+      var rutaf = []
+      if (this.userType === 'b') {
+        rutaf = this.contrato.userAFile.split('/')
+        console.log('descgr', rutaf)
+        openURL(env.apiUrl + '/file2/' + rutaf[rutaf.length - 1])
+      } else {
+        rutaf = this.contrato.userBFile.split('/')
+        console.log('descgr', rutaf)
+        openURL(env.apiUrl + '/file2/' + rutaf[rutaf.length - 1])
+      }
+    },
     rechazar () {
       this.$q.dialog({
         title: 'Confirma',

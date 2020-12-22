@@ -38,6 +38,7 @@
                 no-caps
                 color="primary"
                 class="q-mr-md"
+                @click="download('a')"
                 >Descargar
             </q-btn>
         </div>
@@ -311,6 +312,7 @@
                 no-caps
                 color="primary"
                 class="q-mr-md"
+                @click="download('b')"
                 >Descargar
             </q-btn>
         </div>
@@ -331,6 +333,7 @@
 <script>
 import moment from 'moment'
 import env from '../env'
+import { openURL } from 'quasar'
 import pdf from 'vue-pdf'
 import { required } from 'vuelidate/lib/validators'
 export default {
@@ -400,6 +403,18 @@ export default {
     }
   },
   methods: {
+    async download (val) {
+      var rutaf = []
+      if (val === 'a') {
+        rutaf = this.contrato.userAFile.split('/')
+        console.log('descgr', rutaf)
+        openURL(env.apiUrl + '/file2/' + rutaf[rutaf.length - 1])
+      } else {
+        rutaf = this.contrato.userBFile.split('/')
+        console.log('descgr', rutaf)
+        openURL(env.apiUrl + '/file2/' + rutaf[rutaf.length - 1])
+      }
+    },
     aprobarContrato () {
       if (this.vigenciaIndefinida) {
         this.form.fechaV = null

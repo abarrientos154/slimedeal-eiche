@@ -179,10 +179,11 @@
           <q-item-section> Inicio</q-item-section>
         </q-item>
         <q-item
+          v-if="rol > 1"
           clickable
           active-class="my-menu-link"
           v-ripple
-          @click="rol > 1 ? $router.push('/contratos') : ''"
+          @click="$router.push('/contratos')"
         >
           <q-item-section avatar>
             <q-icon name="description" />
@@ -289,28 +290,6 @@
             @click="newContrat=true"
           />
         </div>
-        <!-- <div class="row justify-center q-pa-md">
-          <q-btn
-            rounded
-            glossy
-            no-caps
-            label="Tutorial"
-            color="primary"
-            class="q-mr-md"
-            @click="iraweb('slimedeal.com/tuto')"
-          />
-        </div>
-        <div class="row justify-center q-pa-md">
-          <q-btn
-            rounded
-            no-caps
-            glossy
-            label="Cuentas Oficiales SD"
-            color="primary"
-            class="q-mr-md"
-            @click="iraweb('slimedeal.com/cosd')"
-          />
-        </div> -->
     </div>
     </q-drawer>
 
@@ -509,7 +488,6 @@ export default {
               created_at: moment(v.created_at).format('DD-MM-YYYY')
             }
           })
-          console.log('Ej Vigentes', this.data)
         }
       }).catch(error => {
         console.log(error)
@@ -524,7 +502,6 @@ export default {
               created_at: moment(v.created_at).format('DD-MM-YYYY')
             }
           })
-          console.log('Ej Revision', this.data)
         }
       }).catch(error => {
         console.log(error)
