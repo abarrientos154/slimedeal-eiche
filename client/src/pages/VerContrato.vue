@@ -12,7 +12,7 @@
   <div class="row justify-between fullheight">
     <q-card
       class="bg-white shadow-13 row q-pb-none"
-      style="width: 200px; height: 100%; min-height: 900px; max-height: 1000px;"
+      style="width: 200px;"
     >
     <q-card-section style="width:100%; height:100%">
         <div class="row justify-center q-pb-sm">
@@ -26,6 +26,10 @@
         <div class="text-subtitle1 text-center">{{userA.name}}</div>
         <div class="text-subtitle2 text-grey text-center">{{userA.email}}</div>
         <div class="text-subtitle2 text-grey text-center">{{userA.phone}}</div>
+        <q-card v-if="contrato.monto" class="row justify-center q-pa-xs q-my-md shadow-13">
+          <div class="col-12 text-center text-subtitle2">Monto del Contrato</div>
+          <div class="col-12 text-center text-subtitle2 text-primary">{{contrato.monto}}</div>
+        </q-card>
         <div v-if="metodoPagoA" class="row justify-center q-pa-xs">
           <q-img
                 v-if="imgComprobanteA != ''"

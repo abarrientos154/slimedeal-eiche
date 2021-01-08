@@ -5,13 +5,14 @@ const Model = use('Model')
 
 class Contrato extends Model {
   static get fillable() {
-    return ['title', 'description', 'metodoPago', 'name', 'email']
+    return ['title', 'description', 'metodoPago', 'monto', 'name', 'email']
   }
   static fieldValidationRules() {
     const rulesUser = {
       title: "string",
       description: "string",
       metodoPago: "integer",
+      monto: "integer",
       name: "string",
       email: "string"
     }

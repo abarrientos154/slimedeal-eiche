@@ -53,6 +53,16 @@
         :done="step > 2"
       >
         <q-select rounded outlined v-model="form.metodoPago" map-options emit-value :options="metodoPago" label="Escoge las condiciones de pago del contrato" :error="$v.form.metodoPago.$error" error-message="Este campo es requerido" @blur="$v.form.metodoPago.$touch()" />
+        <q-input
+          v-model.number="form.monto"
+          type="number"
+          rounded
+          outlined
+          label="Ingrese un monto"
+          :error="$v.form.monto.$error"
+          error-message="Este campo es requerido"
+          @blur="$v.form.monto.$touch()"
+        />
       </q-step>
 
       <q-step
@@ -137,7 +147,8 @@ export default {
       description: { required },
       metodoPago: { required },
       name: { required },
-      email: { required }
+      email: { required },
+      monto: { required }
     },
     file: { required }
   },
@@ -159,7 +170,8 @@ export default {
         }
       } else {
         this.$v.form.metodoPago.$touch()
-        if (this.$v.form.metodoPago.$error) {
+        this.$v.form.monto.$touch()
+        if ((this.$v.form.metodoPago.$error || this.$v.form.monto.$error)) {
           this.$q.notify({
             message: 'Faltan Campos por Llenar',
             color: 'negative',
