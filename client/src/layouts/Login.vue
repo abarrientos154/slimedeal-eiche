@@ -56,6 +56,9 @@
                 </template>
                 </q-input>
                 </div>
+                <div class="row justify-center">
+                <div class="text-h9 text-grey-9 text-bold" @click="cambio = true">¿Olvidaste la contraseña?</div>
+              </div>
                 <div class="row justify-center q-pa-md">
                   <q-btn
                     rounded
@@ -81,6 +84,29 @@
                 </div>
               </q-card-section>
             </q-card>
+          <q-dialog v-model="cambio">
+            <q-card class="column items-center justify-center" style="width: 350px; height:350px;">
+              <q-card-section>
+                <div class="text-h6">¿Olvidaste tu contraseña?</div>
+              </q-card-section>
+              <q-card-section>
+                 <q-input rounded outlined v-model="email" label="Introduce tu correo aqui" autofocus>
+                  <template v-slot:prepend>
+                    <q-icon color="primary" name="mail" />
+                  </template>
+                </q-input>
+              </q-card-section>
+              <q-card-actions align="right">
+                 <q-btn
+                    rounded
+                    icon-right="arrow_right"
+                    color="primary"
+                    @click="recuperar()"
+                  >Recuperar contraseña
+                  </q-btn>
+              </q-card-actions>
+            </q-card>
+          </q-dialog>
   </div>
 </template>
 
@@ -92,6 +118,8 @@ export default {
   data () {
     return {
       form: {},
+      cambio: false,
+      email: '',
       isPwd: true,
       loading: false,
       lorem: 'rfrefrtfretfr',
@@ -135,6 +163,23 @@ export default {
     },
     iraweb (ruta) {
       openURL('http://' + ruta)
+    },
+    recuperar () {
+      if (this.email) {
+        this.$api.get('email_send/' + this.email).then(res => {
+          if (res) {
+            this.$q.notify({
+              message: 'Se envio un correo para recuperar tu contraseña',
+              color: 'positive'
+            })
+          }
+        })
+      } else {
+        this.$q.notify({
+          message: 'Campo Vacio',
+          color: 'negative'
+        })
+      }
     }
   }
 }

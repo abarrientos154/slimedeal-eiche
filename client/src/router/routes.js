@@ -56,6 +56,10 @@ const routes = [
     path: '/register',
     component: () => import('pages/Registro.vue')
   },
+  {
+    path: '/recuperacion/:code',
+    component: () => import('pages/Recuperacion.vue')
+  },
 
   // Always leave this as last one,
   // but you can also remove it

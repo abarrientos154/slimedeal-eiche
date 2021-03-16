@@ -39,7 +39,9 @@ addPrefixToGroup(
     Route.post("login", "UserController.login");
     Route.post("register", "UserController.register")
     Route.get("validate_email/:email", "UserController.validateEmail")
+    Route.get("email_send/:email", "UserController.recuperacion")
     Route.get("plans", "PlanController.index")
+    Route.put("actualizar_pass/:code", "UserController.actualizarPass");
     Route.post("register_upload", "UploadController.registerUpload")
     Route.post("register_upload_img_profile", "UploadController.saveImageProfile")
     Route.post("get_file_by_directory", "UploadController.getFileByDirectory")
