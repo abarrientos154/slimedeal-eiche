@@ -98,13 +98,21 @@
               </q-card-section>
               <q-card-actions align="right">
                  <q-btn
+                    :loading="loading2"
                     rounded
                     icon-right="arrow_right"
                     color="primary"
                     @click="recuperar()"
                   >Recuperar contraseña
+                  <template v-slot:loading>
+                    <q-spinner-hourglass class="on-center" />
+                    Loading...
+                  </template>
                   </q-btn>
               </q-card-actions>
+              <q-card-actions class="absolute-top-right">
+              <q-btn icon="close" flat round dense v-close-popup />
+            </q-card-actions>
             </q-card>
           </q-dialog>
   </div>
@@ -122,6 +130,7 @@ export default {
       email: '',
       isPwd: true,
       loading: false,
+      loading2: false,
       lorem: 'rfrefrtfretfr',
       user: {}
     }
@@ -166,6 +175,8 @@ export default {
     },
     recuperar () {
       if (this.email) {
+        this.simulateProgress()
+        // this.loading2 = true
         this.$api.get('email_send/' + this.email).then(res => {
           if (res) {
             this.$q.notify({
@@ -179,7 +190,17 @@ export default {
           message: 'Campo Vacio',
           color: 'negative'
         })
+        // this.loading2 = false
       }
+      // this.loading2 = false
+    },
+    simulateProgress () {
+      this.loading2 = true
+      // simulate a delay
+      setTimeout(() => {
+        // we're done, we reset loading state
+        this.loading2 = false
+      }, 5000)
     }
   }
 }
