@@ -217,7 +217,6 @@ export default {
       }
     },
     async guardar () {
-      console.log(this.tipoCuenta, 'chicha es marikonson')
       this.$v.$touch()
       console.log(this.$v.form.$error, this.$v.password.$error, this.$v.repeatPassword.$error, this.$v.file.$error, this.tipoCuenta.length, this.$v.perfilFile.$error, 'verificaaa')
       if (!this.$v.form.$error && !this.$v.password.$error && !this.$v.repeatPassword.$error && !this.$v.file.$error && this.tipoCuenta.length > 0 && !this.$v.perfilFile.$error) {
