@@ -15,7 +15,7 @@
         <q-scroll-area
           v-if="pendientes.length"
           horizontal
-          style="height: 130px"
+          style="height: 165px"
           class="rounded-borders "
         >
           <div class="row items-center no-wrap">
@@ -26,7 +26,7 @@
               <div class="q-pa-sm items-center">
                 <q-card
                   class="bg-white my-card"
-                  style="width: 340px; height: 100px"
+                  style="width: 340px; height: 150px"
                 >
                   <q-item class="absolute-center" style="width: 100%">
                     <q-item-section avatar>
@@ -36,16 +36,22 @@
                     </q-item-section>
 
                     <q-item-section>
-                      <q-item-label>{{card.title}}</q-item-label>
-                      <q-item-label caption>{{card.description}}</q-item-label>
+                      <q-item-label class="text-bold q-mb-xs">{{card.title}}</q-item-label>
+                      <q-scroll-area style="height: 120px; width: 140px;">
+                          <div class="q-py-xs" >
+                            <div class="column justify-center items-center">
+                            {{card.description}}
+                          </div>
+                          </div>
+                        </q-scroll-area>
                     </q-item-section>
 
                     <q-item-section>
-                      <div class="q-pb-sm">
-                        <q-btn color="primary" no-caps label="Ver Contrato" style="width: 130px" @click="ver(card._id)" />
+                      <div class="q-pb-sm q-pl-md">
+                        <q-btn color="primary" no-caps label="Ver Contrato" style="width: 120px" @click="ver(card._id)" />
                       </div>
-                      <div>
-                        <q-btn color="primary" no-caps label="Descargar" style="width: 130px" @click="download(card.filePath, card.archiveName)" />
+                      <div class="q-pl-md">
+                        <q-btn color="primary" no-caps label="Descargar" style="width: 120px" @click="download(card.filePath, card.archiveName)" />
                       </div>
                     </q-item-section>
                   </q-item>
@@ -111,7 +117,7 @@
         <q-scroll-area
           v-if="contratos.length"
           horizontal
-          style="height: 130px"
+          style="height: 165px"
           class="rounded-borders "
         >
           <div class="row items-center no-wrap">
@@ -122,7 +128,7 @@
               <div class="q-pa-sm items-center">
                 <q-card
                   class="bg-white my-card"
-                  style="width: 340px; height: 100px"
+                  style="width: 340px; height: 150px"
                 >
                   <q-item class="absolute-center" style="width: 100%">
                     <q-item-section avatar>
@@ -132,16 +138,22 @@
                     </q-item-section>
 
                     <q-item-section>
-                      <q-item-label>{{card.title}}</q-item-label>
-                      <q-item-label caption>{{card.description}}</q-item-label>
+                      <q-item-label class="text-bold q-mb-xs">{{card.title}}</q-item-label>
+                      <q-scroll-area style="height: 120px; width: 140px;">
+                          <div class="q-py-xs" >
+                            <div class="column justify-center items-center">
+                            {{card.description}}
+                          </div>
+                          </div>
+                        </q-scroll-area>
                     </q-item-section>
 
                     <q-item-section>
-                      <div class="q-pb-sm">
-                        <q-btn color="primary" no-caps label="Ver Contrato" style="width: 130px" @click="ver(card._id)" />
+                      <div class="q-pb-sm q-pl-md">
+                        <q-btn color="primary" no-caps label="Ver Contrato" style="width: 120px" @click="ver(card._id)" />
                       </div>
-                      <div>
-                        <q-btn color="primary" no-caps label="Descargar" style="width: 130px" @click="download(card.filePath, card.archiveName)" />
+                      <div class="q-pb-sm q-pl-md">
+                        <q-btn color="primary" no-caps label="Descargar" style="width: 120px" @click="download(card.filePath, card.archiveName)" />
                       </div>
                     </q-item-section>
                   </q-item>
