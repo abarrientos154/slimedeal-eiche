@@ -96,6 +96,13 @@
       </q-step>
 
       <q-step :name="4" title="Paso 4" icon="add_comment">
+      <div class="text-h5"> Monto a Pagar: <strong> {{product.price}} </strong> </div>
+      <div>
+        <paypal :product="product" @confirmarPago="onSubmit" ></paypal>
+      </div>
+      </q-step>
+
+      <q-step :name="5" title="Paso 5" icon="add_comment">
       <div>
         <p>La invitación a este contrato fue enviada exitosamente. Recibirás una copia en tu correo confirmando que se inició un contrato en SlimeDeal. Revisa tu bandeja de correo no deseado en caso de no recibirla.</p>
         <p>Debes esperar siempre la respuesta de tu contraparte. Si tu invitado no tiene cuenta en SlimeDeal no te preocupes. Podrá crearse una cuenta y firmar su parte del contrato.</p>
@@ -112,9 +119,9 @@
         <q-stepper-navigation>
           <q-btn v-if="step !== 2 && step !==3 && step !== 4" @click="verify(1)" color="primary" label="Siguiente" />
           <q-btn v-if="step !== 1 && step !== 3 && step !==4" @click="verify(2)" color="primary" label="Siguiente" />
-          <q-btn v-if="step === 4" color="primary" label="Finalizar" @click="$router.push('contratos')" v-close-popup />
-          <q-btn v-if="step === 3" color="primary" @click="onSubmit()" label="Enviar" :loading="loading" />
-          <q-btn v-if="step > 1 && step < 4" flat color="primary" @click="$refs.stepper.previous()" label="Atras" class="q-ml-sm" />
+          <q-btn v-if="step === 5" color="primary" label="Finalizar" @click="$router.push('contratos')" v-close-popup />
+          <q-btn v-if="step === 3" color="primary" @click="pasoTres()" label="Enviar" :loading="loading" />
+          <q-btn v-if="step > 1 && step < 5" flat color="primary" @click="$refs.stepper.previous()" label="Atras" class="q-ml-sm" />
         </q-stepper-navigation>
       </template>
     </q-stepper>
@@ -123,9 +130,18 @@
 
 <script>
 import { required } from 'vuelidate/lib/validators'
+import Paypal from '../components/Paypal'
 export default {
+  components: {
+    Paypal
+  },
   data () {
     return {
+      product: {
+        price: 1,
+        description: 'Pago de un Contrato',
+        img: 'logo.png'
+      },
       step: 1,
       form: {
         title: '',
@@ -183,7 +199,7 @@ export default {
         }
       }
     },
-    async onSubmit () {
+    async pasoTres () {
       console.log('form', this.form)
       this.$v.form.name.$touch()
       this.$v.form.email.$touch()
@@ -195,38 +211,42 @@ export default {
           icon: 'error'
         })
       } else {
-        this.$q.loading.show({
-          message: 'Enviando Contrato, Por Favor Espere...'
+        this.product.price = this.form.monto
+        this.$refs.stepper.next()
+      }
+    },
+    async onSubmit () {
+      this.$q.loading.show({
+        message: 'Enviando Contrato, Por Favor Espere...'
+      })
+      if (this.file) {
+        var formData = new FormData()
+        formData.append('files', this.file)
+        formData.append('dat', JSON.stringify(this.form))
+        console.log(formData, 'formdata')
+        await this.$api.post('contrato', formData, {
+          headers: {
+            'Content-Type': undefined
+          }
+        }).then((res) => {
+          if (res.error) {
+            this.$q.notify({
+              message: res.msg,
+              color: 'warning',
+              type: 'negative'
+            })
+            this.$q.loading.hide()
+          } else if (res) {
+            this.$q.loading.hide()
+          } else {
+            this.$q.loading.hide()
+          }
+          this.$q.loading.hide()
+        }).catch(error => {
+          this.$q.loading.hide()
+          console.log(error)
         })
-        if (this.file) {
-          var formData = new FormData()
-          formData.append('files', this.file)
-          formData.append('dat', JSON.stringify(this.form))
-          console.log(formData, 'formdata')
-          await this.$api.post('contrato', formData, {
-            headers: {
-              'Content-Type': undefined
-            }
-          }).then((res) => {
-            if (res.error) {
-              this.$q.notify({
-                message: res.msg,
-                color: 'warning',
-                type: 'negative'
-              })
-              this.$q.loading.hide()
-            } else if (res) {
-              this.$q.loading.hide()
-            } else {
-              this.$q.loading.hide()
-            }
-            this.$q.loading.hide()
-          }).catch(error => {
-            this.$q.loading.hide()
-            console.log(error)
-          })
-          this.$refs.stepper.next()
-        }
+        this.$refs.stepper.next()
       }
     }
   }

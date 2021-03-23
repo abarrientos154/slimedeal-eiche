@@ -36,10 +36,10 @@
                     </q-item-section>
 
                     <q-item-section>
-                      <q-item-label class="text-bold q-mb-xs">{{card.title}}</q-item-label>
+                      <q-item-label class="text-bold q-mt-sm q-mb-xs">{{card.title}}</q-item-label>
                       <q-scroll-area style="height: 120px; width: 140px;">
                           <div class="q-py-xs" >
-                            <div class="column justify-center items-center">
+                            <div class="column justify-start items-start">
                             {{card.description}}
                           </div>
                           </div>

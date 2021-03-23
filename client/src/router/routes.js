@@ -39,6 +39,10 @@ const routes = [
       {
         path: '/saldos_movidos',
         component: () => import('pages/SaldosMovidos.vue')
+      },
+      {
+        path: '/paypal',
+        component: () => import('pages/Paypal.vue')
       }
     ]
   },
